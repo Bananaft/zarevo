@@ -29,35 +29,28 @@ void VS()
 void PS()
 {
 	vec3 normal = normalize(vNormal);
+
+    vec4 heightmap = texture2D(sDiffMap, vTexCoord);
+	vec3 pattern  = texture2D(sNormalMap, vTexCoord * 1024).rgb;
+	vec2 coords = vec2(heightmap.r + pattern.r * 0.02, heightmap.b + pattern.g  * 0.02);
+	vec3 color = texture2D(sSpecMap,coords).rgb;
 	
-    // Get material diffuse albedo
-    #ifdef DIFFMAP
-        vec4 diffColor = cMatDiffColor * texture2D(sDiffMap, vTexCoord * 0.2);
-        #ifdef ALPHAMASK
-            if (diffColor.a < 0.5)
-                discard;
-        #endif
-    #else
-        vec4 diffColor = cMatDiffColor;
-    #endif
+	vec4 diffColor = vec4(color,0);
+	
 	
 	//vec2 distCoord = vTexCoord + (1 - diffColor.r * 2);
-	vec4 normalMap = texture2D(sNormalMap, vTexCoord*1 +  .02 * (1 - diffColor.b * 2));
+	//vec4 normalMap = texture2D(sNormalMap, vTexCoord*1 +  .02 * (1 - diffColor.b * 2));
 
-    #ifdef VERTEXCOLOR
-        diffColor *= vColor;
-    #endif
-	
-	//diffColor = vec4(1.0,0.5,0.0,1.0);
+	vec3 ambient = diffColor.rgb * cAmbientColor;
 
     #if defined(PREPASS)
         // Fill light pre-pass G-Buffer
         gl_FragData[0] = vec4(0.5, 0.5, 0.5, 1.0);
         gl_FragData[1] = vec4(EncodeDepth(vWorldPos.w), 0.0);
     #elif defined(DEFERRED)
-        gl_FragData[0] = vec4(0,0,0, diffColor.a);
-        gl_FragData[1] = vec4(1,1,1, 0.0);
-        gl_FragData[2] = vec4(normalMap.rgb * 0.5 + 0.5, 1.0);
+        gl_FragData[0] = vec4(ambient , diffColor.a);
+        gl_FragData[1] = vec4(diffColor.rgb, 0.0);
+        gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
         gl_FragData[3] = vec4(EncodeDepth(vWorldPos.w), 0.0);
     #else
         gl_FragColor = vec4(diffColor.rgb, diffColor.a);
