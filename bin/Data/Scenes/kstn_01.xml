@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="3" />
 	<attribute name="Next Replicated Component ID" value="4" />
-	<attribute name="Next Local Node ID" value="16785412" />
-	<attribute name="Next Local Component ID" value="16785411" />
+	<attribute name="Next Local Node ID" value="16801796" />
+	<attribute name="Next Local Component ID" value="16801795" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -23,7 +23,9 @@
 		<component type="Zone" id="16781313">
 			<attribute name="Bounding Box Min" value="-10000 -10000 -10000" />
 			<attribute name="Bounding Box Max" value="10000 10000 10000" />
-			<attribute name="Fog End" value="10000" />
+			<attribute name="Fog Color" value="0.7 0.9 1 1" />
+			<attribute name="Fog Start" value="800" />
+			<attribute name="Fog End" value="20000" />
 		</component>
 	</node>
 	<node id="16777216">
@@ -35,8 +37,10 @@
 		<attribute name="Variables" />
 		<component type="Terrain" id="16777216">
 			<attribute name="Height Map" value="Image;Textures/geodata/kstn.png" />
-			<attribute name="Material" value="Material;Materials/terrain/kstn.xml" />
+			<attribute name="Material" value="Material;Materials/colorTerrain.xml" />
+			<attribute name="Patch Size" value="128" />
 			<attribute name="Cast Shadows" value="true" />
+			<attribute name="LOD Bias" value="1.6" />
 		</component>
 	</node>
 	<node id="16781315">
