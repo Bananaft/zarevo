@@ -8,6 +8,15 @@ void Start()
 	CreateConsoleAndDebugHud();
 	
 	SubscribeToEvent("KeyDown", "HandleKeyDown");
+	
+	scene_.LoadXML(cache.GetFile("Scenes/kstn_01.xml"));
+	
+	cameraNode = Node();
+    Camera@ camera = cameraNode.CreateComponent("Camera");
+    renderer.viewports[0] = Viewport(scene_, camera);
+	cameraNode.position = Vector3(0,50,0);
+       
+    camera.fov = 80.0f;
 }
 
 void CreateConsoleAndDebugHud()
