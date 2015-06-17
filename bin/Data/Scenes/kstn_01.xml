@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="3" />
 	<attribute name="Next Replicated Component ID" value="4" />
-	<attribute name="Next Local Node ID" value="16801796" />
-	<attribute name="Next Local Component ID" value="16801795" />
+	<attribute name="Next Local Node ID" value="16804420" />
+	<attribute name="Next Local Component ID" value="16804419" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -38,6 +38,7 @@
 		<component type="Terrain" id="16777216">
 			<attribute name="Height Map" value="Image;Textures/geodata/kstn.png" />
 			<attribute name="Material" value="Material;Materials/colorTerrain.xml" />
+			<attribute name="Vertex Spacing" value="1 0.4 1" />
 			<attribute name="Patch Size" value="128" />
 			<attribute name="Cast Shadows" value="true" />
 			<attribute name="LOD Bias" value="1.6" />
@@ -47,7 +48,7 @@
 		<attribute name="Is Enabled" value="true" />
 		<attribute name="Name" value="" />
 		<attribute name="Position" value="0 100 0" />
-		<attribute name="Rotation" value="0.847049 0.290399 -0.252402 -0.366697" />
+		<attribute name="Rotation" value="0.190167 0.714039 0.0214801 -0.673435" />
 		<attribute name="Scale" value="1 1 1" />
 		<attribute name="Variables" />
 		<component type="Light" id="16781314">
