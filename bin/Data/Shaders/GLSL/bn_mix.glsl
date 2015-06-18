@@ -4,9 +4,10 @@
 #include "ScreenPos.glsl"
 
 
-varying vec2 vTexCoord;
+varying vec4 vTexCoord;
 varying vec4 vWorldPos;
 varying vec3 vNormal;
+varying vec4 vTangent;
 #ifdef VERTEXCOLOR
     varying vec4 vColor;
 #endif
@@ -16,10 +17,15 @@ void VS()
     mat4 modelMatrix = iModelMatrix;
     vec3 worldPos = GetWorldPos(modelMatrix);
     gl_Position = GetClipPos(worldPos);
-    vTexCoord = GetTexCoord(iTexCoord); // iTexCoord;//
+    
     vWorldPos = vec4(worldPos, GetDepth(gl_Position));
 	
 	vNormal = GetWorldNormal(modelMatrix);
+	
+	vec3 tangent = GetWorldTangent(modelMatrix);
+    vec3 bitangent = cross(tangent, vNormal) * iTangent.w;
+    vTexCoord = vec4(GetTexCoord(iTexCoord), bitangent.xy);
+    vTangent = vec4(tangent, bitangent.z);
 
     #ifdef VERTEXCOLOR
         vColor = iColor;
@@ -28,19 +34,14 @@ void VS()
 
 void PS()
 {
-	vec3 normal = normalize(vNormal);
+	vec4 heightmap = texture2D(sDiffMap, vTexCoord.xy);
 
-    vec4 heightmap = texture2D(sDiffMap, vTexCoord);
-	vec3 pattern  = texture2D(sNormalMap, vTexCoord * 1024).rgb;
-	vec2 coords = vec2(heightmap.r + pattern.r * 0.02, heightmap.b + pattern.g  * 0.02);
-	vec3 color = texture2D(sSpecMap,coords).rgb;
+	vec4 diffColor = heightmap;
 	
-	vec4 diffColor = vec4(color,0);
+	vec4 normalMap = texture2D(sNormalMap, vTexCoord.xy * 200);
+	mat3 tbn = mat3(vTangent.xyz, vec3(vTexCoord.zw, vTangent.w), vNormal);
+    vec3 normal = normalize(tbn * DecodeNormal(normalMap));
 	
-	
-	//vec2 distCoord = vTexCoord + (1 - diffColor.r * 2);
-	//vec4 normalMap = texture2D(sNormalMap, vTexCoord*1 +  .02 * (1 - diffColor.b * 2));
-
 	vec3 ambient = diffColor.rgb * cAmbientColor;
 
     #if defined(PREPASS)
