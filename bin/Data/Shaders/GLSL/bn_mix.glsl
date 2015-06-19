@@ -34,13 +34,26 @@ void VS()
 
 void PS()
 {
-	vec4 heightmap = texture2D(sDiffMap, vTexCoord.xy);
+	vec4 normalMap = texture2D(sNormalMap, vTexCoord.xy * 300);
+	
+	vec3 nm1;
+    nm1.xy = normalMap.rg * 2.0 - 1.0;
+    nm1.z = sqrt(max(1.0 - dot(nm1.xy, nm1.xy), 0.0));
+	
+	vec3 nm2;
+    nm2.xy = normalMap.ba * 2.0 - 1.0;
+    nm2.z = sqrt(max(1.0 - dot(nm2.xy, nm2.xy), 0.0));
+	
+	vec4 heightmap = texture2D(sDiffMap, vTexCoord.xy + normalize(nm1.xy * 2) * 0.0006);
 
 	vec4 diffColor = heightmap;
 	
-	vec4 normalMap = texture2D(sNormalMap, vTexCoord.xy * 200);
+	
+	
+	vec3 normal = mix(nm1, nm2, 1-heightmap.a);
+	
 	mat3 tbn = mat3(vTangent.xyz, vec3(vTexCoord.zw, vTangent.w), vNormal);
-    vec3 normal = normalize(tbn * DecodeNormal(normalMap));
+    normal = normalize(tbn * normal);
 	
 	vec3 ambient = diffColor.rgb * cAmbientColor;
 
