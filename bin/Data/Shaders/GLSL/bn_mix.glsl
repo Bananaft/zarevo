@@ -34,7 +34,7 @@ void VS()
 
 void PS()
 {
-	vec4 normalMap = texture2D(sNormalMap, vTexCoord.xy * 300);
+	vec4 normalMap = texture2D(sNormalMap, vTexCoord.xy * 2000);
 	
 	vec3 nm1;
     nm1.xy = normalMap.rg * 2.0 - 1.0;
@@ -44,8 +44,8 @@ void PS()
     nm2.xy = normalMap.ba * 2.0 - 1.0;
     nm2.z = sqrt(max(1.0 - dot(nm2.xy, nm2.xy), 0.0));
 	
-	vec4 heightmap = texture2D(sDiffMap, vTexCoord.xy + normalize(nm1.xy * 2) * 0.0006);
-
+	vec4 heightmap = texture2D(sDiffMap, vTexCoord.xy + normalize(nm1.xy * 2) * 0.0001);
+	//vec4 heightmap = texture2D(sDiffMap, vTexCoord.xy);
 	vec4 diffColor = heightmap;
 	
 	
