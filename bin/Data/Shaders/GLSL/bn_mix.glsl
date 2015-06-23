@@ -48,22 +48,23 @@ void PS()
 	//vec4 heightmap = texture2D(sDiffMap, vTexCoord.xy);
 	vec4 diffColor = heightmap;
 	
-	
-	
 	vec3 normal = mix(nm1, nm2, 1-heightmap.a);
 	
 	mat3 tbn = mat3(vTangent.xyz, vec3(vTexCoord.zw, vTangent.w), vNormal);
     normal = normalize(tbn * normal);
 	
 	vec3 ambient = diffColor.rgb * cAmbientColor;
+	
+	float fogFactor = clamp((cFogParams.x - vWorldPos.w) * cFogParams.y, 0.0, 1.0);
+	
 
     #if defined(PREPASS)
         // Fill light pre-pass G-Buffer
         gl_FragData[0] = vec4(0.5, 0.5, 0.5, 1.0);
         gl_FragData[1] = vec4(EncodeDepth(vWorldPos.w), 0.0);
     #elif defined(DEFERRED)
-        gl_FragData[0] = vec4(ambient , diffColor.a);
-        gl_FragData[1] = vec4(diffColor.rgb, 0.0);
+        gl_FragData[0] = vec4(mix(cFogColor, ambient, fogFactor) , diffColor.a);
+        gl_FragData[1] = vec4(fogFactor * diffColor.rgb, 0.0);
         gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
         gl_FragData[3] = vec4(EncodeDepth(vWorldPos.w), 0.0);
     #else
