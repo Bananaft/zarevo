@@ -5,14 +5,15 @@
 	<attribute name="Smoothing Constant" value="50" />
 	<attribute name="Snap Threshold" value="5" />
 	<attribute name="Elapsed Time" value="0" />
-	<attribute name="Next Replicated Node ID" value="3" />
-	<attribute name="Next Replicated Component ID" value="4" />
-	<attribute name="Next Local Node ID" value="16808452" />
-	<attribute name="Next Local Component ID" value="16808451" />
+	<attribute name="Next Replicated Node ID" value="7" />
+	<attribute name="Next Replicated Component ID" value="9" />
+	<attribute name="Next Local Node ID" value="16810756" />
+	<attribute name="Next Local Component ID" value="16810756" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
 	<component type="DebugRenderer" id="2" />
+	<component type="PhysicsWorld" id="8" />
 	<node id="16781314">
 		<attribute name="Is Enabled" value="true" />
 		<attribute name="Name" value="" />
@@ -23,8 +24,8 @@
 		<component type="Zone" id="16781313">
 			<attribute name="Bounding Box Min" value="-10000 -10000 -10000" />
 			<attribute name="Bounding Box Max" value="10000 10000 10000" />
-			<attribute name="Fog Color" value="0.7 0.9 1 1" />
-			<attribute name="Fog Start" value="800" />
+			<attribute name="Ambient Color" value="0 0 0 1" />
+			<attribute name="Fog Start" value="20000" />
 			<attribute name="Fog End" value="20000" />
 		</component>
 	</node>
@@ -44,9 +45,61 @@
 			<attribute name="LOD Bias" value="1.2" />
 		</component>
 	</node>
+	<node id="2">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="TeaPot" />
+		<attribute name="Position" value="-770.013 167.725 -341.494" />
+		<attribute name="Rotation" value="0.746263 -0.54792 0.123954 -0.35709" />
+		<attribute name="Scale" value="100 100 100" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="3">
+			<attribute name="Model" value="Model;Models/TeaPot.mdl" />
+			<attribute name="Material" value="Material;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="4">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="TeaPot" />
+		<attribute name="Position" value="-770.013 193.725 -341.494" />
+		<attribute name="Rotation" value="0.967666 0 -0.252239 0" />
+		<attribute name="Scale" value="100 100 100" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="5">
+			<attribute name="Model" value="Model;Models/TeaPot.mdl" />
+			<attribute name="Material" value="Material;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="5">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="TeaPot" />
+		<attribute name="Position" value="-770.013 239.225 -341.494" />
+		<attribute name="Rotation" value="0.873106 0.427682 -0.0923311 0.215062" />
+		<attribute name="Scale" value="100 100 100" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="6">
+			<attribute name="Model" value="Model;Models/TeaPot.mdl" />
+			<attribute name="Material" value="Material;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="6">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="Torus" />
+		<attribute name="Position" value="-758.177 99.0968 -363.577" />
+		<attribute name="Rotation" value="0.67559 0.737278 0 0" />
+		<attribute name="Scale" value="100 100 100" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="7">
+			<attribute name="Model" value="Model;Models/Torus.mdl" />
+			<attribute name="Material" value="Material;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
 	<node id="16781315">
 		<attribute name="Is Enabled" value="true" />
-		<attribute name="Name" value="" />
+		<attribute name="Name" value="Sun" />
 		<attribute name="Position" value="0 100 0" />
 		<attribute name="Rotation" value="-0.00784054 0.330803 0.507081 -0.795847" />
 		<attribute name="Scale" value="1 1 1" />
@@ -56,18 +109,10 @@
 			<attribute name="Cast Shadows" value="true" />
 			<attribute name="CSM Splits" value="100 1000 10000 0" />
 		</component>
-	</node>
-	<node id="2">
-		<attribute name="Is Enabled" value="true" />
-		<attribute name="Name" value="TeaPot" />
-		<attribute name="Position" value="-770.013 389.225 -341.494" />
-		<attribute name="Rotation" value="0.967666 0 -0.252239 0" />
-		<attribute name="Scale" value="100 100 100" />
-		<attribute name="Variables" />
-		<component type="StaticModel" id="3">
-			<attribute name="Model" value="Model;Models/TeaPot.mdl" />
-			<attribute name="Material" value="Material;;" />
-			<attribute name="Cast Shadows" value="true" />
+		<component type="ScriptInstance" id="16810755">
+			<attribute name="Delayed Method Calls" value="0" />
+			<attribute name="Script File" value="ScriptFile;Scripts/game.as" />
+			<attribute name="Class Name" value="sky" />
 		</component>
 	</node>
 </scene>

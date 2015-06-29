@@ -70,7 +70,7 @@ void PS()
     vec4 projWorldPos = vec4(worldPos, 1.0);
     vec3 lightColor;
     vec3 lightDir;
-    
+
     float diff = GetDiffuse(normal, worldPos, lightDir);
 
     #ifdef SHADOW
@@ -85,6 +85,11 @@ void PS()
         lightColor = textureCube(sLightCubeMap, (worldPos - cLightPosPS.xyz) * lightVecRot).rgb * cLightColor.rgb;
     #else
         lightColor = cLightColor.rgb;
+    #endif
+
+    #ifdef DIRLIGHT
+      float skydiff = 0.2 * (normal.y + 0.9);
+      diff += skydiff;
     #endif
 
     #ifdef SPECULAR

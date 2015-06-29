@@ -2,6 +2,7 @@ Scene@ scene_;
 Node@ cameraNode;
 float yaw = 0.0f; // Camera yaw angle
 float pitch = 0.0f; // Camera pitch angle
+Node@ sun;
 
 void Start()
 {
@@ -119,4 +120,26 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 
     // Move the camera, scale movement with time step
     MoveCamera(timeStep);
+}
+
+class sky : ScriptObject
+{
+    void Init()
+    {
+        
+    }
+    
+    void Update(float timeStep)
+	{
+        int mousescroll = input.mouseMoveWheel;
+        node.Rotate(Quaternion(3 * mousescroll, Vector3(0,1,0)));
+    }
+    
+    void FixedUpdate(float timeStep)
+	{
+         
+    }
+    
+    
+
 }
