@@ -22,6 +22,9 @@ void Start()
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+    
+    renderer.specularLighting = false;
+
 	
 	mainVP.renderPath = renderpath;
 	cameraNode.position = Vector3(0,150,0);

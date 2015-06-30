@@ -9,6 +9,12 @@
         <output index="2" name="normal" />
         <output index="3" name="depth" />
     </command>
+    <command type="quad" tag="Sky" vs="Sky" ps="Sky" psdefines="SHADOW DIRLIGHT">
+      <texture unit="albedo" name="albedo" />
+      <texture unit="normal" name="normal" />
+      <texture unit="depth" name="depth" />
+      <parameter name="SkyColor" value="0.1 0.2 0.5" />
+    </command>
     <command type="lightvolumes" vs="DeferredLight" ps="DeferredLight">
         <texture unit="albedo" name="albedo" />
         <texture unit="normal" name="normal" />

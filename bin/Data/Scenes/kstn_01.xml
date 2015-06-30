@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="7" />
 	<attribute name="Next Replicated Component ID" value="9" />
-	<attribute name="Next Local Node ID" value="16810756" />
-	<attribute name="Next Local Component ID" value="16810756" />
+	<attribute name="Next Local Node ID" value="16812487" />
+	<attribute name="Next Local Component ID" value="16812487" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -97,22 +97,62 @@
 			<attribute name="Cast Shadows" value="true" />
 		</component>
 	</node>
-	<node id="16781315">
+	<node id="16811908">
 		<attribute name="Is Enabled" value="true" />
-		<attribute name="Name" value="Sun" />
-		<attribute name="Position" value="0 100 0" />
-		<attribute name="Rotation" value="-0.00784054 0.330803 0.507081 -0.795847" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-679.473 80.9604 -320.893" />
+		<attribute name="Rotation" value="1 0 0 0" />
 		<attribute name="Scale" value="1 1 1" />
 		<attribute name="Variables" />
-		<component type="Light" id="16781314">
-			<attribute name="Light Type" value="Directional" />
-			<attribute name="Cast Shadows" value="true" />
-			<attribute name="CSM Splits" value="100 1000 10000 0" />
-		</component>
-		<component type="ScriptInstance" id="16810755">
-			<attribute name="Delayed Method Calls" value="0" />
-			<attribute name="Script File" value="ScriptFile;Scripts/game.as" />
-			<attribute name="Class Name" value="sky" />
+		<component type="Light" id="16811908">
+			<attribute name="Color" value="1 0.8 0.2 1" />
+			<attribute name="Range" value="100" />
+			<attribute name="Light Shape Texture" value="TextureCube;" />
 		</component>
 	</node>
+	<node id="16811909">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-624.973 82.4604 -818.393" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="Light" id="16811909">
+			<attribute name="Color" value="1 0.4 0.1 1" />
+			<attribute name="Range" value="200" />
+			<attribute name="Light Shape Texture" value="TextureCube;" />
+		</component>
+	</node>
+	<node id="16812486">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-4518.47 159.96 -1166.39" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="Light" id="16812486">
+			<attribute name="Color" value="1 0.4 0.1 1" />
+			<attribute name="Brightness Multiplier" value="20.39" />
+			<attribute name="Range" value="600" />
+			<attribute name="Light Shape Texture" value="TextureCube;" />
+		</component>
+	</node>
+	<node id="16781315">
+	<attribute name="Is Enabled" value="true" />
+	<attribute name="Name" value="Sun" />
+	<attribute name="Position" value="0 100 0" />
+	<attribute name="Rotation" value="-0.00784054 0.330803 0.507081 -0.795847" />
+	<attribute name="Scale" value="1 1 1" />
+	<attribute name="Variables" />
+	<component type="Light" id="16781314">
+		<attribute name="Light Type" value="Directional" />
+		<attribute name="Cast Shadows" value="true" />
+		<attribute name="CSM Splits" value="100 1000 10000 0" />
+	</component>
+	<component type="ScriptInstance" id="16810755">
+		<attribute name="Delayed Method Calls" value="0" />
+		<attribute name="Script File" value="ScriptFile;Scripts/game.as" />
+		<attribute name="Class Name" value="sky" />
+	</component>
+</node>
 </scene>
