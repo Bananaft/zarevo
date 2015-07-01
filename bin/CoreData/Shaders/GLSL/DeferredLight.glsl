@@ -87,11 +87,6 @@ void PS()
         lightColor = cLightColor.rgb;
     #endif
 
-    #ifdef DIRLIGHT
-      float skydiff = 0.2 * (normal.y + 0.9);
-      diff += skydiff;
-    #endif
-    
     #ifdef SPECULAR
         float spec = GetSpecular(normal, -worldPos, lightDir, normalInput.a * 255.0);
         gl_FragColor = diff * vec4(lightColor * (albedoInput.rgb + spec * cLightColor.a * albedoInput.aaa), 0.0);

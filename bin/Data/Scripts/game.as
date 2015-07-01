@@ -135,7 +135,7 @@ class sky : ScriptObject
     void Update(float timeStep)
 	{
         int mousescroll = input.mouseMoveWheel;
-        node.Rotate(Quaternion(3 * mousescroll, Vector3(0,1,0)));
+        node.Rotate(Quaternion(0.5 * mousescroll, Vector3(0,1,0)));
     }
     
     void FixedUpdate(float timeStep)

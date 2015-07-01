@@ -9,15 +9,6 @@
         <output index="1" name="albedo" />
         <output index="2" name="normal" />
     </command>
-    <command type="quad" tag="Sky" vs="Sky" ps="Sky" psdefines="HWDEPTH SHADOW DIRLIGHT" depthstencil="depth">
-      <texture unit="albedo" name="albedo" />
-      <texture unit="normal" name="normal" />
-      <texture unit="depth" name="depth" />
-      <parameter name="SkyColor" value="0.05 0.1 0.2" />
-      <parameter name="SunColor" value="0.9 0.8 0.7" />
-      <parameter name="SunDir" value="0.1 0.3 0.5" />
-      <parameter name="FogDist" value="8000" />
-    </command>
     <command type="lightvolumes" vs="DeferredLight" ps="DeferredLight" psdefines="HWDEPTH" depthstencil="depth">
         <texture unit="albedo" name="albedo" />
         <texture unit="normal" name="normal" />
@@ -26,6 +17,12 @@
     <command type="scenepass" pass="postopaque" depthstencil="depth" />
     <command type="scenepass" pass="refract" depthstencil="depth">
         <texture unit="environment" name="viewport" />
+    </command>
+    <command type="quad" tag="Sky" vs="Sky" ps="Sky" psdefines="HWDEPTH SHADOW DIRLIGHT" depthstencil="depth">
+      <texture unit="diffuse" name="viewport" />
+      <texture unit="depth" name="depth" />
+      <parameter name="SkyColor" value="0.2 0.6 0.8" />
+      <parameter name="FogDist" value="8000" />
     </command>
     <command type="scenepass" pass="alpha" vertexlights="true" sort="backtofront" metadata="alpha" depthstencil="depth" />
     <command type="scenepass" pass="postalpha" sort="backtofront" depthstencil="depth" />

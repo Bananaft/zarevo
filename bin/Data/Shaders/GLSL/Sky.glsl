@@ -35,25 +35,19 @@ void PS()
 
         vec3 worldPos = vFarRay * depth;
 
-        vec4 albedoInput = texture2D(sAlbedoBuffer, vScreenPos);
-        vec4 normalInput = texture2D(sNormalBuffer, vScreenPos);
+        vec4 diffuseInput = texture2D(sDiffMap, vScreenPos);
 
 
-    vec3 normal = normalize(normalInput.rgb * 2.0 - 1.0);
     vec4 projWorldPos = vec4(worldPos, 1.0);
-    vec3 sunColor = cSunColor.rgb;
-    vec3 sunDir = cSunDir;
 
-    //float diff = max(dot(normal, sunDir), 0.0); //GetDiffuse(normal, worldPos, sunDir);
+    float depth2 = length(worldPos.xz);
 
-    //#ifdef SHADOW
-    //    diff *= GetDirShadowDeferred(projWorldPos, depth);
-    //#endif
-    float fogFactor = clamp(15 * depth, 0.0, 1.0);
+    float fogFactor = clamp(depth2 / 1000, 0.0, 1.0);
+    float diffFactor = clamp(depth2 / 5000, 0.0, 1.0);
 
-    float skydiff = 0.5 * (normal.y + 1.0);
+    //float skydiff = 0.5 * (normal.y + 1.0);
 
-    vec3 result = mix(albedoInput.rgb * (skydiff * cSkyColor),cSkyColor * 2,fogFactor);
+    vec3 result = diffuseInput.rgb * (1-0.95*diffFactor) + cSkyColor * fogFactor;
 
     gl_FragColor = vec4(result, 0.0);
 
