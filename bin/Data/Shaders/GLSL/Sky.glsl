@@ -42,8 +42,8 @@ void PS()
 
     float depth2 = length(worldPos.xz);
 
-    float fogFactor = clamp(depth2 / 1000, 0.0, 1.0);
-    float diffFactor = clamp(depth2 / 5000, 0.0, 1.0);
+    float fogFactor = clamp(depth2 / 8000, 0.0, 1.0);
+    float diffFactor = clamp(depth2 / 15000, 0.0, 1.0);
 
     //float skydiff = 0.5 * (normal.y + 1.0);
 

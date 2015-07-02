@@ -53,7 +53,7 @@ void PS()
 	mat3 tbn = mat3(vTangent.xyz, vec3(vTexCoord.zw, vTangent.w), vNormal);
     normal = normalize(tbn * normal);
 
-	vec3 ambient = diffColor.rgb * cAmbientColor;
+	vec3 ambient = diffColor.rgb * cAmbientColor * ( 0.5 * (normal.y + 1.0));
 
 
     #if defined(PREPASS)
