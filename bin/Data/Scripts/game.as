@@ -2,8 +2,8 @@ Scene@ scene_;
 Node@ cameraNode;
 float yaw = 0.0f; // Camera yaw angle
 float pitch = 0.0f; // Camera pitch angle
-Node@ sun;
-
+Terrain@ terrain;
+ 
 void Start()
 {
 	scene_ = Scene();
@@ -33,6 +33,10 @@ void Start()
     camera.fov = 80.0f;
 	
 	SubscribeToEvent("Update", "HandleUpdate");
+    
+    Node@ terrNode = scene_.GetChild("Terrain", true);
+    terrain = terrNode.GetComponent("Terrain");
+    
 }
 
 void CreateConsoleAndDebugHud()
@@ -123,6 +127,9 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 
     // Move the camera, scale movement with time step
     MoveCamera(timeStep);
+    Vector3 campos = cameraNode.position;
+    float ter_height = terrain.GetHeight(campos) + 0.17;
+    if (campos.y<ter_height) cameraNode.position = Vector3(campos.x, ter_height, campos.z);
 }
 
 class sky : ScriptObject
