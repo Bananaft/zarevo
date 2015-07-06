@@ -3,6 +3,7 @@ Node@ cameraNode;
 float yaw = 0.0f; // Camera yaw angle
 float pitch = 0.0f; // Camera pitch angle
 Terrain@ terrain;
+
  
 void Start()
 {
@@ -36,6 +37,11 @@ void Start()
     
     Node@ terrNode = scene_.GetChild("Terrain", true);
     terrain = terrNode.GetComponent("Terrain");
+    
+    Node@ skyNode = scene_.CreateChild("Sky");
+    Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
+	sky.Init();
+    
     
 }
 
@@ -96,7 +102,7 @@ void MoveCamera(float timeStep)
         return;
 
     // Movement speed as world units per second
-    const float MOVE_SPEED = 200.0f;
+    const float MOVE_SPEED = 100.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 
@@ -132,24 +138,49 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     if (campos.y<ter_height) cameraNode.position = Vector3(campos.x, ter_height, campos.z);
 }
 
-class sky : ScriptObject
+class Sky : ScriptObject
 {
+    
+    float daytime = 0;
+    float astroStep = 0.01;
+    
+    Zone@ zone;
+    Light@ sun;
+    Node@ sunNode;
+    
+    Color DaySkyColor = Color(0.5,0.5,0.5);
+    Color NightSkyColor = Color(0,0,0);
+    
+    Color SunColor = Color(1,1,1);
+    
+    
     void Init()
     {
+        //Scene@ scene = node.parent;
+        Node@ zoneNode = scene_.GetChild("Zone", true);
+        zone = zoneNode.GetComponent("Zone");
         
+        sunNode = scene_.GetChild("Sun", true);
+        zone = zoneNode.GetComponent("Light");
     }
     
     void Update(float timeStep)
 	{
+       
+        //node.Rotate(Quaternion(0.5 * mousescroll, Vector3(0,1,0)));
+        
+        //skyColorLerp = Clamp(0,1,0.5 + sin());
+        
+        //zone.ambientColor = Color(mousescroll,0,0);
+        
+        daytime += astroStep * timeStep;
+        if (daytime > 1) daytime -= 1;
         int mousescroll = input.mouseMoveWheel;
-        node.Rotate(Quaternion(0.5 * mousescroll, Vector3(0,1,0)));
+        daytime += mousescroll * 0.01;
     }
     
     void FixedUpdate(float timeStep)
 	{
          
     }
-    
-    
-
 }
