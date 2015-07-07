@@ -140,15 +140,16 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
 
 class Sky : ScriptObject
 {
+    float Pi = 3.14159;
     
     float daytime = 0;
-    float astroStep = 0.01;
+    float astroStep = 0.00069444444;
     
     Zone@ zone;
     Light@ sun;
     Node@ sunNode;
     
-    Color DaySkyColor = Color(0.5,0.5,0.5);
+    Color DaySkyColor = Color(0.3,0.3,0.3);
     Color NightSkyColor = Color(0,0,0);
     
     Color SunColor = Color(1,1,1);
@@ -161,26 +162,41 @@ class Sky : ScriptObject
         zone = zoneNode.GetComponent("Zone");
         
         sunNode = scene_.GetChild("Sun", true);
-        zone = zoneNode.GetComponent("Light");
+        sun = sunNode.GetComponent("Light");
+        
+        log.Info(zone.ambientColor.ToString());
     }
     
     void Update(float timeStep)
 	{
        
-        //node.Rotate(Quaternion(0.5 * mousescroll, Vector3(0,1,0)));
+       
         
-        //skyColorLerp = Clamp(0,1,0.5 + sin());
+        //float skyColorLerp = Clamp( 0 , 1 , 0.5 + Sin(2 * Pi * daytime));
+        float skyColorLerp = 1 + 3 * Sin(360 * daytime);
+        if(skyColorLerp>1)skyColorLerp=1;
+        else if (skyColorLerp<0)skyColorLerp=0;
         
-        //zone.ambientColor = Color(mousescroll,0,0);
+        float sunLerp = 6 * Sin(360 * daytime);
+        if(sunLerp>1)sunLerp=1;
+        else if (sunLerp<0)sunLerp=0;
+        
+        sunNode.rotation = Quaternion(360 * daytime, 0.0f , 0.0f );
+        
+        sun.color = Color(0,0,0).Lerp(SunColor , sunLerp);
+        zone.ambientColor = NightSkyColor.Lerp(DaySkyColor,skyColorLerp);
         
         daytime += astroStep * timeStep;
         if (daytime > 1) daytime -= 1;
+        if (daytime < 0) daytime += 1;
+       
         int mousescroll = input.mouseMoveWheel;
         daytime += mousescroll * 0.01;
+        log.Info((6+Ceil(daytime*24)) + ":" + Ceil((Ceil((1-daytime)*24)-(1-daytime)*24)*60));
     }
     
     void FixedUpdate(float timeStep)
 	{
-         
+
     }
 }
