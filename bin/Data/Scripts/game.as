@@ -3,7 +3,7 @@ Node@ cameraNode;
 float yaw = 0.0f; // Camera yaw angle
 float pitch = 0.0f; // Camera pitch angle
 Terrain@ terrain;
-
+RenderPath@ renderpath;
  
 void Start()
 {
@@ -19,7 +19,7 @@ void Start()
     
 	Viewport@ mainVP = Viewport(scene_, camera);
 	renderer.viewports[0] = mainVP;
-	RenderPath@ renderpath = mainVP.renderPath.Clone();
+	renderpath = mainVP.renderPath.Clone();
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
@@ -164,7 +164,6 @@ class Sky : ScriptObject
         sunNode = scene_.GetChild("Sun", true);
         sun = sunNode.GetComponent("Light");
         
-        log.Info(zone.ambientColor.ToString());
     }
     
     void Update(float timeStep)
@@ -184,7 +183,9 @@ class Sky : ScriptObject
         sunNode.rotation = Quaternion(360 * daytime, 0.0f , 0.0f );
         
         sun.color = Color(0,0,0).Lerp(SunColor , sunLerp);
-        zone.ambientColor = NightSkyColor.Lerp(DaySkyColor,skyColorLerp);
+        Color skycol = NightSkyColor.Lerp(DaySkyColor,skyColorLerp);
+        zone.ambientColor = skycol;
+        renderpath.shaderParameters["SkyColor"] = Variant(skycol);
         
         daytime += astroStep * timeStep;
         if (daytime > 1) daytime -= 1;
