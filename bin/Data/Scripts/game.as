@@ -149,10 +149,10 @@ class Sky : ScriptObject
     Light@ sun;
     Node@ sunNode;
     
-    Color DaySkyColor = Color(0.3,0.3,0.3);
+    Color DaySkyColor = Color(0.3,0.4,0.5);
     Color NightSkyColor = Color(0,0,0);
     
-    Color SunColor = Color(1,1,1);
+    Color SunColor = Color(1,0.95,0.8);
     
     
     void Init()
@@ -180,7 +180,7 @@ class Sky : ScriptObject
         if(sunLerp>1)sunLerp=1;
         else if (sunLerp<0)sunLerp=0;
         
-        sunNode.rotation = Quaternion(360 * daytime, 0.0f , 0.0f );
+        sunNode.rotation = Quaternion( 0.0f, 360 * daytime - 90 , 0.0f );
         
         sun.color = Color(0,0,0).Lerp(SunColor , sunLerp);
         Color skycol = NightSkyColor.Lerp(DaySkyColor,skyColorLerp);
