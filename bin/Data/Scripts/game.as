@@ -102,7 +102,7 @@ void MoveCamera(float timeStep)
         return;
 
     // Movement speed as world units per second
-    const float MOVE_SPEED = 100.0f;
+    const float MOVE_SPEED = 400.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 
@@ -153,10 +153,14 @@ class Sky : ScriptObject
     Color NightSkyColor = Color(0,0,0);
     
     Color SunColor = Color(1,0.95,0.8);
+    Ramp SunColorRamp;
+    Ramp SkyColorRamp;
+    
     
     
     void Init()
     {
+        
         //Scene@ scene = node.parent;
         Node@ zoneNode = scene_.GetChild("Zone", true);
         zone = zoneNode.GetComponent("Zone");
@@ -164,27 +168,35 @@ class Sky : ScriptObject
         sunNode = scene_.GetChild("Sun", true);
         sun = sunNode.GetComponent("Light");
         
+        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.02,0.007),Color(0.0,0.0,0.0)};
+        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
+        
+        Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.0,0.0,0.0)};
+        Array<float> arSkyColP = { 0.335               , 0.480               , 0.597                  , 0.700            };
+        
+        SunColorRamp.SetRamp (arSunColC,arSunColP);
+        SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
+        
     }
     
     void Update(float timeStep)
 	{
        
-       
-        
-        //float skyColorLerp = Clamp( 0 , 1 , 0.5 + Sin(2 * Pi * daytime));
         float skyColorLerp = 1 + 3 * Sin(360 * daytime);
         if(skyColorLerp>1)skyColorLerp=1;
         else if (skyColorLerp<0)skyColorLerp=0;
         
-        float sunLerp = 6 * Sin(360 * daytime);
-        if(sunLerp>1)sunLerp=1;
-        else if (sunLerp<0)sunLerp=0;
-        
+       
         sunNode.rotation = Quaternion( 0.0f, 360 * daytime - 90 , 0.0f );
         
-        sun.color = Color(0,0,0).Lerp(SunColor , sunLerp);
-        Color skycol = NightSkyColor.Lerp(DaySkyColor,skyColorLerp);
-        zone.ambientColor = skycol;
+        Vector3 sunvec = sunNode.worldDirection;// * Vector3(0,1,0);
+        //float sunheight = 
+        float suncolPos = 0.5 + 0.5 * sunvec.y;
+        sun.color = SunColorRamp.GetColor(suncolPos) * 1;
+        //log.Info( sun.color.ToString());
+        
+        Color skycol = SkyColorRamp.GetColor(suncolPos);
+        zone.ambientColor = skycol * 0.7;
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
         
         daytime += astroStep * timeStep;
@@ -193,11 +205,55 @@ class Sky : ScriptObject
        
         int mousescroll = input.mouseMoveWheel;
         daytime += mousescroll * 0.01;
-        log.Info((6+Ceil(daytime*24)) + ":" + Ceil((Ceil((1-daytime)*24)-(1-daytime)*24)*60));
+        //log.Info((6+Ceil(daytime*24)) + ":" + Ceil((Ceil((1-daytime)*24)-(1-daytime)*24)*60));
     }
     
     void FixedUpdate(float timeStep)
 	{
 
     }
+}
+
+class Ramp
+{
+    Array<Color> Colors;
+    Array<float> Positions;
+    
+    void SetRamp ( Array<Color> Cols, Array<float> Poss)
+    {
+        Colors = Cols;
+        Positions = Poss;
+    }
+    
+    Color GetColor (float pos)
+    {
+       Color col = Color(0,0,0);
+       for (uint i=0; i<Colors.length;i++)
+       {
+           if (Positions[i]>pos)
+           {
+               Color Col1 = Colors[i];
+               if (i==0)
+               {
+                    col = Col1;
+                    break;
+               }
+               else
+               {
+                    Color Col2 = Colors[i-1];
+                    float lerp = 1-((pos - Positions[i-1]) / (Positions[i] - Positions[i-1]));
+                    col = Col1.Lerp(Col2,lerp);
+                    log.Info(lerp);
+                    break;
+               }
+           } 
+           else if (i == Colors.length)
+           {
+                col = Colors[i];
+           }
+       }
+       
+       return col;
+    }
+
 }
