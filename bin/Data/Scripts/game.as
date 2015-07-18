@@ -21,8 +21,8 @@ void Start()
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
-	renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
-	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+	//renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
+	//renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
     
     renderer.specularLighting = false;
 
@@ -172,7 +172,7 @@ class Sky : ScriptObject
         Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
         
         Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.0,0.0,0.0)};
-        Array<float> arSkyColP = { 0.335               , 0.480               , 0.597                  , 0.700            };
+        Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            };
         
         SunColorRamp.SetRamp (arSunColC,arSunColP);
         SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
@@ -192,12 +192,15 @@ class Sky : ScriptObject
         Vector3 sunvec = sunNode.worldDirection;// * Vector3(0,1,0);
         //float sunheight = 
         float suncolPos = 0.5 + 0.5 * sunvec.y;
-        sun.color = SunColorRamp.GetColor(suncolPos) * 1;
+        Color suncol = SunColorRamp.GetColor(suncolPos) * 1;
+        sun.color = suncol;
         //log.Info( sun.color.ToString());
         
         Color skycol = SkyColorRamp.GetColor(suncolPos);
         zone.ambientColor = skycol * 0.7;
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
+        renderpath.shaderParameters["SunColor"] = Variant(suncol);
+        renderpath.shaderParameters["SunDir"] = Variant(sunvec);
         
         daytime += astroStep * timeStep;
         if (daytime > 1) daytime -= 1;
@@ -243,7 +246,6 @@ class Ramp
                     Color Col2 = Colors[i-1];
                     float lerp = 1-((pos - Positions[i-1]) / (Positions[i] - Positions[i-1]));
                     col = Col1.Lerp(Col2,lerp);
-                    log.Info(lerp);
                     break;
                }
            } 

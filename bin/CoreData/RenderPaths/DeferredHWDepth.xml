@@ -22,6 +22,8 @@
       <texture unit="diffuse" name="viewport" />
       <texture unit="depth" name="depth" />
       <parameter name="SkyColor" value="0.2 0.6 0.8" />
+      <parameter name="SunColor" value="0.2 0.6 0.8" />
+      <parameter name="SunDir"   value="0.2 0.6 0.8" />
       <parameter name="FogDist" value="8000" />
     </command>
     <command type="scenepass" pass="alpha" vertexlights="true" sort="backtofront" metadata="alpha" depthstencil="depth" />
