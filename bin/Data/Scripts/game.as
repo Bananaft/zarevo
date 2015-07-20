@@ -31,7 +31,7 @@ void Start()
 	cameraNode.position = Vector3(0,150,0);
 	
 	camera.farClip = 12000;
-    camera.fov = 80.0f;
+    camera.fov = 50.0f;
 	
 	SubscribeToEvent("Update", "HandleUpdate");
     
@@ -136,6 +136,8 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     Vector3 campos = cameraNode.position;
     float ter_height = terrain.GetHeight(campos) + 0.17;
     if (campos.y<ter_height) cameraNode.position = Vector3(campos.x, ter_height, campos.z);
+    
+    renderpath.shaderParameters["CamHeight"] = cameraNode.position.y;
 }
 
 class Sky : ScriptObject
@@ -168,8 +170,8 @@ class Sky : ScriptObject
         sunNode = scene_.GetChild("Sun", true);
         sun = sunNode.GetComponent("Light");
         
-        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.02,0.007),Color(0.0,0.0,0.0)};
-        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
+        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.02,0.007)};//,Color(0.0,0.0,0.0)};
+        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                };//, 1.0              };
         
         Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.0,0.0,0.0)};
         Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            };
@@ -249,7 +251,7 @@ class Ramp
                     break;
                }
            } 
-           else if (i == Colors.length)
+           else if (i == Colors.length-1)
            {
                 col = Colors[i];
            }
