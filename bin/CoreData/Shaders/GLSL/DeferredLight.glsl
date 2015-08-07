@@ -49,7 +49,7 @@ void PS()
         #else
             vec3 worldPos = vFarRay * depth;
         #endif
-        vec4 albedoInput = texture2D(sAlbedoBuffer, vScreenPos);
+        vec4 albedoInput = pow( texture2D(sAlbedoBuffer, vScreenPos) , vec4( 2.2f ) );
         vec4 normalInput = texture2D(sNormalBuffer, vScreenPos);
     #else
         #ifdef HWDEPTH
@@ -62,7 +62,7 @@ void PS()
         #else
             vec3 worldPos = vFarRay * depth / vScreenPos.w;
         #endif
-        vec4 albedoInput = texture2DProj(sAlbedoBuffer, vScreenPos);
+        vec4 albedoInput =  pow( texture2DProj(sAlbedoBuffer, vScreenPos), vec4( 2.2f ) );
         vec4 normalInput = texture2DProj(sNormalBuffer, vScreenPos);
     #endif
 

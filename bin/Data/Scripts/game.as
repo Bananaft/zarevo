@@ -21,9 +21,10 @@ void Start()
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
-	//renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
-	//renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
-    
+	renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
+	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+    renderer.hdrRendering = true;
+
     renderer.specularLighting = false;
 
 	
@@ -102,7 +103,7 @@ void MoveCamera(float timeStep)
         return;
 
     // Movement speed as world units per second
-    const float MOVE_SPEED = 400.0f;
+    const float MOVE_SPEED = 1200.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 
@@ -170,8 +171,8 @@ class Sky : ScriptObject
         sunNode = scene_.GetChild("Sun", true);
         sun = sunNode.GetComponent("Light");
         
-        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.02,0.007)};//,Color(0.0,0.0,0.0)};
-        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                };//, 1.0              };
+        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.02,0.007),Color(0.0,0.0,0.0)};
+        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
         
         Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.0,0.0,0.0)};
         Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            };
@@ -199,7 +200,7 @@ class Sky : ScriptObject
         //log.Info( sun.color.ToString());
         
         Color skycol = SkyColorRamp.GetColor(suncolPos);
-        zone.ambientColor = skycol * 0.7;
+        zone.ambientColor = skycol * 0.2;
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
         renderpath.shaderParameters["SunColor"] = Variant(suncol);
         renderpath.shaderParameters["SunDir"] = Variant(sunvec);
