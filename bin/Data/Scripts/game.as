@@ -4,7 +4,10 @@ float yaw = 0.0f; // Camera yaw angle
 float pitch = 0.0f; // Camera pitch angle
 Terrain@ terrain;
 RenderPath@ renderpath;
- 
+
+bool pe_bloom = true;
+bool pe_fog = true;
+
 void Start()
 {
 	scene_ = Scene();
@@ -92,6 +95,28 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
             // Here we save in the Data folder with date and time appended
             screenshot.SavePNG(fileSystem.programDir + "Data/Screenshot_" +
                 time.timeStamp.Replaced(':', '_').Replaced('.', '_').Replaced(' ', '_') + ".png");
+        }
+     else if (key == KEY_B) 
+        {
+            if (pe_bloom)
+                {
+                    renderpath.SetEnabled("BloomHDR", false);
+                    pe_bloom = false;
+                } else {
+                    renderpath.SetEnabled("BloomHDR", true);
+                    pe_bloom = true;
+                }
+        }
+     else if (key == KEY_F) 
+        {
+            if (pe_bloom)
+                {
+                    renderpath.SetEnabled("Sky", false);
+                    pe_bloom = false;
+                } else {
+                    renderpath.SetEnabled("Sky", true);
+                    pe_bloom = true;
+                }
         }
 
 }
