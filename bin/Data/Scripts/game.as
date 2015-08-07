@@ -103,7 +103,7 @@ void MoveCamera(float timeStep)
         return;
 
     // Movement speed as world units per second
-    const float MOVE_SPEED = 1200.0f;
+    const float MOVE_SPEED = 300.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 
@@ -195,8 +195,8 @@ class Sky : ScriptObject
         Vector3 sunvec = sunNode.worldDirection;// * Vector3(0,1,0);
         //float sunheight = 
         float suncolPos = 0.5 + 0.5 * sunvec.y;
-        Color suncol = SunColorRamp.GetColor(suncolPos) * 1;
-        sun.color = suncol;
+        Color suncol = SunColorRamp.GetColor(suncolPos);
+        sun.color = suncol * 3;
         //log.Info( sun.color.ToString());
         
         Color skycol = SkyColorRamp.GetColor(suncolPos);
