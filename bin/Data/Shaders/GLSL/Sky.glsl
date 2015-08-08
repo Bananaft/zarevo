@@ -61,7 +61,7 @@ void PS()
 
     vec3 result = diffuseInput.rgb*diffFactor + fogcolor*fogFactor; //diffuseInput.rgb * (1-0.95*diffFactor) + fogcolor * fogFactor;
 
-    result = pow( result ,vec3( 1/2.2 ) );
+    //result = pow( result ,vec3( 1/2.2 ) );
 
     gl_FragColor = vec4(result, 0.0);
 

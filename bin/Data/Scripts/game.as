@@ -24,8 +24,8 @@ void Start()
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
-	renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+    renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
     renderer.hdrRendering = true;
 
     renderer.specularLighting = false;
@@ -199,8 +199,8 @@ class Sky : ScriptObject
         Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.02,0.007),Color(0.0,0.0,0.0)};
         Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
         
-        Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.0,0.0,0.0)};
-        Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            };
+        Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
+        Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            , 0.900            };
         
         SunColorRamp.SetRamp (arSunColC,arSunColP);
         SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
