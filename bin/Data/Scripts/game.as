@@ -7,6 +7,8 @@ RenderPath@ renderpath;
 
 bool pe_bloom = true;
 bool pe_fog = true;
+bool pe_ae = true;
+
 
 void Start()
 {
@@ -118,6 +120,17 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                     pe_bloom = true;
                 }
         }
+      else if (key == KEY_E) 
+        {
+            if (pe_ae)
+                {
+                    renderpath.SetEnabled("AutoExposure", false);
+                    pe_ae = false;
+                } else {
+                    renderpath.SetEnabled("AutoExposure", true);
+                    pe_ae = true;
+                }
+        }
 
 }
 
@@ -128,7 +141,8 @@ void MoveCamera(float timeStep)
         return;
 
     // Movement speed as world units per second
-    const float MOVE_SPEED = 300.0f;
+    float MOVE_SPEED;
+    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 200.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 

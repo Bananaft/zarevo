@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="8" />
 	<attribute name="Next Replicated Component ID" value="9" />
-	<attribute name="Next Local Node ID" value="16817671" />
-	<attribute name="Next Local Component ID" value="16817671" />
+	<attribute name="Next Local Node ID" value="16819399" />
+	<attribute name="Next Local Component ID" value="16819399" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -54,7 +54,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="3">
 			<attribute name="Model" value="Model;Models/TeaPot.mdl" />
-			<attribute name="Material" value="Material;Materials/colorTerrain.xml;Materials/colorTerrain.xml" />
+			<attribute name="Material" value="Material;Materials/test1.xml;Materials/test1.xml" />
 			<attribute name="Cast Shadows" value="true" />
 		</component>
 	</node>
@@ -67,7 +67,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="5">
 			<attribute name="Model" value="Model;Models/TeaPot.mdl" />
-			<attribute name="Material" value="Material;Materials/colorTerrain.xml;Materials/colorTerrain.xml" />
+			<attribute name="Material" value="Material;Materials/test1.xml;Materials/test1.xml" />
 			<attribute name="Cast Shadows" value="true" />
 		</component>
 	</node>
@@ -80,7 +80,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="6">
 			<attribute name="Model" value="Model;Models/TeaPot.mdl" />
-			<attribute name="Material" value="Material;Materials/colorTerrain.xml;Materials/colorTerrain.xml" />
+			<attribute name="Material" value="Material;Materials/test1.xml;Materials/test1.xml" />
 			<attribute name="Cast Shadows" value="true" />
 		</component>
 	</node>
@@ -93,7 +93,7 @@
 		<attribute name="Variables" />
 		<component type="StaticModel" id="7">
 			<attribute name="Model" value="Model;Models/Torus.mdl" />
-			<attribute name="Material" value="Material;Materials/colorTerrain.xml" />
+			<attribute name="Material" value="Material;Materials/test1.xml" />
 			<attribute name="Cast Shadows" value="true" />
 		</component>
 	</node>

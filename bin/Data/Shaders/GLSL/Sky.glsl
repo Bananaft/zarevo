@@ -50,14 +50,16 @@ void PS()
 
     //float skydiff = 0.5 * (normal.y + 1.0);
     vec3 DirRay = normalize(vFarRay);
-    float layer = min(exp((1-abs(DirRay.y))*2*(1-diffFactor)-2*(1-diffFactor)),1);
+  //  float layer = min(pow((1-abs(DirRay.y)),3.5),1);//*2*(1-diffFactor)-2*(1-diffFactor)
+    //float layer = pow(1-DirRay.y, 1-cCamHeight);
+    float layer = clamp(exp(((1-DirRay.y)-1) * (0.5 + cCamHeight*0.001)),0,1);
     float sunDot = max(dot(DirRay ,-1 * cSunDir ),0);
-    float sunAmount = pow (sunDot, 1 + (1-layer) * 6); //exp(sunDot*20*(1-layer)-20*(1-layer)); //pow (sunDot, 1 + (1-layer) * 6);// * (1-diffFactor);//max (dot(DirRay ,-1 * cSunDir ),0);
+    float sunAmount = pow (exp((sunDot-1)*5), 1 + (1-layer) * 60); //exp(sunDot*20*(1-layer)-20*(1-layer)); //pow (sunDot, 1 + (1-layer) * 6);// * (1-diffFactor);//max (dot(DirRay ,-1 * cSunDir ),0);
 
     //sunAmount *= 1+layer*2;
     //
 
-    vec3 fogcolor = cSkyColor + cSunColor *  sunAmount;//             //mix( cSkyColor,cSunColor, sunAmount );// pow(sunAmount,8.0)
+    vec3 fogcolor = 1.5 * cSkyColor * layer + cSunColor *  sunAmount;//             //mix( cSkyColor,cSunColor, sunAmount );// pow(sunAmount,8.0)
 
     vec3 result = diffuseInput.rgb*diffFactor + fogcolor*fogFactor; //diffuseInput.rgb * (1-0.95*diffFactor) + fogcolor * fogFactor;
 
