@@ -68,6 +68,6 @@ void PS()
     #ifdef COMBINE2
     vec3 color = texture2D(sDiffMap, vScreenPos).rgb * cBloomHDRMix.x;
     vec3 bloom = texture2D(sNormalMap, vTexCoord).rgb * cBloomHDRMix.y;
-    gl_FragColor = vec4(color + bloom, 1.0);
+    gl_FragColor = vec4(pow(color,vec3( 1/2.2 )) + bloom, 1.0);
     #endif
 }

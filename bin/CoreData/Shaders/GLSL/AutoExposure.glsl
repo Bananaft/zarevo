@@ -68,6 +68,7 @@ void PS()
     #ifdef EXPOSE
     vec3 color = texture2D(sDiffMap, vScreenPos).rgb;
     float adaptedLum = texture2D(sNormalMap, vTexCoord).r;
-    gl_FragColor = vec4( pow( vec3(color * (cAutoExposureMiddleGrey / adaptedLum)),vec3( 1/2.2 ) ), 1.0 );
+    //gl_FragColor = vec4( pow( vec3(color * (cAutoExposureMiddleGrey / adaptedLum)),vec3( 1/2.2 ) ), 1.0 );
+    gl_FragColor = vec4( vec3(color * (cAutoExposureMiddleGrey / adaptedLum)), 1.0);
     #endif
 }
