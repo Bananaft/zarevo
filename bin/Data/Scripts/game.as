@@ -142,7 +142,7 @@ void MoveCamera(float timeStep)
 
     // Movement speed as world units per second
     float MOVE_SPEED;
-    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 200.0f;
+    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 11.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 
@@ -174,7 +174,7 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     // Move the camera, scale movement with time step
     MoveCamera(timeStep);
     Vector3 campos = cameraNode.position;
-    float ter_height = terrain.GetHeight(campos) + 0.17;
+    float ter_height = terrain.GetHeight(campos) + 0.9;
     if (campos.y<ter_height) cameraNode.position = Vector3(campos.x, ter_height, campos.z);
     
     renderpath.shaderParameters["CamHeight"] = cameraNode.position.y;
@@ -235,7 +235,7 @@ class Sky : ScriptObject
         //float sunheight = 
         float suncolPos = 0.5 + 0.5 * sunvec.y;
         Color suncol = SunColorRamp.GetColor(suncolPos);
-        sun.color = suncol * 3;
+        sun.color = suncol * 2;
         //log.Info( sun.color.ToString());
         
         Color skycol = SkyColorRamp.GetColor(suncolPos);
