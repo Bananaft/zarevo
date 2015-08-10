@@ -90,7 +90,7 @@ float GetDiffuse(vec3 normal, vec3 worldPos, out vec3 lightDir)
         vec3 lightVec = (cLightPosPS.xyz - worldPos) * cLightPosPS.w;
         float lightDist = length(lightVec);
         lightDir = lightVec / lightDist;
-        return max(dot(normal, lightDir), 0.0) * texture2D(sLightRampMap, vec2(lightDist, 0.0)).r;
+        return max(dot(normal, lightDir) * pow(1-lightDist,2.6), 0.0);
     #endif
 }
 
@@ -214,7 +214,7 @@ float GetDirShadow(const vec4 iShadowPos[NUMCASCADES], float depth)
         shadowPos = iShadowPos[2];
     else
         shadowPos = iShadowPos[3];
-        
+
     return GetDirShadowFade(GetShadow(shadowPos), depth);
 }
 #else
