@@ -34,7 +34,7 @@ void VS()
 
 void PS()
 {
-	vec4 normalMap = texture2D(sNormalMap, vTexCoord.xy * 2000);
+	vec4 normalMap = texture2D(sNormalMap, vTexCoord.xy * 500);
 
 	vec3 nm1;
     nm1.xy = normalMap.rg * 2.0 - 1.0;
@@ -61,7 +61,7 @@ void PS()
         gl_FragData[0] = vec4(0.5, 0.5, 0.5, 1.0);
         gl_FragData[1] = vec4(EncodeDepth(vWorldPos.w), 0.0);
     #elif defined(DEFERRED)
-        gl_FragData[0] = vec4(ambient , diffColor.a);
+        gl_FragData[0] = vec4(ambient , 1.0);
         gl_FragData[1] = vec4(diffColor.rgb, 0.0);
         gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
         gl_FragData[3] = vec4(EncodeDepth(vWorldPos.w), 0.0);

@@ -1,0 +1,2 @@
+*.dds filter=lfs diff=lfs merge=lfs -crlf
+*.tif filter=lfs diff=lfs merge=lfs -crlf
