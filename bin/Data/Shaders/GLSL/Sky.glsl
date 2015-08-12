@@ -59,7 +59,7 @@ void PS()
     //sunAmount *= 1+layer*2;
     //
 
-    vec3 fogcolor = 1.5 * cSkyColor * layer + cSunColor *  sunAmount;//             //mix( cSkyColor,cSunColor, sunAmount );// pow(sunAmount,8.0)
+    vec3 fogcolor = 1.0 * cSkyColor * layer + cSunColor *  sunAmount;//             //mix( cSkyColor,cSunColor, sunAmount );// pow(sunAmount,8.0)
 
     vec3 result = diffuseInput.rgb*diffFactor + fogcolor*fogFactor; //diffuseInput.rgb * (1-0.95*diffFactor) + fogcolor * fogFactor;
 

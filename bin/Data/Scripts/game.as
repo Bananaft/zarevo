@@ -142,7 +142,7 @@ void MoveCamera(float timeStep)
 
     // Movement speed as world units per second
     float MOVE_SPEED;
-    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 11.0f;
+    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 100.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1f;
 
