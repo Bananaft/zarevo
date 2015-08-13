@@ -90,7 +90,7 @@ float GetDiffuse(vec3 normal, vec3 worldPos, out vec3 lightDir)
         vec3 lightVec = (cLightPosPS.xyz - worldPos) * cLightPosPS.w;
         float lightDist = length(lightVec);
         lightDir = lightVec / lightDist;
-        return max(dot(normal, lightDir) * pow(1-lightDist,2.6), 0.0);
+        return max(dot(normal, lightDir) * pow(max(1-lightDist,0),2.6), 0.0);
     #endif
 }
 
