@@ -8,10 +8,10 @@ uniform vec3 cSkyColor;
 uniform vec3 cSunColor;
 uniform vec3 cSunDir;
 uniform float cFogDist;
-uniform float cCamHeight;
 
 varying vec2 vScreenPos;
 varying vec3 vFarRay;
+varying float CamHeight;
 
 void VS()
 {
@@ -21,6 +21,7 @@ void VS()
 
     vScreenPos = GetScreenPosPreDiv(gl_Position);
     vFarRay = GetFarRay(gl_Position);
+    CamHeight = cCameraPos.y;
 }
 
 
@@ -42,7 +43,7 @@ void PS()
     vec4 projWorldPos = vec4(worldPos, 1.0);
 
     float depth2 = 1-clamp(length(worldPos)/cFogDist, 0.0, 1.0);
-    float height = (worldPos.y + cCamHeight)*0.01;
+    float height = (worldPos.y + CamHeight)*0.01;
 
     float fogFactor =  clamp(exp(-height*depth2+0.7) * (1-exp(depth2*2-2)),0,1);
     float diffFactor = 1-fogFactor;//(1-exp(-height*depth2)) * (exp(depth2*3-3));
@@ -52,7 +53,7 @@ void PS()
     vec3 DirRay = normalize(vFarRay);
   //  float layer = min(pow((1-abs(DirRay.y)),3.5),1);//*2*(1-diffFactor)-2*(1-diffFactor)
     //float layer = pow(1-DirRay.y, 1-cCamHeight);
-    float layer = clamp(exp(((1-DirRay.y)-1) * (0.5 + cCamHeight*0.001)),0,1);
+    float layer = clamp(exp(((1-DirRay.y)-1) * (0.5 + CamHeight*0.001)),0,1);
     float sunDot = max(dot(DirRay ,-1 * cSunDir ),0);
     float sunAmount = pow (exp((sunDot-1)*5), 1 + (1-layer) * 60); //exp(sunDot*20*(1-layer)-20*(1-layer)); //pow (sunDot, 1 + (1-layer) * 6);// * (1-diffFactor);//max (dot(DirRay ,-1 * cSunDir ),0);
 

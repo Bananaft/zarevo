@@ -25,7 +25,6 @@
       <parameter name="SunColor" value="0.2 0.6 0.8" />
       <parameter name="SunDir"   value="0.2 0.6 0.8" />
       <parameter name="FogDist" value="12000" />
-      <parameter name="CamHeight" value="0" />
     </command>
     <command type="scenepass" pass="alpha" vertexlights="true" sort="backtofront" metadata="alpha" depthstencil="depth" />
     <command type="scenepass" pass="postalpha" sort="backtofront" depthstencil="depth" />
