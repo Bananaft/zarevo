@@ -1,3 +1,5 @@
+#include "mesh_tools.as";
+
 Scene@ scene_;
 Node@ cameraNode;
 float yaw = 0.0f; // Camera yaw angle
@@ -8,6 +10,7 @@ RenderPath@ renderpath;
 bool pe_bloom = true;
 bool pe_fog = true;
 bool pe_ae = true;
+bool wireframe =false;
 
 
 void Start()
@@ -48,7 +51,18 @@ void Start()
     Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
 	sky.Init();
     
+    Array<Vector3> pCloud = BoxPointCloud(400,Vector3(50,50,10));
+    Geometry@ geom = pCloudToQuadSprites(pCloud);
+    Model@ cloudModel = Model();
     
+   cloudModel.numGeometries = 1;
+   cloudModel.SetGeometry(0, 0, geom);
+   cloudModel.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
+   
+   Node@ cloudNode = scene_.CreateChild("cloudModel");
+   cloudNode.position = Vector3(0.0, 100.0, 0.0);
+    StaticModel@ object = cloudNode.CreateComponent("StaticModel");
+   object.model = cloudModel;
 }
 
 void CreateConsoleAndDebugHud()
@@ -66,6 +80,7 @@ void CreateConsoleAndDebugHud()
     // Create debug HUD
     DebugHud@ debugHud = engine.CreateDebugHud();
     debugHud.defaultStyle = xmlFile;
+
 }
 
 void HandleKeyDown(StringHash eventType, VariantMap& eventData)
@@ -111,7 +126,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
         }
      else if (key == KEY_F) 
         {
-            if (pe_bloom)
+            if (pe_fog)
                 {
                     renderpath.SetEnabled("Sky", false);
                     pe_bloom = false;
@@ -130,6 +145,17 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                     renderpath.SetEnabled("AutoExposure", true);
                     pe_ae = true;
                 }
+        }    else if (key == KEY_V)
+        {
+            Camera@ cam = cameraNode.GetComponent("camera");
+            if (wireframe){
+                cam.fillMode = FILL_SOLID;
+                wireframe = false;
+            } else {
+                cam.fillMode = FILL_WIREFRAME;
+                wireframe = true;
+            }
+            
         }
 
 }
