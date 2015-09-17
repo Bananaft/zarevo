@@ -51,18 +51,20 @@ void Start()
     Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
 	sky.Init();
     
-    Array<Vector3> pCloud = BoxPointCloud(400,Vector3(50,50,10));
+    Vector3 clSize = Vector3(400,50,400);
+    Array<Vector3> pCloud = BoxPointCloud(50000,clSize);
     Geometry@ geom = pCloudToQuadSprites(pCloud);
     Model@ cloudModel = Model();
     
    cloudModel.numGeometries = 1;
    cloudModel.SetGeometry(0, 0, geom);
-   cloudModel.boundingBox = BoundingBox(Vector3(-0.5, -0.5, -0.5), Vector3(0.5, 0.5, 0.5));
+   cloudModel.boundingBox = BoundingBox(clSize * -1.0, clSize);
    
    Node@ cloudNode = scene_.CreateChild("cloudModel");
    cloudNode.position = Vector3(0.0, 100.0, 0.0);
     StaticModel@ object = cloudNode.CreateComponent("StaticModel");
    object.model = cloudModel;
+   object.material = cache.GetResource("Material", "Materials/VColUnlit.xml");
 }
 
 void CreateConsoleAndDebugHud()
@@ -129,10 +131,10 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
             if (pe_fog)
                 {
                     renderpath.SetEnabled("Sky", false);
-                    pe_bloom = false;
+                    pe_fog = false;
                 } else {
                     renderpath.SetEnabled("Sky", true);
-                    pe_bloom = true;
+                    pe_fog = true;
                 }
         }
       else if (key == KEY_E) 

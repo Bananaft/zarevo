@@ -4,7 +4,7 @@ Array<Vector3> BoxPointCloud (uint amount,Vector3 size)
         Array<Vector3> Cloud(amount);
         for(uint i=0; i<amount;i++)
         {
-            Cloud[i]=Vector3(0.5 * size.x - Random(size.x),0.5 * size.y - Random(size.y),0.5 * size.y - Random(size.y));
+            Cloud[i]=Vector3(0.5 * size.x - Random(size.x),0.5 * size.y - Random(size.y),0.5 * size.z - Random(size.z));
         }
         return Cloud;
 }
@@ -36,13 +36,13 @@ Geometry@ pCloudToQuadSprites(Array<Vector3> pCloud)
     
     for (uint16 i = 0; i<pCloud.length; ++i)
     {
-        indexData[i*6]   = i + 0;
-        indexData[i*6+1] = i + 1;
-        indexData[i*6+2] = i + 2;
+        indexData[i*6]   = i*4 + 2;
+        indexData[i*6+1] = i*4 + 1;
+        indexData[i*6+2] = i*4 + 0;
         
-        indexData[i*6+3] = i + 1;
-        indexData[i*6+4] = i + 3;
-        indexData[i*6+5] = i + 2;
+        indexData[i*6+3] = i*4 + 3;
+        indexData[i*6+4] = i*4 + 1;
+        indexData[i*6+5] = i*4 + 2;
     }
     
     VertexBuffer@ vb = VertexBuffer();
@@ -65,7 +65,7 @@ Geometry@ pCloudToQuadSprites(Array<Vector3> pCloud)
 
     geom.SetVertexBuffer(0, vb);
     geom.SetIndexBuffer(ib);
-    geom.SetDrawRange(TRIANGLE_LIST , 0, numVertices);
+    geom.SetDrawRange(TRIANGLE_LIST , 0, numIndexes);
 
     return geom;
 }
