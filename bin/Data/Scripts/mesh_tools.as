@@ -12,8 +12,9 @@ Array<Vector3> BoxPointCloud (uint amount,Vector3 size)
 Geometry@ pCloudToQuadSprites(Array<Vector3> pCloud)
 {
     uint numVertices = pCloud.length * 4;
+    uint numIndexes = pCloud.length * 6;
     Array<float> vertexData(numVertices * 6, 0.0f);
-    Array<uint16> indexData(pCloud.length * 6);
+    Array<uint16> indexData(numIndexes);
     for (uint16 i = 0; i<pCloud.length; ++i)
     {
         vertexData[i*4*6]     = -1 + pCloud[i].x;
@@ -56,9 +57,9 @@ Geometry@ pCloudToQuadSprites(Array<Vector3> pCloud)
     vb.SetData(temp);
 
     ib.shadowed = true;
-    ib.SetSize(numVertices, false);
+    ib.SetSize(numIndexes, false);
     temp.Clear();
-    for (uint i = 0; i < numVertices; ++i)
+    for (uint i = 0; i < numIndexes; ++i)
         temp.WriteUShort(indexData[i]);
     ib.SetData(temp);
 
