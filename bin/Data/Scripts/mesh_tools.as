@@ -13,25 +13,25 @@ Geometry@ pCloudToQuadSprites(Array<Vector3> pCloud)
 {
     uint numVertices = pCloud.length * 4;
     uint numIndexes = pCloud.length * 6;
-    Array<float> vertexData(numVertices * 6, 0.0f);
+    Array<float> vertexData(numVertices * 3, 0.0f);
     Array<uint16> indexData(numIndexes);
     for (uint16 i = 0; i<pCloud.length; ++i)
     {
-        vertexData[i*4*6]     = -1 + pCloud[i].x;
-        vertexData[i*4*6+1]   =  0 + pCloud[i].y;
-        vertexData[i*4*6+2]   = -1 + pCloud[i].z;
+        vertexData[i*4*3]     = -1 + pCloud[i].x;
+        vertexData[i*4*3+1]   =  0 + pCloud[i].y;
+        vertexData[i*4*3+2]   = -1 + pCloud[i].z;
         
-        vertexData[i*4*6+6]   =  1 + pCloud[i].x;
-        vertexData[i*4*6+7]   =  0 + pCloud[i].y;
-        vertexData[i*4*6+8]   = -1 + pCloud[i].z;
+        vertexData[i*4*3+3]   =  1 + pCloud[i].x;
+        vertexData[i*4*3+4]   =  0 + pCloud[i].y;
+        vertexData[i*4*3+5]   = -1 + pCloud[i].z;
         
-        vertexData[i*4*6+12]   = -1 + pCloud[i].x;
-        vertexData[i*4*6+13]   =  0 + pCloud[i].y;
-        vertexData[i*4*6+14]   =  1 + pCloud[i].z;
+        vertexData[i*4*3+6]   = -1 + pCloud[i].x;
+        vertexData[i*4*3+7]   =  0 + pCloud[i].y;
+        vertexData[i*4*3+8]   =  1 + pCloud[i].z;
         
-        vertexData[i*4*6+18]   = 1 + pCloud[i].x;
-        vertexData[i*4*6+19]   = 0 + pCloud[i].y;
-        vertexData[i*4*6+20]   = 1 + pCloud[i].z;
+        vertexData[i*4*3+9]   = 1 + pCloud[i].x;
+        vertexData[i*4*3+10]   = 0 + pCloud[i].y;
+        vertexData[i*4*3+11]   = 1 + pCloud[i].z;
     }
     
     for (uint16 i = 0; i<pCloud.length; ++i)
@@ -50,9 +50,9 @@ Geometry@ pCloudToQuadSprites(Array<Vector3> pCloud)
     Geometry@ geom = Geometry();
     
     vb.shadowed = true;
-    vb.SetSize(numVertices, MASK_POSITION|MASK_NORMAL);
+    vb.SetSize(numVertices, MASK_POSITION);
     VectorBuffer temp;
-    for (uint i = 0; i < numVertices * 6; ++i)
+    for (uint i = 0; i < numVertices * 3; ++i)
         temp.WriteFloat(vertexData[i]);
     vb.SetData(temp);
 

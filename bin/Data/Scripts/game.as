@@ -65,6 +65,8 @@ void Start()
     StaticModel@ object = cloudNode.CreateComponent("StaticModel");
    object.model = cloudModel;
    object.material = cache.GetResource("Material", "Materials/VColUnlit.xml");
+   object.castShadows = true;
+   cloudNode.RotateAround(Vector3(1,0,0),180);
 }
 
 void CreateConsoleAndDebugHud()
