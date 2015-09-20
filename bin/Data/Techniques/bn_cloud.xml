@@ -2,5 +2,5 @@
     <pass name="base" />
     <pass name="deferred" psdefines="DEFERRED" />
     <pass name="depth" vs="Depth" ps="Depth" />
-    <pass name="shadow" vs="Shadow" ps="Shadow" />
+    <pass name="shadow" vs="bn_cloud_shadow" ps="bn_cloud_shadow" />
 </technique>
