@@ -18,41 +18,41 @@ Geometry@ pCloudToQuadSprites(Array<Vector3> pCloud)
     IndexBuffer@ ib = IndexBuffer();
     Geometry@ geom = Geometry();
     
-    //vb.shadowed = true;
+    vb.shadowed = true;
     vb.SetSize(numVertices, MASK_POSITION|MASK_TEXCOORD1);
     VectorBuffer temp;
 
     for (uint16 i = 0; i<pCloud.length; ++i)
     {
-        temp.WriteFloat( pCloud[i].x);
-        temp.WriteFloat( pCloud[i].y);
-        temp.WriteFloat( pCloud[i].z);
+        temp.WriteFloat( 0 + pCloud[i].x);
+        temp.WriteFloat(  0 + pCloud[i].y);
+        temp.WriteFloat( 0 + pCloud[i].z);
         temp.WriteFloat(-1);
         temp.WriteFloat(-1);
 
 
-        temp.WriteFloat( pCloud[i].x);
-        temp.WriteFloat( pCloud[i].y);
-        temp.WriteFloat( pCloud[i].z);
+        temp.WriteFloat( 0 + pCloud[i].x);
+        temp.WriteFloat( 0 + pCloud[i].y);
+        temp.WriteFloat( 0 + pCloud[i].z);
         temp.WriteFloat(1);
         temp.WriteFloat(-1);
 
-        temp.WriteFloat( pCloud[i].x);
-        temp.WriteFloat( pCloud[i].y);
-        temp.WriteFloat( pCloud[i].z);
+        temp.WriteFloat( 0 + pCloud[i].x);
+        temp.WriteFloat( 0 + pCloud[i].y);
+        temp.WriteFloat( 0 + pCloud[i].z);
         temp.WriteFloat(-1);
         temp.WriteFloat(1);
 
-        temp.WriteFloat( pCloud[i].x);
-        temp.WriteFloat( pCloud[i].y);
-        temp.WriteFloat( pCloud[i].z);
+        temp.WriteFloat( 0 + pCloud[i].x);
+        temp.WriteFloat( 0 + pCloud[i].y);
+        temp.WriteFloat( 0 + pCloud[i].z);
         temp.WriteFloat(1);
         temp.WriteFloat(1);
     }
     
     vb.SetData(temp);
     
-    //ib.shadowed = true;
+    ib.shadowed = true;
     ib.SetSize(numIndexes, false);
     temp.Clear();
     

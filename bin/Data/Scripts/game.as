@@ -52,7 +52,7 @@ void Start()
 	sky.Init();
     
     Vector3 clSize = Vector3(400,50,400);
-    Array<Vector3> pCloud = BoxPointCloud(50000,clSize);
+    Array<Vector3> pCloud = BoxPointCloud(50,clSize);
     Geometry@ geom = pCloudToQuadSprites(pCloud);
     Model@ cloudModel = Model();
     
@@ -64,7 +64,9 @@ void Start()
    cloudNode.position = Vector3(0.0, 100.0, 0.0);
     StaticModel@ object = cloudNode.CreateComponent("StaticModel");
    object.model = cloudModel;
-   object.material = cache.GetResource("Material", "Materials/VColUnlit.xml");
+   Material@ CloudMat = Material();
+   CloudMat.SetTechnique(0,cache.GetResource("Technique","Techniques/bn_cloud.xml"));
+   object.material = CloudMat;
    object.castShadows = true;
    
 }
