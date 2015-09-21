@@ -40,6 +40,8 @@ void Start()
 	cameraNode.position = Vector3(0,150,0);
 	
 	camera.farClip = 12000;
+    camera.nearClip = 0.6;
+    //log.Info(camera.nearClip);
     camera.fov = 50.0f;
 	
 	SubscribeToEvent("Update", "HandleUpdate");
@@ -171,12 +173,12 @@ void MoveCamera(float timeStep)
     // Do not move if the UI has a focused element (the console)
     if (ui.focusElement !is null)
         return;
-
+    Camera@ cam = cameraNode.GetComponent("camera");
     // Movement speed as world units per second
     float MOVE_SPEED;
     if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 100.0f;
     // Mouse sensitivity as degrees per pixel
-    const float MOUSE_SENSITIVITY = 0.1f;
+    const float MOUSE_SENSITIVITY = 0.1 * 1/cam.zoom;
 
     // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
     IntVector2 mouseMove = input.mouseMove;
@@ -198,8 +200,7 @@ void MoveCamera(float timeStep)
         cameraNode.Translate(Vector3(1.0f, 0.0f, 0.0f) * MOVE_SPEED * timeStep);
         
     int mousescroll = input.mouseMoveWheel;
-    Camera@ cam = cameraNode.GetComponent("camera");
-    cam.fov = Clamp(cam.fov + mousescroll * 2.0, 5 , 70 );
+    cam.zoom = Clamp(cam.zoom + mousescroll * cam.zoom * 0.2, 0.8 , 30.0 );
 }
 
 void HandleUpdate(StringHash eventType, VariantMap& eventData)
