@@ -13,7 +13,9 @@ void VS()
   mat4 modelMatrix = iModelMatrix;
   vec3 worldPos = GetWorldPos(modelMatrix);
   vec4 clipPos = GetClipPos(worldPos);
-  gl_Position = vec4(clipPos.r + iTexCoord.x * (0.001 * cFrustumSize.y), clipPos.g + iTexCoord.y * (0.001 * cFrustumSize.x), clipPos.b,clipPos.a);
+  gl_Position = vec4(clipPos.x + 32 * iTexCoord.x * ( cFrustumSize.y /  cFrustumSize.x),
+                     clipPos.y + 32 * iTexCoord.y ,
+                     clipPos.z,clipPos.w);
   vWorldPos = vec4(worldPos, GetDepth(gl_Position));
 
   //vNormal = GetWorldNormal(modelMatrix);
