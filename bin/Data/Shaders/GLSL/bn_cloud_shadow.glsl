@@ -9,7 +9,9 @@ void VS()
     mat4 modelMatrix = iModelMatrix;
     vec3 worldPos = GetWorldPos(modelMatrix);
     vec4 clipPos = GetClipPos(worldPos);
-    gl_Position = vec4(clipPos.r + iTexCoord.x * (cFrustumSize.y / cFrustumSize.z) * cShadowMapInvSize.x, clipPos.g + iTexCoord.y * (cFrustumSize.x / cFrustumSize.z) * cShadowMapInvSize.y, clipPos.b,clipPos.a);
+    gl_Position = vec4(clipPos.x + 0.032 * iTexCoord.x ,
+                       clipPos.y + 0.032 * iTexCoord.y ,
+                       clipPos.z,clipPos.w);
     vTexCoord = GetTexCoord(iTexCoord);
 }
 

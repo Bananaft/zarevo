@@ -196,6 +196,10 @@ void MoveCamera(float timeStep)
         cameraNode.Translate(Vector3(-1.0f, 0.0f, 0.0f) * MOVE_SPEED * timeStep);
     if (input.keyDown['D'])
         cameraNode.Translate(Vector3(1.0f, 0.0f, 0.0f) * MOVE_SPEED * timeStep);
+        
+    int mousescroll = input.mouseMoveWheel;
+    Camera@ cam = cameraNode.GetComponent("camera");
+    cam.fov = Clamp(cam.fov + mousescroll * 2.0, 5 , 70 );
 }
 
 void HandleUpdate(StringHash eventType, VariantMap& eventData)
@@ -280,9 +284,11 @@ class Sky : ScriptObject
         if (daytime > 1) daytime -= 1;
         if (daytime < 0) daytime += 1;
        
-        int mousescroll = input.mouseMoveWheel;
-        daytime += mousescroll * 0.01;
+        //int mousescroll = input.mouseMoveWheel;
+        //daytime += mousescroll * 0.01;
         //log.Info((6+Ceil(daytime*24)) + ":" + Ceil((Ceil((1-daytime)*24)-(1-daytime)*24)*60));
+             if (input.keyDown[KEY_KP_PLUS]) daytime += 0.001;
+        else if (input.keyDown[KEY_KP_MINUS]) daytime -= 0.001;
     }
     
     void FixedUpdate(float timeStep)
