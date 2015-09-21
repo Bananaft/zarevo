@@ -54,7 +54,7 @@ void Start()
 	sky.Init();
     
     Vector3 clSize = Vector3(400,50,400);
-    Array<Vector3> pCloud = BoxPointCloud(50,clSize);
+    Array<Vector3> pCloud = BoxPointCloud(500,clSize);
     Geometry@ geom = pCloudToQuadSprites(pCloud);
     Model@ cloudModel = Model();
     
