@@ -62,15 +62,16 @@ void Start()
    cloudModel.SetGeometry(0, 0, geom);
    cloudModel.boundingBox = BoundingBox(clSize * -1.0, clSize);
    
-   Node@ cloudNode = scene_.CreateChild("cloudModel");
-   cloudNode.position = Vector3(0.0, 100.0, 0.0);
-    StaticModel@ object = cloudNode.CreateComponent("StaticModel");
-   object.model = cloudModel;
-   Material@ CloudMat = Material();
-   CloudMat.SetTechnique(0,cache.GetResource("Technique","Techniques/bn_cloud.xml"));
-   object.material = CloudMat;
-   object.castShadows = true;
+//   Node@ cloudNode = scene_.CreateChild("cloudModel");
+//   cloudNode.position = Vector3(0.0, 100.0, 0.0);
+//    StaticModel@ object = cloudNode.CreateComponent("StaticModel");
+//   object.model = cloudModel;
+//   Material@ CloudMat = Material();
+//   CloudMat.SetTechnique(0,cache.GetResource("Technique","Techniques/bn_cloud.xml"));
+//   object.material = CloudMat;
+//   object.castShadows = true;
    
+   makeClouds(200, 50);
 }
 
 void CreateConsoleAndDebugHud()
@@ -337,6 +338,36 @@ class Ramp
        }
        
        return col;
+    }
+
+}
+
+void makeClouds(int NumClouds, int NumBboards)
+{
+    
+    for (uint i = 0; i < NumClouds; ++i)
+    {
+        Node@ smokeNode = scene_.CreateChild("Smoke");
+        smokeNode.position = Vector3(Random(12000.0f) - 6000.0f, Random(120.0f) + 300.0f, Random(12000.0f) - 6000.0f);
+
+        BillboardSet@ billboardObject = smokeNode.CreateComponent("BillboardSet");
+        billboardObject.numBillboards = NumBboards;
+        billboardObject.material = cache.GetResource("Material", "Materials/test2.xml");
+        billboardObject.sorted = true;
+        billboardObject.castShadows = true;
+
+        for (uint j = 0; j < NumBboards; ++j)
+        {
+            Billboard@ bb = billboardObject.billboards[j];
+            bb.position = Vector3(Random(300.0f) - 150.0f, Random(40.0f) - 20.0f, Random(80.0f) - 40.0f);
+            float size= 6+Random(15);
+            bb.size = Vector2(size, size);
+            bb.rotation = Random() * 360.0f;
+            bb.enabled = true;
+        }
+
+        // After modifying the billboards, they need to be "commited" so that the BillboardSet updates its internals
+        billboardObject.Commit();
     }
 
 }

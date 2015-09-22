@@ -1,0 +1,6 @@
+<technique vs="LitSolid" ps="LitSolid" psdefines="LitSolid">
+    <pass name="base" />
+    <pass name="deferred" psdefines="DEFERRED" />
+    <pass name="depth" vs="Depth" ps="Depth" />
+    <pass name="shadow" vs="shadow" ps="shadow" vsdefines="BILLBOARD"/>
+</technique>
