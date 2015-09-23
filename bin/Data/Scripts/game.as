@@ -62,14 +62,14 @@ void Start()
    cloudModel.SetGeometry(0, 0, geom);
    cloudModel.boundingBox = BoundingBox(clSize * -1.0, clSize);
    
-//   Node@ cloudNode = scene_.CreateChild("cloudModel");
-//   cloudNode.position = Vector3(0.0, 100.0, 0.0);
-//    StaticModel@ object = cloudNode.CreateComponent("StaticModel");
-//   object.model = cloudModel;
-//   Material@ CloudMat = Material();
-//   CloudMat.SetTechnique(0,cache.GetResource("Technique","Techniques/bn_cloud.xml"));
-//   object.material = CloudMat;
-//   object.castShadows = true;
+   Node@ cloudNode = scene_.CreateChild("cloudModel");
+   cloudNode.position = Vector3(0.0, 100.0, 0.0);
+    StaticModel@ object = cloudNode.CreateComponent("StaticModel");
+   object.model = cloudModel;
+   Material@ CloudMat = Material();
+   CloudMat.SetTechnique(0,cache.GetResource("Technique","Techniques/bn_cloud.xml"));
+   object.material = CloudMat;
+   object.castShadows = true;
    
    makeClouds(200, 50);
 }
