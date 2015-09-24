@@ -2,6 +2,8 @@
 
 Scene@ scene_;
 Node@ cameraNode;
+Node@ cloudNode;
+
 float yaw = 0.0f; // Camera yaw angle
 float pitch = 0.0f; // Camera pitch angle
 Terrain@ terrain;
@@ -62,7 +64,7 @@ void Start()
    cloudModel.SetGeometry(0, 0, geom);
    cloudModel.boundingBox = BoundingBox(clSize * -1.0, clSize);
    
-   Node@ cloudNode = scene_.CreateChild("cloudModel");
+   cloudNode = scene_.CreateChild("cloudModel");
    cloudNode.position = Vector3(0.0, 100.0, 0.0);
     StaticModel@ object = cloudNode.CreateComponent("StaticModel");
    object.model = cloudModel;
@@ -70,8 +72,8 @@ void Start()
    CloudMat.SetTechnique(0,cache.GetResource("Technique","Techniques/bn_cloud.xml"));
    object.material = CloudMat;
    object.castShadows = true;
-   
-   makeClouds(200, 50);
+
+   //makeClouds(200, 50);
 }
 
 void CreateConsoleAndDebugHud()
@@ -201,7 +203,7 @@ void MoveCamera(float timeStep)
         cameraNode.Translate(Vector3(1.0f, 0.0f, 0.0f) * MOVE_SPEED * timeStep);
         
     int mousescroll = input.mouseMoveWheel;
-    cam.zoom = Clamp(cam.zoom + mousescroll * cam.zoom * 0.2, 0.8 , 30.0 );
+    cam.zoom = Clamp(cam.zoom + mousescroll * cam.zoom * 0.2, 0.8 , 20.0 );
 }
 
 void HandleUpdate(StringHash eventType, VariantMap& eventData)
@@ -215,7 +217,7 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     float ter_height = terrain.GetHeight(campos) + 0.9;
     if (campos.y<ter_height) cameraNode.position = Vector3(campos.x, ter_height, campos.z);
     
-    //renderpath.shaderParameters["CamHeight"] = cameraNode.position.y;
+    cloudNode.Rotate(Quaternion(0, 6 * timeStep,0));
 }
 
 class Sky : ScriptObject
@@ -291,6 +293,10 @@ class Sky : ScriptObject
         //log.Info((6+Ceil(daytime*24)) + ":" + Ceil((Ceil((1-daytime)*24)-(1-daytime)*24)*60));
              if (input.keyDown[KEY_KP_PLUS]) daytime += 0.001;
         else if (input.keyDown[KEY_KP_MINUS]) daytime -= 0.001;
+        
+//        if (input.keyDown[KEY_LEFT]) sunNode.parent.Rotate(Quaternion(0,0,-1));
+//        else if (input.keyDown[KEY_RIGHT]) sunNode.parent.Rotate(Quaternion(0,0,1));
+        
     }
     
     void FixedUpdate(float timeStep)

@@ -11,11 +11,8 @@ varying vec4 vWorldPos;
 void VS()
 {
   mat4 modelMatrix = iModelMatrix;
-  vec3 worldPos = GetWorldPos(modelMatrix);
-  vec4 clipPos = GetClipPos(worldPos);
-  gl_Position = vec4(clipPos.x + 16 * iTexCoord.x  * 12000 * (1/cFrustumSize.x), //* 0.001 * cFrustumSize.y
-                     clipPos.y + 16 * iTexCoord.y  * 12000 * (1/cFrustumSize.y),
-                     clipPos.z,clipPos.w);
+  vec3 worldPos = GetWorldPos(modelMatrix) +  vec3(6*iTexCoord.x, 6*iTexCoord.y,0) * cCameraRot;
+  gl_Position = GetClipPos(worldPos);
   vWorldPos = vec4(worldPos, GetDepth(gl_Position));
 
   //vNormal = GetWorldNormal(modelMatrix);
