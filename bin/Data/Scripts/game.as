@@ -36,7 +36,8 @@ void Start()
     renderer.hdrRendering = true;
 
     renderer.specularLighting = false;
-
+    
+    renderer.shadowMapSize = 2048;
 	
 	mainVP.renderPath = renderpath;
 	cameraNode.position = Vector3(0,150,0);
@@ -258,7 +259,7 @@ class Sky : ScriptObject
         
         SunColorRamp.SetRamp (arSunColC,arSunColP);
         SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
-        
+     
     }
     
     void Update(float timeStep)
