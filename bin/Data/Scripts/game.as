@@ -70,7 +70,7 @@ void Start()
     StaticModel@ object = cloudNode.CreateComponent("StaticModel");
    object.model = cloudModel;
    Material@ CloudMat = Material();
-   CloudMat.SetTechnique(0,cache.GetResource("Technique","Techniques/bn_cloud.xml"));
+   CloudMat = cache.GetResource("Material","Materials/test_bbl.xml");
    object.material = CloudMat;
    object.castShadows = true;
 
