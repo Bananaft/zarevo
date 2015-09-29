@@ -72,7 +72,7 @@ void Start()
    Material@ CloudMat = Material();
    CloudMat = cache.GetResource("Material","Materials/test_bbl.xml");
    object.material = CloudMat;
-   //object.castShadows = true;
+   object.castShadows = true;
 
    //makeClouds(200, 50);
 }

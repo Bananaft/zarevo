@@ -1,6 +1,6 @@
-<technique vs="bn_cloud" ps="bn_cloud" psdefines="DIFFMAP">
+<technique vs="bn_cloud" ps="bn_cloud" psdefines="DIFFMAP" >
     <pass name="base" />
     <pass name="deferred" psdefines="DEFERRED" />
-    <pass name="depth" vs="Depth" ps="Depth" />
+    <pass name="depth" vs="Depth" ps="Depth"  />
     <pass name="shadow" vs="bn_cloud_shadow" ps="bn_cloud_shadow" />
 </technique>
