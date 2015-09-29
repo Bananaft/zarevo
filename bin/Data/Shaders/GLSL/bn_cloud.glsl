@@ -21,7 +21,9 @@ void VS()
   vec3 camDir = normalize(cCameraPos-worldPos);
   vec3 camRight = normalize( cross( camDir, cCameraRot[ 1 ].xyz ) );
   vec3 camUp = normalize( cross( camRight, camDir ) );
-  vNormal = camUp;//vec3(0,0,-1) * cCameraRot;
+  vNormal = camDir;//vec3(0,0,-1) * cCameraRot;
+  vBinormal = camUp * -1;
+  vTangent = camRight;
 
   vTexCoord = vec4(0.5 * iTexCoord + vec2(0.5,0.5),0,0);
 
@@ -29,9 +31,9 @@ void VS()
 
 void PS()
 {
-  vec4 blob_nm = texture2D(sDiffMap, vTexCoord.xy);
+  vec3 blob_nm = DecodeNormal(texture2D(sDiffMap, vTexCoord.xy));
   mat3 tbn = mat3(vTangent, vBinormal, vNormal);
-  vec3 normal =  normalize(blob_nm.xyz * tbn);// + blob_nm.rgb;//vec3(0.5 + 0.5 * vTexCoord.x,0.5 + 0.5 * vTexCoord.x,1-(0.5 * (vTexCoord.x+vTexCoord.y)));
+  vec3 normal =  blob_nm.xyz * tbn;// + blob_nm.rgb;//vec3(0.5 + 0.5 * vTexCoord.x,0.5 + 0.5 * vTexCoord.x,1-(0.5 * (vTexCoord.x+vTexCoord.y)));
   vec3 ambient = vec3(0.0,0.0,0.0);
   vec3 diffColor = vec3(1.0,1.0,1.0);
   #if defined(PREPASS)
