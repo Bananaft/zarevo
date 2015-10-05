@@ -200,6 +200,7 @@ void MoveCamera(float timeStep)
         roll = 0.0;
         
         
+        
         // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
     IntVector2 mouseMove = input.mouseMove;
     yaw += MOUSE_SENSITIVITY * mouseMove.x;
