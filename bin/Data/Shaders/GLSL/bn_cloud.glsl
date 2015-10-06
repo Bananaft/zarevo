@@ -18,12 +18,12 @@ void VS()
   gl_Position = GetClipPos(worldPos);
   vWorldPos = vec4(worldPos, GetDepth(gl_Position));
   //vec4 worldnorm = GetNearRay(gl_Position);
-  vec3 Up = vec3(cCameraRot[0][1],cCameraRot[1][1],cCameraRot[2][1]);
+  vec3 Right = vec3(cCameraRot[0][0],cCameraRot[1][0],cCameraRot[2][0]);
   vec3 camDir = normalize(cCameraPos-worldPos);
-  vec3 camRight = normalize( cross( camDir , Up));
-  vec3 camUp = normalize( cross( camRight, camDir ) );
+  vec3 camRight = normalize( Right - camDir * dot(camDir,Right) );
+  vec3 camUp =    normalize( cross( camDir , camRight));//cross( camRight, camDir )
   vNormal = camDir;
-  vBinormal = camUp;
+  vBinormal =camUp;
   vTangent = camRight;
 
   vTexCoord = vec4(0.5 * iTexCoord + vec2(0.5,0.5),0,0);
