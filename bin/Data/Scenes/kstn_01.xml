@@ -6,9 +6,9 @@
 	<attribute name="Snap Threshold" value="5" />
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="37" />
-	<attribute name="Next Replicated Component ID" value="38" />
-	<attribute name="Next Local Node ID" value="16821721" />
-	<attribute name="Next Local Component ID" value="16821719" />
+	<attribute name="Next Replicated Component ID" value="39" />
+	<attribute name="Next Local Node ID" value="16822300" />
+	<attribute name="Next Local Component ID" value="16822298" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -136,29 +136,6 @@
 			<attribute name="Range" value="600" />
 			<attribute name="Light Shape Texture" value="TextureCube;" />
 		</component>
-	</node>
-	<node id="7">
-		<attribute name="Is Enabled" value="true" />
-		<attribute name="Name" value="Sky" />
-		<attribute name="Position" value="0 0 0" />
-		<attribute name="Rotation" value="0.857167 0.515038 0 0" />
-		<attribute name="Scale" value="1 1 1" />
-		<attribute name="Variables" />
-		<node id="16781315">
-			<attribute name="Is Enabled" value="true" />
-			<attribute name="Name" value="Sun" />
-			<attribute name="Position" value="0 0 0" />
-			<attribute name="Rotation" value="1 0 0 0" />
-			<attribute name="Scale" value="1 1 1" />
-			<attribute name="Variables" />
-			<component type="Light" id="16781314">
-				<attribute name="Light Type" value="Directional" />
-				<attribute name="Cast Shadows" value="true" />
-				<attribute name="Focus To Scene" value="false" />
-				<attribute name="Auto-Reduce Size" value="false" />
-				<attribute name="CSM Splits" value="80 400 2000 6000" />
-			</component>
-		</node>
 	</node>
 	<node id="16819976">
 		<attribute name="Is Enabled" value="true" />
@@ -654,6 +631,42 @@
 			<attribute name="Model" value="Model;Models/Sphere.mdl" />
 			<attribute name="Material" value="Material;" />
 			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="16822297">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-5.60097 68.5943 -49.8633" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="Light" id="16822295">
+			<attribute name="Light Type" value="Directional" />
+			<attribute name="Color" value="0 0 15 1" />
+		</component>
+	</node>
+	<node id="16822298">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-5.60097 68.5943 -49.8633" />
+		<attribute name="Rotation" value="0.707107 -0.707107 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="Light" id="16822296">
+			<attribute name="Light Type" value="Directional" />
+			<attribute name="Color" value="0 15 0 1" />
+		</component>
+	</node>
+	<node id="16822299">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-5.60097 68.5943 -49.8633" />
+		<attribute name="Rotation" value="0.707107 0 -0.707107 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="Light" id="16822297">
+			<attribute name="Light Type" value="Directional" />
+			<attribute name="Color" value="15 0 0 1" />
 		</component>
 	</node>
 </scene>
