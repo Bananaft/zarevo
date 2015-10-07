@@ -22,9 +22,9 @@ void VS()
   vec3 camDir = normalize(cCameraPos-worldPos);
   vec3 camRight = normalize( Right - camDir * dot(camDir,Right) );
   vec3 camUp =    normalize( cross( camDir , camRight));//cross( camRight, camDir )
-  vNormal = camDir;
-  vBinormal =camUp;
-  vTangent = camRight;
+  vNormal = cCameraRot[2] * -1;//camDir;
+  vBinormal = cCameraRot[0];//camUp;
+  vTangent = cCameraRot[1];//camRight;
 
   vTexCoord = vec4(0.5 * iTexCoord + vec2(0.5,0.5),0,0);
 

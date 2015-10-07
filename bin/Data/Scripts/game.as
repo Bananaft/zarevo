@@ -366,7 +366,7 @@ void makeClouds(int NumClouds, int NumBboards)
 
         BillboardSet@ billboardObject = smokeNode.CreateComponent("BillboardSet");
         billboardObject.numBillboards = NumBboards;
-        billboardObject.material = cache.GetResource("Material", "Materials/test2.xml");
+        billboardObject.material = cache.GetResource("Material", "Materials/test_nm.xml");
         billboardObject.sorted = true;
         billboardObject.castShadows = true;
 
