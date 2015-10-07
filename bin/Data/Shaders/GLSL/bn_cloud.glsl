@@ -18,13 +18,13 @@ void VS()
   gl_Position = GetClipPos(worldPos);
   vWorldPos = vec4(worldPos, GetDepth(gl_Position));
   //vec4 worldnorm = GetNearRay(gl_Position);
-  vec3 Right = vec3(cCameraRot[0][0],cCameraRot[1][0],cCameraRot[2][0]);
-  vec3 camDir = normalize(cCameraPos-worldPos);
-  vec3 camRight = normalize( Right - camDir * dot(camDir,Right) );
-  vec3 camUp =    normalize( cross( camDir , camRight));//cross( camRight, camDir )
-  vNormal = cCameraRot[2] * -1;//camDir;
-  vBinormal = cCameraRot[0];//camUp;
-  vTangent = cCameraRot[1];//camRight;
+  vec3 camUp = vec3(cCameraRot[0][1],cCameraRot[1][1],cCameraRot[2][1]);
+  vec3 Dir = normalize(cCameraPos-worldPos);
+  vec3 Right = normalize( cross( Dir , camUp));
+  vec3 Up = normalize( cross( Right, Dir ) );
+  vNormal = Dir;
+  vBinormal = Up * -1;
+  vTangent = Right;
 
   vTexCoord = vec4(0.5 * iTexCoord + vec2(0.5,0.5),0,0);
 
@@ -32,11 +32,11 @@ void VS()
 
 void PS()
 {
-  vec4 blob_nm = texture2D(sDiffMap, vTexCoord.xy);
-  if (blob_nm.a < 0.5)
+  vec4 nmMap = texture2D(sDiffMap, vTexCoord.xy);
+  if (nmMap.a < 0.5)
       discard;
   mat3 tbn = mat3(vTangent, vBinormal, vNormal);
-  vec3 normal = DecodeNormal(blob_nm) * tbn;
+  vec3 normal = DecodeNormal(nmMap) * tbn;
 
   vec3 diffColor = vec3(1.0,1.0,1.0);
   vec3 ambient = diffColor.rgb * cAmbientColor * ( 0.5 * (normal.y + 1.0));
