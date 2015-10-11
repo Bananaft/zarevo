@@ -35,7 +35,7 @@ void PS()
   vec4 nmMap = texture2D(sDiffMap, vTexCoord.xy);
   if (nmMap.a < 0.5)
       discard;
-  mat3 tbn = mat3(vTangent, vBinormal, vNormal);
+  mat3 tbn = mat3(vTangent.x, vBinormal.x, vNormal.x,vTangent.y, vBinormal.y, vNormal.y,vTangent.z, vBinormal.z, vNormal.z);
   vec3 normal = DecodeNormal(nmMap) * tbn;
 
   vec3 diffColor = vec3(1.0,1.0,1.0);
