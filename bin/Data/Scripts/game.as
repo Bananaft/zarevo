@@ -57,7 +57,7 @@ void Start()
     Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
 	sky.Init();
     
-    Vector3 clSize = Vector3(400,50,400);
+    Vector3 clSize = Vector3(200,40,200);
     Array<Vector3> pCloud = BoxPointCloud(500,clSize);
     Geometry@ geom = pCloudToQuadSprites(pCloud);
     Model@ cloudModel = Model();
@@ -73,7 +73,7 @@ void Start()
    Material@ CloudMat = Material();
    CloudMat = cache.GetResource("Material","Materials/test_bbl.xml");
    object.material = CloudMat;
-   //object.castShadows = true;
+   object.castShadows = true;
 
    //makeClouds(200, 50);
 }
