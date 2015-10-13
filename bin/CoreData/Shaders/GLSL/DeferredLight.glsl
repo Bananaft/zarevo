@@ -71,7 +71,7 @@ void PS()
     vec3 lightColor;
     vec3 lightDir;
 
-    float diff = GetDiffuse(normal, worldPos, lightDir);
+    float diff = GetDiffuse(normal, worldPos, lightDir,albedoInput.a);
 
     #ifdef SHADOW
         diff *= GetShadowDeferred(projWorldPos, depth);
