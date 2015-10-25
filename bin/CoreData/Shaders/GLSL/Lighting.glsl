@@ -81,16 +81,22 @@ vec4 GetShadowPos(int index, vec4 projWorldPos)
 #endif
 
 #ifdef COMPILEPS
-float GetDiffuse(vec3 normal, vec3 worldPos, out vec3 lightDir)
+float GetDiffuse(vec3 normal, vec3 worldPos, out vec3 lightDir, float translucency)
 {
     #ifdef DIRLIGHT
         lightDir = cLightDirPS;
-        return max(dot(normal, lightDir), 0.0);
+        float NdotL = dot(normal, lightDir);
+        float Diffuse = NdotL * (1 - translucency);
+        float Scatter = (NdotL * 0.5 + 0.8 * translucency) * translucency;
+        return max(Diffuse + Scatter, 0.0);
     #else
         vec3 lightVec = (cLightPosPS.xyz - worldPos) * cLightPosPS.w;
         float lightDist = length(lightVec);
         lightDir = lightVec / lightDist;
-        return max(dot(normal, lightDir) * pow(max(1-lightDist,0),2.6), 0.0);
+        float NdotL = dot(normal, lightDir);
+        float Diffuse = NdotL * (1 - translucency);
+        float Scatter = (NdotL * 0.5 + 0.8 * translucency) * translucency;
+        return max((Diffuse + Scatter) * pow(max(1-lightDist,0),2.6), 0.0);
     #endif
 }
 
