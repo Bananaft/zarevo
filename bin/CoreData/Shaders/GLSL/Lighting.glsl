@@ -157,7 +157,7 @@ float GetShadow(vec4 shadowPos)
                 float inLight =0;
                 for(int i=0; i<9; i++)
                 {
-                  inLight += textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy * kernel[i] * 3.0, shadowPos.zw));
+                  inLight += textureProj(sShadowMap, vec4(shadowPos.xy + kernel[i] * 0.0008, shadowPos.zw));
                 }
 
                 return inLight/9;
