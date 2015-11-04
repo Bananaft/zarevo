@@ -14,6 +14,8 @@ bool pe_bloom = true;
 bool pe_fog = true;
 bool pe_ae = true;
 bool wireframe =false;
+bool timepass =true;
+
 
 
 void Start()
@@ -148,6 +150,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                     pe_fog = true;
                 }
         }
+        
       else if (key == KEY_E) 
         {
             if (pe_ae)
@@ -170,6 +173,11 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
             }
             
         }
+    else if (key == KEY_T) 
+        {
+            if(timepass) timepass = false; else timepass = true;
+        }    
+        
 
 }
 
@@ -292,7 +300,7 @@ class Sky : ScriptObject
         renderpath.shaderParameters["SunColor"] = Variant(suncol);
         renderpath.shaderParameters["SunDir"] = Variant(sunvec);
         
-        daytime += astroStep * timeStep;
+        if (timepass)daytime += astroStep * timeStep;
         if (daytime > 1) daytime -= 1;
         if (daytime < 0) daytime += 1;
        
