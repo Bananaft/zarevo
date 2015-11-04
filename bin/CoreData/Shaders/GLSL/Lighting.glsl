@@ -160,11 +160,6 @@ float GetShadow(vec4 shadowPos)
 
                 return 1 - (dence * shadowCoeff);
 
-
-                    //texture(sShadowMap,vec3(shadowPos.xy, 1.0));//cShadowIntensity.y + cShadowIntensity.x * (texture(sShadowMap, shadowPos.xyz));// +
-                    //textureProj(sShadowMap, vec4(shadowPos.x + offsets.x , shadowPos.yzw)) +
-                    //textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shadowPos.zw)) +
-                    //textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy, shadowPos.zw)));
         #else
             // Take one sample
             #ifndef GL3
