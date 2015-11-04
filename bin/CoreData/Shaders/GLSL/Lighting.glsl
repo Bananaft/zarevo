@@ -161,7 +161,7 @@ float GetShadow(vec4 shadowPos)
                 // }
                 //
                 // return inLight/9;
-                return 1-clamp( -2000 * (texture(sShadowMap,shadowPos.xy).r - shadowPos.z),0.0,1.0);//texture(sShadowMap,vec3(shadowPos.xy, 1.0));//cShadowIntensity.y + cShadowIntensity.x * (texture(sShadowMap, shadowPos.xyz));// +
+                return 1-clamp( -1000 * (texture(sShadowMap,shadowPos.xy).r - shadowPos.z),0.0,1.0);//texture(sShadowMap,vec3(shadowPos.xy, 1.0));//cShadowIntensity.y + cShadowIntensity.x * (texture(sShadowMap, shadowPos.xyz));// +
                     //textureProj(sShadowMap, vec4(shadowPos.x + offsets.x , shadowPos.yzw)) +
                     //textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shadowPos.zw)) +
                     //textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy, shadowPos.zw)));

@@ -2,22 +2,25 @@
 #include "Samplers.glsl"
 #include "Transform.glsl"
 
-varying vec2 vTexCoord;
+varying vec4 vTexCoord;
 
 void VS()
 {
     mat4 modelMatrix = iModelMatrix;
     vec3 worldPos = GetWorldPos(modelMatrix) +  vec3(6*iTexCoord.x, 6*iTexCoord.y,0) * cCameraRot;
     vec4 clipPos = GetClipPos(worldPos);
-    //clipPos.z += 0.0005;
+
     gl_Position = clipPos;
-    vTexCoord = 0.5 * iTexCoord + vec2(0.5,0.5);
+    vTexCoord.xy = 0.5 * iTexCoord + vec2(0.5,0.5);
+    vTexCoord.zw = clipPos.xy * 1024;
 }
 
 void PS()
 {
-        float alpha = texture2D(sDiffMap, vTexCoord).a;
-        if (alpha < 0.5)
+        float chkr = fract(vTexCoord.z + vTexCoord.w);
+        float alpha = texture2D(sDiffMap, vTexCoord.xy).a;
+
+        if (chkr < 0.5)
             discard;
 
     //gl_FragColor = vec4(1.0);
