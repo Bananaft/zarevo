@@ -1,10 +1,3 @@
-uniform vec2 kernel[9] = vec2[]
-(
-   vec2(0.95581, -0.18159), vec2(0.50147, -0.35807), vec2(0.69607, 0.35559),
-   vec2(-0.0036825, -0.59150),	vec2(0.15930, 0.089750), vec2(-0.65031, 0.058189),
-   vec2(0.11915, 0.78449),	vec2(-0.34296, 0.51575), vec2(-0.60380, -0.41527)
-);
-
 #ifdef COMPILEVS
 vec3 GetAmbient(float zonePos)
 {
@@ -148,18 +141,17 @@ float GetShadow(vec4 shadowPos)
             #else
                 vec2 offsets = cShadowMapInvSize;
             #endif
-
-                float dence = clamp( -800 * (texture(sShadowMap,shadowPos.xy).r - shadowPos.z),0.0,1.0);
-
-                float shadowCoeff = 0.0;
-                shadowCoeff += float(texture(sShadowMap,vec2(shadowPos.x + offsets.x, shadowPos.y + offsets.y)).r < shadowPos.z);
-                shadowCoeff += float(texture(sShadowMap,vec2(shadowPos.x - offsets.x, shadowPos.y + offsets.y)).r < shadowPos.z);
-                shadowCoeff += float(texture(sShadowMap,vec2(shadowPos.x - offsets.x, shadowPos.y - offsets.y)).r < shadowPos.z);
-                shadowCoeff += float(texture(sShadowMap,vec2(shadowPos.x + offsets.x, shadowPos.y - offsets.y)).r < shadowPos.z);
-                shadowCoeff *= 0.25;
-
-                return 1 - (dence * shadowCoeff);
-
+            #ifndef GL3
+                return cShadowIntensity.y + cShadowIntensity.x * (shadow2DProj(sShadowMap, shadowPos).r +
+                    shadow2DProj(sShadowMap, vec4(shadowPos.x + offsets.x, shadowPos.yzw)).r +
+                    shadow2DProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shadowPos.zw)).r +
+                    shadow2DProj(sShadowMap, vec4(shadowPos.xy + offsets.xy, shadowPos.zw)).r);
+            #else
+                return cShadowIntensity.y + cShadowIntensity.x * (textureProj(sShadowMap, shadowPos) +
+                    textureProj(sShadowMap, vec4(shadowPos.x + offsets.x, shadowPos.yzw)) +
+                    textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shadowPos.zw)) +
+                    textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy, shadowPos.zw)));
+            #endif
         #else
             // Take one sample
             #ifndef GL3
