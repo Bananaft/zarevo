@@ -148,13 +148,14 @@ float GetShadow(vec4 shadowPos)
                     shadow2DProj(sShadowMap, vec4(shadowPos.xy + offsets.xy, shadowPos.zw)).r);
             #else
                     float shdstep = 0.0002;
-                    float shdmod = mod(shadowPos.z, shdstep);
-                    float shddepth = shadowPos.z - mod(shadowPos.z, shdstep);
+                    float shdmod = shdstep - mod(shadowPos.z, shdstep);
+                    float shddepth = shadowPos.z + shdmod;
                     float steppos = shdmod / shdstep;
-                return cShadowIntensity.y + cShadowIntensity.x * (textureProj(sShadowMap, shadowPos)*steppos +
-                    textureProj(sShadowMap, vec4(shadowPos.x + offsets.x, shadowPos.y, shddepth - shdstep, shadowPos.w))*steppos +
-                    textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shddepth - shdstep * 2, shadowPos.w))*(1-steppos) +
-                    textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy,            shddepth - shdstep * 3, shadowPos.w))*(1-steppos));
+                return cShadowIntensity.y + cShadowIntensity.x *
+                   (textureProj(sShadowMap, vec4(shadowPos.xy, shddepth, shadowPos.w))*(1-steppos) +
+                    textureProj(sShadowMap, vec4(shadowPos.x + offsets.x, shadowPos.y, shddepth - shdstep, shadowPos.w))*(steppos));// +
+                    //textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shddepth + shdstep * 2, shadowPos.w))*(1 - steppos) +
+                    //textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy,            shddepth + shdstep * 3, shadowPos.w))*(steppos));
             #endif
         #else
             // Take one sample
