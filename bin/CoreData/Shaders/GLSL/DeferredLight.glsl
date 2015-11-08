@@ -74,7 +74,8 @@ void PS()
     float diff = GetDiffuse(normal, worldPos, lightDir,albedoInput.a);
 
     #ifdef SHADOW
-        diff *= GetShadowDeferred(projWorldPos, depth);
+        float offset = float(fract((vScreenPos.x / cGBufferInvSize.x + vScreenPos.y / cGBufferInvSize.y) * 0.5) > 0.5);
+        diff *= offset; //GetShadowDeferred(projWorldPos, depth, offset);
     #endif
 
     #if defined(SPOTLIGHT)

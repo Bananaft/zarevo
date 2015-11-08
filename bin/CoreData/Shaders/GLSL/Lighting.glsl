@@ -130,7 +130,7 @@ float GetIntensity(vec3 color)
     #define NUMCASCADES 1
 #endif
 
-float GetShadow(vec4 shadowPos)
+float GetShadow(vec4 shadowPos, float offset)
 {
     #ifndef GL_ES
         #ifndef LQSHADOW
@@ -147,15 +147,10 @@ float GetShadow(vec4 shadowPos)
                     shadow2DProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shadowPos.zw)).r +
                     shadow2DProj(sShadowMap, vec4(shadowPos.xy + offsets.xy, shadowPos.zw)).r);
             #else
-                    float shdstep = 0.0002;
-                    float shdmod = shdstep - mod(shadowPos.z, shdstep);
-                    float shddepth = shadowPos.z + shdmod;
-                    float steppos = shdmod / shdstep;
-                return cShadowIntensity.y + cShadowIntensity.x *
-                   (textureProj(sShadowMap, vec4(shadowPos.xy, shddepth, shadowPos.w))*(1-steppos) +
-                    textureProj(sShadowMap, vec4(shadowPos.x + offsets.x, shadowPos.y, shddepth - shdstep, shadowPos.w))*(steppos));// +
-                    //textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shddepth + shdstep * 2, shadowPos.w))*(1 - steppos) +
-                    //textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy,            shddepth + shdstep * 3, shadowPos.w))*(steppos));
+                return cShadowIntensity.y + cShadowIntensity.x * (textureProj(sShadowMap, shadowPos) +
+                    textureProj(sShadowMap, vec4(shadowPos.x + offsets.x, shadowPos.y, shadowPos.z - 0.0001 * offset, shadowPos.w)) +
+                    textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y, shadowPos.z - 0.0002 * offset, shadowPos.w)) +
+                    textureProj(sShadowMap, vec4(shadowPos.xy + offsets.xy, shadowPos.z - 0.0003 * offset, shadowPos.w)));
             #endif
         #else
             // Take one sample
@@ -202,7 +197,7 @@ float GetPointShadow(vec3 lightVec)
     indirectPos.xy += vec2(cShadowCubeAdjust.z + indirectPos.z * 0.5, cShadowCubeAdjust.w + indirectPos.w);
 
     vec4 shadowPos = vec4(indirectPos.xy, cShadowDepthFade.x + cShadowDepthFade.y / depth, 1.0);
-    return GetShadow(shadowPos);
+    return GetShadow(shadowPos, 0.0);
 }
 #endif
 
@@ -226,12 +221,12 @@ float GetDirShadow(const vec4 iShadowPos[NUMCASCADES], float depth)
     else
         shadowPos = iShadowPos[3];
 
-    return GetDirShadowFade(GetShadow(shadowPos), depth);
+    return GetDirShadowFade(GetShadow(shadowPos, 0.0), depth);
 }
 #else
 float GetDirShadow(const vec4 iShadowPos[NUMCASCADES], float depth)
 {
-    return GetDirShadowFade(GetShadow(iShadowPos[0]), depth);
+    return GetDirShadowFade(GetShadow(iShadowPos[0],0.0), depth);
 }
 #endif
 
@@ -249,7 +244,7 @@ float GetDirShadowDeferred(vec4 projWorldPos, float depth)
     else
         shadowPos = projWorldPos * cLightMatricesPS[3];
 
-    return GetDirShadowFade(GetShadow(shadowPos), depth);
+    return GetDirShadowFade(GetShadow(shadowPos,0.0), depth);
 }
 #endif
 #endif
@@ -259,20 +254,20 @@ float GetShadow(vec4 iShadowPos[NUMCASCADES], float depth)
     #if defined(DIRLIGHT)
         return GetDirShadow(iShadowPos, depth);
     #elif defined(SPOTLIGHT)
-        return GetShadow(iShadowPos[0]);
+        return GetShadow(iShadowPos[0],0.0);
     #else
         return GetPointShadow(iShadowPos[0].xyz);
     #endif
 }
 
 #ifndef GL_ES
-float GetShadowDeferred(vec4 projWorldPos, float depth)
+float GetShadowDeferred(vec4 projWorldPos, float depth, float offcet)
 {
     #if defined(DIRLIGHT)
         return GetDirShadowDeferred(projWorldPos, depth);
     #elif defined(SPOTLIGHT)
         vec4 shadowPos = projWorldPos * cLightMatricesPS[1];
-        return GetShadow(shadowPos);
+        return GetShadow(shadowPos, offcet);
     #else
         vec3 shadowPos = projWorldPos.xyz - cLightPosPS.xyz;
         return GetPointShadow(shadowPos);
