@@ -15,7 +15,7 @@ uniform samplerCube sLightCubeMap;
     uniform sampler2D sNormalBuffer;
     uniform sampler2D sDepthBuffer;
     uniform sampler2D sLightBuffer;
-    uniform sampler2D sShadowMap;
+    uniform sampler2DShadow sShadowMap;
     uniform samplerCube sFaceSelectCubeMap;
     uniform samplerCube sIndirectionCubeMap;
     uniform samplerCube sZoneCubeMap;

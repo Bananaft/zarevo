@@ -233,7 +233,7 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     float ter_height = terrain.GetHeight(campos) + 0.9;
     if (campos.y<ter_height) cameraNode.position = Vector3(campos.x, ter_height, campos.z);
     
-    //cloudNode.Rotate(Quaternion(0, 6 * timeStep,0));
+    if (timepass) cloudNode.Rotate(Quaternion(0, 3 * timeStep,0));
 }
 
 class Sky : ScriptObject
