@@ -77,7 +77,7 @@ void PS()
         int x = int(gl_FragCoord.x);//int(vScreenPos.x / cGBufferInvSize.x);
         int y = int(gl_FragCoord.y);//int(vScreenPos.y / cGBufferInvSize.y);
         //bool //float(fract((vScreenPos.x / cGBufferInvSize.x + vScreenPos.y / cGBufferInvSize.y) * 0.5) > 0.5);
-        diff *= GetShadowDeferred(projWorldPos, depth, float(x % 2 == y % 2));
+        diff *= GetShadowDeferred(projWorldPos, depth, vec2(albedoInput.a,float(x % 2 == y % 2)));
     #endif
 
     #if defined(SPOTLIGHT)

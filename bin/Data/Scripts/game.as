@@ -59,7 +59,7 @@ void Start()
     Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
 	sky.Init();
     
-    Vector3 clSize = Vector3(200,40,200);
+    Vector3 clSize = Vector3(120,30,120);
     Array<Vector3> pCloud = BoxPointCloud(500,clSize);
     Geometry@ geom = pCloudToQuadSprites(pCloud);
     Model@ cloudModel = Model();
@@ -68,14 +68,20 @@ void Start()
    cloudModel.SetGeometry(0, 0, geom);
    cloudModel.boundingBox = BoundingBox(clSize * -1.0, clSize);
    
-   cloudNode = scene_.CreateChild("cloudModel");
-   cloudNode.position = Vector3(0.0, 100.0, 0.0);
-    StaticModel@ object = cloudNode.CreateComponent("StaticModel");
-   object.model = cloudModel;
    Material@ CloudMat = Material();
    CloudMat = cache.GetResource("Material","Materials/test_bbl.xml");
-   object.material = CloudMat;
-   object.castShadows = true;
+   
+   for (int i=0; i<100; i++)
+   {
+       cloudNode = scene_.CreateChild("cloudModel");
+       cloudNode.position = Vector3(Random(5000), 100.0 + Random(200), Random(5000));
+       StaticModel@ object = cloudNode.CreateComponent("StaticModel");
+       object.model = cloudModel;
+       
+       object.material = CloudMat;
+       object.castShadows = true;
+   }
+   
 
    //makeClouds(200, 50);
 }
