@@ -24,7 +24,7 @@
 		<component type="Zone" id="16781313">
 			<attribute name="Bounding Box Min" value="-10000 -10000 -10000" />
 			<attribute name="Bounding Box Max" value="10000 10000 10000" />
-			<attribute name="Ambient Color" value="0.3 0.3 0.3 1" />
+			<attribute name="Ambient Color" value="0.0 0.0 0.0 1" />
 			<attribute name="Fog Start" value="20000" />
 			<attribute name="Fog End" value="20000" />
 		</component>

@@ -74,7 +74,7 @@ void Start()
    for (int i=0; i<100; i++)
    {
        cloudNode = scene_.CreateChild("cloudModel");
-       cloudNode.position = Vector3(Random(5000), 100.0 + Random(200), Random(5000));
+       cloudNode.position = Vector3(Random(5500), 100.0 + Random(200), Random(-6000));
        StaticModel@ object = cloudNode.CreateComponent("StaticModel");
        object.model = cloudModel;
        
@@ -253,10 +253,7 @@ class Sky : ScriptObject
     Light@ sun;
     Node@ sunNode;
     
-    Color DaySkyColor = Color(0.3,0.4,0.5);
-    Color NightSkyColor = Color(0,0,0);
     
-    Color SunColor = Color(1,0.95,0.8);
     Ramp SunColorRamp;
     Ramp SkyColorRamp;
     
@@ -301,7 +298,7 @@ class Sky : ScriptObject
         //log.Info( sun.color.ToString());
         
         Color skycol = SkyColorRamp.GetColor(suncolPos);
-        zone.ambientColor = skycol * 0.2;
+        //zone.ambientColor = skycol * 0.2;
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
         renderpath.shaderParameters["SunColor"] = Variant(suncol);
         renderpath.shaderParameters["SunDir"] = Variant(sunvec);
