@@ -272,7 +272,7 @@ class Sky : ScriptObject
         sunNode = scene_.GetChild("Sun", true);
         sun = sunNode.GetComponent("Light");
         
-        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.02,0.007),Color(0.0,0.0,0.0)};
+        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.01,0.002),Color(0.0,0.0,0.0)};
         Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
         
         Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};

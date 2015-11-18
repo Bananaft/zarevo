@@ -149,6 +149,7 @@ float GetShadow(vec4 shadowPos, vec2 offset)
             #else
                 float dofc = 0.00005 * offset.y;
                 float horofc = (offset.y - 0.5) * 2.0;
+                offsets *= 1+ offset.x;
                 return cShadowIntensity.y + cShadowIntensity.x * (textureProj(sShadowMap, shadowPos) +
                     textureProj(sShadowMap, vec4(shadowPos.x + offsets.x * horofc, shadowPos.y, shadowPos.z - offset.x * (0.00005 - dofc), shadowPos.w)) +
                     textureProj(sShadowMap, vec4(shadowPos.x, shadowPos.y + offsets.y * horofc, shadowPos.z - offset.x * (0.00015 - dofc), shadowPos.w)) +
