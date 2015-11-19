@@ -18,8 +18,10 @@
     <command type="scenepass" pass="refract" depthstencil="depth">
         <texture unit="environment" name="viewport" />
     </command>
-    <command type="quad" tag="Sky" vs="Sky" ps="Sky" psdefines="HWDEPTH SHADOW DIRLIGHT" depthstencil="depth">
+    <command type="quad" tag="Sky" vs="Sky" ps="Sky" psdefines="HWDEPTH" depthstencil="depth">
       <texture unit="diffuse" name="viewport" />
+      <texture unit="albedo" name="albedo" />
+      <texture unit="normal" name="normal" />
       <texture unit="depth" name="depth" />
       <parameter name="SkyColor" value="0.2 0.6 0.8" />
       <parameter name="SunColor" value="0.2 0.6 0.8" />
