@@ -23,6 +23,7 @@
       <texture unit="emissive" name="albedo" />
       <texture unit="normal" name="normal" />
       <texture unit="depth" name="depth" />
+      <texture unit="specular" name="Textures/geodata/kstn_env.png" />
       <parameter name="SkyColor" value="0.2 0.6 0.8" />
       <parameter name="SunColor" value="0.2 0.6 0.8" />
       <parameter name="SunDir"   value="0.2 0.6 0.8" />

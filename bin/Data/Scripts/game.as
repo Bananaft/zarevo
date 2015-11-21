@@ -36,6 +36,7 @@ void Start()
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
     renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
+    //renderpath. = cache.GetResource("Texture2D", "Textures/geodata/kstn_env.png");
     renderer.hdrRendering = true;
 
     renderer.specularLighting = false;
