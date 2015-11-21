@@ -38,7 +38,7 @@ void PS()
         vec3 worldPos = vFarRay * depth;
 
     vec4 diffuseInput = texture2D(sDiffMap, vScreenPos);
-    //vec4 albedoInput = texture2D(sAlbedoBuffer, vScreenPos);
+    vec4 albedoInput = texture2D(sEmissiveMap, vScreenPos);
     vec4 normalInput = texture2D(sNormalBuffer, vScreenPos);
 
 
@@ -58,9 +58,9 @@ void PS()
 
     vec3 fogcolor = 1.0 * cSkyColor * layer + cSunColor *  sunAmount;
 
-    vec3 skyLight = cSkyColor * 0.02;
+    vec3 skyLight = cSkyColor * 1.0 * pow(normalInput.y,2.2);
 
-    vec3 result = (diffuseInput.rgb)*diffFactor + fogcolor*fogFactor;
+    vec3 result = (diffuseInput.rgb + skyLight * albedoInput.rgb)*diffFactor + fogcolor*fogFactor;
 
     gl_FragColor = vec4(result, 0.0);
 
