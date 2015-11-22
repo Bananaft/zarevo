@@ -65,9 +65,11 @@ void PS()
 
     vec3 fogcolor = 1.0 * cSkyColor * layer + cSunColor *  sunAmount;
 
+    float groundDiff = max(dot(vec3(0,-1,0), cSunDir), 0.0);
+
     vec3 zenithFactor = cSkyColor * pow(normalInput.y,4.2); //cSkyColor
     vec3 horizonFactor = cSkyColor * (1- 4 * pow(abs(0.5 - normalInput.y),2.2));
-    vec3 groundFactor = groundAlbedo.rgb * pow(1-normalInput.y,4.2); //
+    vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * groundAlbedo.rgb * pow(1-normalInput.y,4.2); //
 
 
     vec3 skyLight =  0.9 * (zenithFactor + horizonFactor + groundFactor);
