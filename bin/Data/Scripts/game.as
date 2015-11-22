@@ -20,7 +20,9 @@ bool timepass =true;
 
 void Start()
 {
-	scene_ = Scene();
+	cache.autoReloadResources = true;
+    
+    scene_ = Scene();
 	CreateConsoleAndDebugHud();
 
 	SubscribeToEvent("KeyDown", "HandleKeyDown");

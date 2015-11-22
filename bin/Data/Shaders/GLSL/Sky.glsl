@@ -51,7 +51,7 @@ void PS()
 
     vec2 uv = 0.5 + globalPos.xz / (3072 * 5);
     uv.y *= -1;
-    vec4 groundAlbedo = texture2D(sSpecMap, uv);
+    vec4 groundAlbedo = textureLod(sSpecMap, uv, 0.0);
 
 
     float fogFactor =  clamp(exp(-height*depth2+0.7) * (1-exp(depth2*2-2)),0,1);
@@ -64,8 +64,15 @@ void PS()
 
 
     vec3 fogcolor = 1.0 * cSkyColor * layer + cSunColor *  sunAmount;
-    float nm = pow(normalInput.y,2.2);
-    vec3 skyLight = cSkyColor * 1.0 * nm + groundAlbedo.rgb * pow(1-normalInput.y,2.2);;
+
+    vec3 zenithFactor = cSkyColor * pow(normalInput.y,4.2); //cSkyColor
+    vec3 horizonFactor = cSkyColor * (1- 4 * pow(abs(0.5 - normalInput.y),2.2));
+    vec3 groundFactor = groundAlbedo.rgb * pow(1-normalInput.y,4.2); //
+
+
+    vec3 skyLight =  0.9 * (zenithFactor + horizonFactor + groundFactor);
+
+    //vec3 skyLight = vec3(0.5) * normalInput.y + vec3(0.5) * (1-normalInput.y);
 
     vec3 result = (diffuseInput.rgb + skyLight * albedoInput.rgb)*diffFactor + fogcolor*fogFactor;
 
