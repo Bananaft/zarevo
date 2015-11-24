@@ -72,13 +72,13 @@ void PS()
     vec3 horizonFactor = cSkyColor * (1- 4 * pow(abs(0.5 - normalInput.y),2.2));
     vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * 0.5 * groundAlbedo.rgb * pow(1-normalInput.y,4.2); //
     float heightStep = cTerrHStep * 256.0;
-    float occl = clamp((globalPos.y + 15.0)/heightStep - groundAlbedo.a, 0 , 1);
+    float occl = clamp((globalPos.y + 10.0)/heightStep - groundAlbedo.a, 0 , 1);
 
-    vec3 skyLight =  0.9 * (zenithFactor + horizonFactor + groundFactor) * occl;
+    vec3 skyLight =  0.9 * (zenithFactor + occl * (horizonFactor + groundFactor));
 
     //vec3 skyLight = vec3(0.5) * normalInput.y + vec3(0.5) * (1-normalInput.y);
 
-    vec3 result = skyLight;  // (diffuseInput.rgb + skyLight * albedoInput.rgb)*diffFactor + fogcolor*fogFactor;
+    vec3 result = (diffuseInput.rgb + skyLight * albedoInput.rgb)*diffFactor + fogcolor*fogFactor;
 
     gl_FragColor = vec4(result, 0.0);
 
