@@ -69,7 +69,7 @@ void PS()
 
     vec3 zenithFactor = cSkyColor * pow(normalInput.y,4.2); //cSkyColor
     vec3 horizonFactor = cSkyColor * (1- 4 * pow(abs(0.5 - normalInput.y),2.2));
-    vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * groundAlbedo.rgb * pow(1-normalInput.y,4.2); //
+    vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * 0.5 * groundAlbedo.rgb * pow(1-normalInput.y,4.2); //
 
 
     vec3 skyLight =  0.9 * (zenithFactor + horizonFactor + groundFactor);

@@ -53,7 +53,7 @@ void PS()
 	mat3 tbn = mat3(vTangent.xyz, vec3(vTexCoord.zw, vTangent.w), vNormal);
     normal = normalize(tbn * normal);
 
-	vec3 ambient = diffColor.rgb * cAmbientColor * ( 0.5 * (normal.y + 1.0));
+	//vec3 ambient = diffColor.rgb * cAmbientColor * ( 0.5 * (normal.y + 1.0));
 
 
     #if defined(PREPASS)
@@ -61,8 +61,8 @@ void PS()
         gl_FragData[0] = vec4(0.5, 0.5, 0.5, 1.0);
         gl_FragData[1] = vec4(EncodeDepth(vWorldPos.w), 0.0);
     #elif defined(DEFERRED)
-        gl_FragData[0] = vec4(ambient , 0.0);
-        gl_FragData[1] = vec4(diffColor.rgb, 0.0);
+        gl_FragData[0] = vec4(0.0);
+        gl_FragData[1] = vec4(diffColor.rgb * 0.55, 0.0);
         gl_FragData[2] = vec4(normal * 0.5 + 0.5, 0.0);
         gl_FragData[3] = vec4(EncodeDepth(vWorldPos.w), 0.0);
     #else
