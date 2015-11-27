@@ -4,6 +4,7 @@
 #include "ScreenPos.glsl"
 #include "Lighting.glsl"
 
+uniform vec3 cZenColor;
 uniform vec3 cSkyColor;
 uniform vec3 cSunColor;
 uniform vec3 cSunDir;
@@ -52,7 +53,9 @@ void PS()
 
     vec2 uv = 0.5 + globalPos.xz / (3072 * 5);
     uv.y *= -1;
-    vec4 groundAlbedo = textureLod(sSpecMap, uv, 0.0);
+    vec4 groundAlbedo1 = textureLod(sSpecMap, uv, 0.0);
+    vec4 groundAlbedo2 = textureLod(sSpecMap, uv, 1.0);
+    vec4 groundAlbedo3 = textureLod(sSpecMap, uv, 2.0);
 
 
     float fogFactor =  clamp(exp(-height*depth2+0.7) * (1-exp(depth2*2-2)),0,1);
@@ -63,18 +66,21 @@ void PS()
     float sunDot = max(dot(DirRay ,-1 * cSunDir ),0);
     float sunAmount = pow (exp((sunDot-1)*5), 1 + (1-layer) * 60);
 
-
-    vec3 fogcolor = 1.0 * cSkyColor * layer + cSunColor *  sunAmount;
+    float hor_factor =clamp(pow(1-DirRay.y, 2 + layer),0,1);
+    vec3 fogcolor = 1.0 * mix(cZenColor,cSkyColor, hor_factor) * layer + cSunColor *  sunAmount;
 
     float groundDiff = max(dot(vec3(0,-1,0), cSunDir), 0.0);
 
-    vec3 zenithFactor = cSkyColor * pow(normalInput.y,4.2); //cSkyColor
+    vec3 zenithFactor = mix(cZenColor,cSkyColor, 0.5) * pow(normalInput.y,4.2); //cSkyColor
     vec3 horizonFactor = cSkyColor * (1- 4 * pow(abs(0.5 - normalInput.y),2.2));
-    vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * 0.5 * groundAlbedo.rgb * pow(1-normalInput.y,4.2); //
+    vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * 0.5 * groundAlbedo1.rgb * pow(1-normalInput.y,4.2); //
     float heightStep = cTerrHStep * 256.0;
-    float occl = clamp((globalPos.y + 10.0)/heightStep - groundAlbedo.a, 0 , 1);
 
-    vec3 skyLight =  0.9 * (zenithFactor + occl * (horizonFactor + groundFactor));
+    float occl1 = clamp(((globalPos.y + 15.0)/heightStep - groundAlbedo1.a)*20, 0 , 1);
+    float occl2 = clamp(((globalPos.y + 20.0)/heightStep - groundAlbedo2.a)*10, 0 , 1);
+    float occl3 = clamp(((globalPos.y + 30.0)/heightStep - groundAlbedo3.a)*3, 0 , 1);
+
+    vec3 skyLight =  0.9 * (zenithFactor * occl1 * occl2 + occl1 * occl2 * occl3 * (horizonFactor + groundFactor));
 
     //vec3 skyLight = vec3(0.5) * normalInput.y + vec3(0.5) * (1-normalInput.y);
 

@@ -38,7 +38,7 @@ void Start()
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
     renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
-    //renderpath. = cache.GetResource("Texture2D", "Textures/geodata/kstn_env.png");
+    
     renderer.hdrRendering = true;
 
     renderer.specularLighting = false;
@@ -259,6 +259,7 @@ class Sky : ScriptObject
     
     Ramp SunColorRamp;
     Ramp SkyColorRamp;
+    Ramp ZenColorRamp;
     
     
     
@@ -275,11 +276,15 @@ class Sky : ScriptObject
         Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.01,0.002),Color(0.0,0.0,0.0)};
         Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
         
-        Array<Color> arSkyColC = {Color(0.21,0.44,0.55),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
+        Array<Color> arSkyColC = {Color(0.32,0.64,0.95),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
         Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            , 0.900            };
+        
+        Array<Color> arZenColC = {Color(0.11,0.27,1.00),Color(0.002,0.003,0.111),Color(0.000,0.0015,0.005),Color(0.0,0.0,0.0)};
+        Array<float> arZenColP = {         0.45               , 0.520                  , 0.700            , 0.900            };
         
         SunColorRamp.SetRamp (arSunColC,arSunColP);
         SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
+        ZenColorRamp.SetRamp (arZenColC,arZenColP);
      
     }
     
@@ -299,9 +304,10 @@ class Sky : ScriptObject
         Color suncol = SunColorRamp.GetColor(suncolPos);
         sun.color = suncol * 2;
         //log.Info( sun.color.ToString());
-        
+        Color zencol = ZenColorRamp.GetColor(suncolPos);
         Color skycol = SkyColorRamp.GetColor(suncolPos);
         //zone.ambientColor = skycol * 0.2;
+        renderpath.shaderParameters["ZenColor"] = Variant(zencol);
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
         renderpath.shaderParameters["SunColor"] = Variant(suncol);
         renderpath.shaderParameters["SunDir"] = Variant(sunvec);
