@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="37" />
 	<attribute name="Next Replicated Component ID" value="39" />
-	<attribute name="Next Local Node ID" value="16823453" />
-	<attribute name="Next Local Component ID" value="16823451" />
+	<attribute name="Next Local Node ID" value="16824612" />
+	<attribute name="Next Local Component ID" value="16824610" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -703,6 +703,84 @@
 			<attribute name="Color" value="1 0.8 0.2 1" />
 			<attribute name="Range" value="100" />
 			<attribute name="Light Shape Texture" value="TextureCube;" />
+		</component>
+	</node>
+	<node id="16824029">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-1009.3 53.3404 1286.11" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="16824027">
+			<attribute name="Model" value="Model;Models/Vehicles/Cars/hilux" />
+			<attribute name="Material" value="Material;;;;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="16824030">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-1029.45 53.3898 1228.35" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="16824028">
+			<attribute name="Model" value="Model;Models/Vehicles/Cars/hilux" />
+			<attribute name="Material" value="Material;;;;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="16824032">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-590.102 58.9991 -743.101" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="16824030">
+			<attribute name="Model" value="Model;Models/Vehicles/Cars/hilux" />
+			<attribute name="Material" value="Material;;;;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="16824033">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-617.377 59.9805 -821.327" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="16824031">
+			<attribute name="Model" value="Model;Models/Vehicles/Cars/hilux" />
+			<attribute name="Material" value="Material;;;;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="16824034">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-503.277 57.1402 -658.758" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="16824032">
+			<attribute name="Model" value="Model;Models/Vehicles/Cars/hilux" />
+			<attribute name="Material" value="Material;;;;;" />
+			<attribute name="Cast Shadows" value="true" />
+		</component>
+	</node>
+	<node id="16824035">
+		<attribute name="Is Enabled" value="true" />
+		<attribute name="Name" value="" />
+		<attribute name="Position" value="-1335.71 107.731 -597.428" />
+		<attribute name="Rotation" value="1 0 0 0" />
+		<attribute name="Scale" value="1 1 1" />
+		<attribute name="Variables" />
+		<component type="StaticModel" id="16824033">
+			<attribute name="Model" value="Model;Models/Vehicles/Cars/hilux" />
+			<attribute name="Material" value="Material;;;;;" />
+			<attribute name="Cast Shadows" value="true" />
 		</component>
 	</node>
 </scene>
