@@ -280,7 +280,7 @@ class Sky : ScriptObject
         Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            , 0.900            };
         
         Array<Color> arZenColC = {Color(0.11,0.27,1.00),Color(0.002,0.003,0.111),Color(0.000,0.0015,0.005),Color(0.0,0.0,0.0)};
-        Array<float> arZenColP = {         0.45               , 0.520                  , 0.700            , 0.900            };
+        Array<float> arZenColP = {         0.45               , 0.620                  , 0.700            , 0.900            };
         
         SunColorRamp.SetRamp (arSunColC,arSunColP);
         SkyColorRamp.SetRamp (arSkyColC,arSkyColP);

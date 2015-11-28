@@ -64,9 +64,9 @@ void PS()
 
     float layer = clamp(exp(((1-DirRay.y)-1) * (0.5 + cCameraPosPS.y*0.001)),0,1);
     float sunDot = max(dot(DirRay ,-1 * cSunDir ),0);
-    float sunAmount = pow (exp((sunDot-1)*5), 1 + (1-layer) * 60);
+    float sunAmount = pow(exp((sunDot-1)*5), 1 + (1-layer) * 60);
 
-    float hor_factor =clamp(pow(1-DirRay.y, 2 + layer),0,1);
+    float hor_factor =clamp(pow(1-DirRay.y, 2 + layer) * (0.2 + 0.8 *pow(sunDot,2.2)),0,1);
     vec3 fogcolor = 1.0 * mix(cZenColor,cSkyColor, hor_factor) * layer + cSunColor *  sunAmount;
 
     float groundDiff = max(dot(vec3(0,-1,0), cSunDir), 0.0);
