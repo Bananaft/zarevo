@@ -44,6 +44,8 @@ void Start()
     renderer.specularLighting = false;
     
     renderer.shadowMapSize = 2048;
+    renderer.shadowQuality = 3;
+    
 	
 	mainVP.renderPath = renderpath;
 	cameraNode.position = Vector3(0,150,0);
@@ -198,7 +200,7 @@ void MoveCamera(float timeStep)
     Camera@ cam = cameraNode.GetComponent("camera");
     // Movement speed as world units per second
     float MOVE_SPEED;
-    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 100.0f;
+    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 20.0f;
     // Mouse sensitivity as degrees per pixel
     const float MOUSE_SENSITIVITY = 0.1 * 1/cam.zoom;
   
@@ -279,7 +281,7 @@ class Sky : ScriptObject
         Array<Color> arSkyColC = {Color(0.32,0.64,0.95),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
         Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            , 0.900            };
         
-        Array<Color> arZenColC = {Color(0.11,0.27,1.00),Color(0.002,0.003,0.111),Color(0.000,0.0015,0.005),Color(0.0,0.0,0.0)};
+        Array<Color> arZenColC = {Color(0.04,0.27,1.00),Color(0.002,0.003,0.111),Color(0.0001,0.0015,0.005),Color(0.0,0.0,0.0)};
         Array<float> arZenColP = {         0.45               , 0.620                  , 0.700            , 0.900            };
         
         SunColorRamp.SetRamp (arSunColC,arSunColP);

@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="37" />
 	<attribute name="Next Replicated Component ID" value="39" />
-	<attribute name="Next Local Node ID" value="16824612" />
-	<attribute name="Next Local Component ID" value="16824610" />
+	<attribute name="Next Local Node ID" value="16825188" />
+	<attribute name="Next Local Component ID" value="16825186" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -156,7 +156,8 @@
 				<attribute name="Cast Shadows" value="true" />
 				<attribute name="Focus To Scene" value="false" />
 				<attribute name="Auto-Reduce Size" value="false" />
-				<attribute name="CSM Splits" value="80 400 2000 6000" />
+				<attribute name="CSM Splits" value="50 360 1600 5000" />
+				<attribute name="CSM Fade Start" value="0.95" />
 			</component>
 		</node>
 	</node>
