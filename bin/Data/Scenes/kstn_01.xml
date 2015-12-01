@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="37" />
 	<attribute name="Next Replicated Component ID" value="39" />
-	<attribute name="Next Local Node ID" value="16825188" />
-	<attribute name="Next Local Component ID" value="16825186" />
+	<attribute name="Next Local Node ID" value="16826340" />
+	<attribute name="Next Local Component ID" value="16826338" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -158,6 +158,8 @@
 				<attribute name="Auto-Reduce Size" value="false" />
 				<attribute name="CSM Splits" value="50 360 1600 5000" />
 				<attribute name="CSM Fade Start" value="0.95" />
+				<attribute name="Depth Constant Bias" value="3e-006" />
+				<attribute name="Depth Slope Bias" value="4" />
 			</component>
 		</node>
 	</node>
