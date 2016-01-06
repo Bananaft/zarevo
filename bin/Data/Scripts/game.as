@@ -1,19 +1,19 @@
 #include "mesh_tools.as";
+#include "freelookCam.as";
 
 Scene@ scene_;
-Node@ cameraNode;
+//Node@ cameraNode;
 Node@ cloudNode;
-
-float yaw = 0.0f; // Camera yaw angle
-float pitch = 0.0f; // Camera pitch angle
-float roll = 0.0f;
-Terrain@ terrain;
-RenderPath@ renderpath;
 
 bool pe_bloom = true;
 bool pe_fog = true;
 bool pe_ae = true;
 bool wireframe =false;
+
+Terrain@ terrain;
+RenderPath@ renderpath;
+
+
 bool timepass =true;
 
 
@@ -29,10 +29,12 @@ void Start()
 
 	scene_.LoadXML(cache.GetFile("Scenes/kstn_01.xml"));
 
-	cameraNode = Node();
+	Node@ cameraNode = Node();
     Camera@ camera = cameraNode.CreateComponent("Camera");
-    
 	Viewport@ mainVP = Viewport(scene_, camera);
+    freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
+    flcam.Init(cameraNode);
+    
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
@@ -48,7 +50,7 @@ void Start()
     
 	
 	mainVP.renderPath = renderpath;
-	cameraNode.position = Vector3(0,150,0);
+	
 	
 	camera.farClip = 12000;
     camera.nearClip = 0.6;
@@ -173,7 +175,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                     pe_ae = true;
                 }
         }    else if (key == KEY_V)
-        {
+ /*       {
             Camera@ cam = cameraNode.GetComponent("camera");
             if (wireframe){
                 cam.fillMode = FILL_SOLID;
@@ -183,7 +185,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                 wireframe = true;
             }
             
-        }
+        }*/
     else if (key == KEY_T) 
         {
             if(timepass) timepass = false; else timepass = true;
@@ -194,56 +196,13 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
 
 void MoveCamera(float timeStep)
 {
-    // Do not move if the UI has a focused element (the console)
-    if (ui.focusElement !is null)
-        return;
-    Camera@ cam = cameraNode.GetComponent("camera");
-    // Movement speed as world units per second
-    float MOVE_SPEED;
-    if (input.keyDown[KEY_SHIFT]) MOVE_SPEED = 1200.0f; else MOVE_SPEED = 20.0f;
-    // Mouse sensitivity as degrees per pixel
-    const float MOUSE_SENSITIVITY = 0.1 * 1/cam.zoom;
-  
-    // Read WASD keys and move the camera scene node to the corresponding direction if they are pressed
-    if (input.keyDown['W'])
-        cameraNode.Translate(Vector3(0.0f, 0.0f, 1.0f) * MOVE_SPEED * timeStep);
-    if (input.keyDown['S'])
-        cameraNode.Translate(Vector3(0.0f, 0.0f, -1.0f) * MOVE_SPEED * timeStep);
-    if (input.keyDown['A'])
-        cameraNode.Translate(Vector3(-1.0f, 0.0f, 0.0f) * MOVE_SPEED * timeStep);
-    if (input.keyDown['D'])
-        cameraNode.Translate(Vector3(1.0f, 0.0f, 0.0f) * MOVE_SPEED * timeStep);
-    if (input.keyDown['Q'])
-        roll += 45 * timeStep;
-    else 
-        roll = 0.0;
-        
-        
-        
-        // Use this frame's mouse motion to adjust camera node yaw and pitch. Clamp the pitch between -90 and 90 degrees
-    IntVector2 mouseMove = input.mouseMove;
-    yaw += MOUSE_SENSITIVITY * mouseMove.x;
-    pitch += MOUSE_SENSITIVITY * mouseMove.y;
-    pitch = Clamp(pitch, -90.0f, 90.0f);
-    
-     // Construct new orientation for the camera scene node from yaw and pitch. Roll is fixed to zero
-    cameraNode.rotation = Quaternion(pitch, yaw, roll);
-    
-    int mousescroll = input.mouseMoveWheel;
-    cam.zoom = Clamp(cam.zoom + mousescroll * cam.zoom * 0.2, 0.8 , 20.0 );
+
 }
 
 void HandleUpdate(StringHash eventType, VariantMap& eventData)
 {
     // Take the frame time step, which is stored as a float
     float timeStep = eventData["TimeStep"].GetFloat();
-
-    // Move the camera, scale movement with time step
-    MoveCamera(timeStep);
-    Vector3 campos = cameraNode.position;
-    float ter_height = terrain.GetHeight(campos) + 0.9;
-    if (campos.y<ter_height) cameraNode.position = Vector3(campos.x, ter_height, campos.z);
-    
     if (timepass) cloudNode.Rotate(Quaternion(0, 3 * timeStep,0));
 }
 
@@ -329,10 +288,7 @@ class Sky : ScriptObject
         
     }
     
-    void FixedUpdate(float timeStep)
-	{
 
-    }
 }
 
 class Ramp
