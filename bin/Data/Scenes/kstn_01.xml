@@ -7,8 +7,8 @@
 	<attribute name="Elapsed Time" value="0" />
 	<attribute name="Next Replicated Node ID" value="37" />
 	<attribute name="Next Replicated Component ID" value="39" />
-	<attribute name="Next Local Node ID" value="16826340" />
-	<attribute name="Next Local Component ID" value="16826338" />
+	<attribute name="Next Local Node ID" value="16826916" />
+	<attribute name="Next Local Component ID" value="16826916" />
 	<attribute name="Variables" />
 	<attribute name="Variable Names" value="" />
 	<component type="Octree" id="1" />
@@ -44,6 +44,10 @@
 			<attribute name="Cast Shadows" value="true" />
 			<attribute name="LOD Bias" value="1.2" />
 		</component>
+		<component type="CollisionShape" id="16826914">
+			<attribute name="Shape Type" value="Terrain" />
+		</component>
+		<component type="RigidBody" id="16826915" />
 	</node>
 	<node id="2">
 		<attribute name="Is Enabled" value="true" />

@@ -1,5 +1,6 @@
 #include "mesh_tools.as";
 #include "freelookCam.as";
+#include "plane.as";
 
 Scene@ scene_;
 //Node@ cameraNode;
@@ -28,12 +29,22 @@ void Start()
 	SubscribeToEvent("KeyDown", "HandleKeyDown");
 
 	scene_.LoadXML(cache.GetFile("Scenes/kstn_01.xml"));
+   // scene_.CreateComponent("PhysicsWorld");
 
-	Node@ cameraNode = Node();
+	Node@ cameraNode = scene_.CreateChild("CamNode");
     Camera@ camera = cameraNode.CreateComponent("Camera");
 	Viewport@ mainVP = Viewport(scene_, camera);
-    freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
-    flcam.Init(cameraNode);
+    //freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
+    //flcam.Init();
+    
+    //scene_.CreateComponent("DebugRenderer");
+    
+    
+    Node@ planeNode = scene_.CreateChild("plane");
+    cameraNode.parent = planeNode;
+    planeNode.position = Vector3(0,150,0);
+    plane@ plane = cast<plane>(planeNode.CreateScriptObject(scriptFile, "plane"));
+    plane.Init();
     
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
@@ -58,6 +69,7 @@ void Start()
     camera.fov = 50.0f;
 	
 	SubscribeToEvent("Update", "HandleUpdate");
+    SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
     
     Node@ terrNode = scene_.GetChild("Terrain", true);
     terrain = terrNode.GetComponent("Terrain");
@@ -90,7 +102,6 @@ void Start()
    }
    
 
-   //makeClouds(200, 50);
 }
 
 void CreateConsoleAndDebugHud()
@@ -110,6 +121,12 @@ void CreateConsoleAndDebugHud()
     debugHud.defaultStyle = xmlFile;
 
 }
+
+void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
+    {
+
+    }
+
 
 void HandleKeyDown(StringHash eventType, VariantMap& eventData)
 {
@@ -174,7 +191,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                     renderpath.SetEnabled("AutoExposure", true);
                     pe_ae = true;
                 }
-        }    else if (key == KEY_V)
+        }    //else if (key == KEY_V)
  /*       {
             Camera@ cam = cameraNode.GetComponent("camera");
             if (wireframe){
@@ -204,6 +221,7 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     // Take the frame time step, which is stored as a float
     float timeStep = eventData["TimeStep"].GetFloat();
     if (timepass) cloudNode.Rotate(Quaternion(0, 3 * timeStep,0));
+    
 }
 
 class Sky : ScriptObject
