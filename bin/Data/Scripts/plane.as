@@ -2,8 +2,9 @@ class plane : ScriptObject
 {
     RigidBody@ body;
     Vector2 lastImput = Vector2(0,0);
-    float deadzone = 0.3;
+    float deadzone = 0.2;
     float livezone = 0.95;
+    float inpCurve = 1.5;
     Array<Vector2> lgraph(500,Vector2(0,0));
     int graphpos = 0;
    
@@ -45,16 +46,14 @@ void FixedUpdate(float timeStep)
         
         
         Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
+        Vector2 mappedInput = MapInput(stickInput); 
         
         Vector2 deltaInput = stickInput - lastImput;
         
-        if (stickInput.length > deadzone)
-        {
-            body.ApplyTorque(body.rotation * (Vector3(stickInput.x * (stickInput.length-deadzone) , -1 * stickInput.y * (stickInput.length-deadzone),0) * -20));
-        } else
-        {
-            body.ApplyTorque(body.rotation * Vector3(deltaInput.x * -100, deltaInput.y * 100,0));
-        }
+
+        body.ApplyTorque(body.rotation * (Vector3(mappedInput.x , -1 * mappedInput.y, 0 ) * -20));
+
+        //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * -100, deltaInput.y * 100,0));
         
         lastImput = stickInput;
         
@@ -65,17 +64,26 @@ void FixedUpdate(float timeStep)
 
 Vector2 MapInput(Vector2 inp)
 {
-    Vector2 mapInp;
-    //if (inp.length < deadzone) return Vector2(0,0);
+
     
     //float maplength = 1 + (1-livezone);
-    Vector2 Ninp = inp; 
-    Ninp.Normalize();
-    float x = inp.x * (livezone-deadzone) - deadzone;
-    float y = inp.y * (livezone-deadzone) - Ninp.y*deadzone;
+    //Vector2 Ninp = inp; 
+    //Ninp.Normalize();
     
+    //mapInp = (inp - Ninp * deadzone) / (livezone-deadzone);
     
-    mapInp = Vector2(x,y);
+    //mapInp = Vector2(Pow(mapInp.x,inpCurve),Pow(mapInp.y,inpCurve));
+    
+    float r = inp.length;
+    float Phi = Atan2(inp.x, inp.y);
+    
+        
+    if (r < deadzone) return Vector2(0,0);
+    
+    r = Pow((r - deadzone) / (livezone-deadzone),2.2);
+    
+    Vector2 mapInp = Vector2(r * Sin(Phi), r * Cos(Phi));
+    
     if (mapInp.length>1) mapInp.Normalize();
     
     return mapInp; 
