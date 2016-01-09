@@ -45,7 +45,7 @@ void FixedUpdate(float timeStep)
         
         if (stickInput.length > deadzone)
         {
-            body.ApplyTorque(body.rotation * (Vector3(stickInput.x * (stickInput.length-deadzone) , deltaInput.y , 2 * stickInput.y * (stickInput.length-deadzone)) * -20));
+            body.ApplyTorque(body.rotation * (Vector3(stickInput.x * (stickInput.length-deadzone) , 0 , 2 * stickInput.y * (stickInput.length-deadzone)) * -20));
         } else
         {
             body.ApplyTorque(body.rotation * Vector3(deltaInput.x * -50, deltaInput.y * 50,0));
