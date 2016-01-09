@@ -54,7 +54,7 @@ void PS()
       //gl_FragData[1] = vec4(EncodeDepth(vWorldPos.w), 0.0);
   #elif defined(DEFERRED)
       gl_FragData[0] = vec4(ambient , 1.0);
-      gl_FragData[1] = vec4(diffColor.rgb, 1.6 * (1.2 - nmMap.a));
+      gl_FragData[1] = vec4(diffColor.rgb, 1.7 * (1.45 - nmMap.a));
       gl_FragData[2] = vec4(normal * 0.5 + 0.5, 1.0);
       //gl_FragData[3] = vec4(EncodeDepth(vWorldPos.w), 0.0);
   #else
