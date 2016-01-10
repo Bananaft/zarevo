@@ -4,9 +4,10 @@ class plane : ScriptObject
     Vector2 lastImput = Vector2(0,0);
     float deadzone = 0.2;
     float livezone = 0.95;
-    float inpCurve = 1.5;
+    float inpCurve = 1.9;
     Array<Vector2> lgraph(500,Vector2(0,0));
     int graphpos = 0;
+    
    
     
 void Init()
@@ -53,7 +54,7 @@ void FixedUpdate(float timeStep)
 
         body.ApplyTorque(body.rotation * (Vector3(mappedInput.x , -1 * mappedInput.y, 0 ) * -20));
 
-        //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * -100, deltaInput.y * 100,0));
+        body.ApplyTorque(body.rotation * Vector3(deltaInput.x * -100, deltaInput.y * 100,0));
         
         lastImput = stickInput;
         
@@ -80,7 +81,7 @@ Vector2 MapInput(Vector2 inp)
         
     if (r < deadzone) return Vector2(0,0);
     
-    r = Pow((r - deadzone) / (livezone-deadzone),2.2);
+    r = Pow((r - deadzone) / (livezone-deadzone), inpCurve );
     
     Vector2 mapInp = Vector2(r * Sin(Phi), r * Cos(Phi));
     
@@ -111,6 +112,9 @@ void DrawHud()
         Vector2 lastImputMapped = MapInput(lastImput);
         hud.AddCircle(node.position + (node.rotation * Vector3(70 + lastImputMapped.y * 10,-35 + lastImputMapped.x * 10,100)),node.rotation * Vector3(0,0,1), 1 ,hudcol2,8 , false);
         
+        //hud.AddLine(node.position + (node.rotation * Vector3(60,-35 + 10,100)), node.position + (node.rotation * Vector3(60 - 0.25 * 500,-35 + 10,100)), hudcol,false);
+        //hud.AddLine(node.position + (node.rotation * Vector3(60,-35 - 10,100)), node.position + (node.rotation * Vector3(60 - 0.25 * 500,-35 - 10,100)), hudcol,false);
+        
         for (int i=0; i<499; i++)
         {
             hud.AddLine(node.position + (node.rotation * Vector3(60 - 0.25 * i ,-35 + 10 * lgraph[i].x,100)),
@@ -124,6 +128,7 @@ void DrawHud()
             hud.AddLine(node.position + (node.rotation * Vector3(60 - 0.25 * i ,-35 + 10 * mpinp.y,100)),
                         node.position + (node.rotation * Vector3(60 - 0.25 * (i+1),-35 + 10 * mpinp2.y,100)), hudcol2,false);
         }
+        
     }
         
 }
