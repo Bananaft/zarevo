@@ -8,7 +8,7 @@ class plane : ScriptObject
     Array<Vector2> lgraph(500,Vector2(0,0));
     int graphpos = 0;
     
-   
+    Vector3 AimVec = Vector3(0,0,1);
     
 void Init()
     {
@@ -55,6 +55,8 @@ void FixedUpdate(float timeStep)
         body.ApplyTorque(body.rotation * (Vector3(mappedInput.x , -1 * mappedInput.y, 0 ) * -20));
 
         body.ApplyTorque(body.rotation * Vector3(deltaInput.x * -100, deltaInput.y * 100,0));
+        
+        //AimVec.
         
         lastImput = stickInput;
         
