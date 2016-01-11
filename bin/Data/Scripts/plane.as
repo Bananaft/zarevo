@@ -52,11 +52,23 @@ void FixedUpdate(float timeStep)
         Vector2 deltaInput = stickInput - lastImput;
         
 
-        body.ApplyTorque(body.rotation * (Vector3(mappedInput.x , -1 * mappedInput.y, 0 ) * -20));
+        body.ApplyTorque(body.rotation * (Vector3(mappedInput.x  * 0.01, -1 * mappedInput.y* 0.01, 0 ) * -20));
 
-        body.ApplyTorque(body.rotation * Vector3(deltaInput.x * -100, deltaInput.y * 100,0));
+        //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * 100, deltaInput.y * 100,0));
         
-        //AimVec.
+        Vector3 fwd   = body.rotation *  Vector3(0,0,1);
+        Vector3 top   = body.rotation *  Vector3(0,1,0);        
+        Vector3 right = body.rotation *  Vector3(1,0,0); // top.CrossProduct(AimVec);
+        
+
+ 
+            float permm = 2;
+            float deltal = 4;
+            
+            
+            Quaternion vert = Quaternion(mappedInput.x * permm + deltaInput.x * deltal, body.rotation * right);
+            Quaternion hor = Quaternion(mappedInput.y * permm + deltaInput.y * deltal, body.rotation *  top );
+            AimVec =  vert * hor * AimVec;
         
         lastImput = stickInput;
         
@@ -116,6 +128,10 @@ void DrawHud()
         
         //hud.AddLine(node.position + (node.rotation * Vector3(60,-35 + 10,100)), node.position + (node.rotation * Vector3(60 - 0.25 * 500,-35 + 10,100)), hudcol,false);
         //hud.AddLine(node.position + (node.rotation * Vector3(60,-35 - 10,100)), node.position + (node.rotation * Vector3(60 - 0.25 * 500,-35 - 10,100)), hudcol,false);
+        
+        hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
+        
+        hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
         
         for (int i=0; i<499; i++)
         {
