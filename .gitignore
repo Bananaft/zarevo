@@ -1,3 +1,10 @@
 bin/AssetImporter.exe
 *.exe
 *.blend1
+bin/.codelite/.tern-port
+bin/.codelite/.tern-project
+bin/.codelite/bin.session
+bin/bin.workspace
+bin/.codelite/bin.tags
+bin/bin.project
+bin/.codelite/refactoring.db

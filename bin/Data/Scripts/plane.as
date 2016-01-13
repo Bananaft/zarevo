@@ -58,23 +58,32 @@ void FixedUpdate(float timeStep)
         
         Vector3 fwd   = body.rotation *  Vector3(0,0,1);
         Vector3 top   = body.rotation *  Vector3(0,1,0);        
-        Vector3 right = body.rotation *  Vector3(1,0,0); // top.CrossProduct(AimVec);
+        Vector3 right =  top.CrossProduct(AimVec); //body.rotation *  Vector3(1,0,0); //
         
 
+		
  
-            float permm = 2;
-            float deltal = 4;
+        float permm = 2;
+        float deltal = 4;
             
-            
-            Quaternion vert = Quaternion(mappedInput.x * permm + deltaInput.x * deltal, body.rotation * right);
-            Quaternion hor = Quaternion(mappedInput.y * permm + deltaInput.y * deltal, body.rotation *  top );
-            AimVec =  vert * hor * AimVec;
+        Quaternion vert = Quaternion(mappedInput.x * permm + deltaInput.x * deltal, right);
+        Quaternion hor = Quaternion(mappedInput.y * permm + deltaInput.y * deltal, top );
+        AimVec =  vert * hor * AimVec;
+		
+		float fwdDot = fwd.DotProduct(AimVec);
+		float backradius = (0.3);
+		if (fwdDot < backradius)
+		{
+			Quaternion qback = Quaternion(100 * (fwdDot-backradius),fwd.CrossProduct(AimVec));
+			AimVec = qback * AimVec;
+		}
         
         lastImput = stickInput;
         
         graphpos++;
         if (graphpos > 500) graphpos = 0;
         lgraph[graphpos] = stickInput;
+		
     }    
 
 Vector2 MapInput(Vector2 inp)
