@@ -9,6 +9,11 @@ class plane : ScriptObject
     int graphpos = 0;
     
     Vector3 AimVec = Vector3(0,0,1);
+    float aimzone = 0.3;
+    float rollzone = 0.99;
+    
+    float RollForce = 6;
+    float RollVel = 20;
     
 void Init()
     {
@@ -20,7 +25,7 @@ void Init()
 		//body.angularFactor = Vector3(0.5f, 0.5f, 0.5f);
 		//body.collisionLayer = 2;
         body.angularDamping = 0.99;
-        body.linearDamping = 0.7;
+        body.linearDamping = 0.8;
         
         SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
     }
@@ -39,7 +44,8 @@ void Update(float timeStep)
 void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
-        body.ApplyForce(body.rotation * Vector3(0,0,500));
+        
+        body.ApplyForce(body.rotation * Vector3(0,0,900));
         
         // axis indexes: 
         // 0-leftHor 1-leftVert 2-rightHor 3-rightVert 4-leftTrigger 5-rightTrigger
@@ -55,14 +61,13 @@ void FixedUpdate(float timeStep)
         //body.ApplyTorque(body.rotation * (Vector3(mappedInput.x  * -1, -1 * mappedInput.y, 0 ) * -20));
 
         //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * 170, deltaInput.y * 170,0));
-		body.ApplyTorque(body.rotation * Vector3(0, 1,0));
+		//body.ApplyTorque(body.rotation * Vector3(0, 1,0));
         
         Vector3 fwd   = body.rotation *  Vector3(0,0,1);
         Vector3 top   = body.rotation *  Vector3(0,1,0);        
         Vector3 right =  top.CrossProduct(AimVec); //body.rotation *  Vector3(1,0,0); //
         
-
-		
+        
  
         float permm = 2;
         float deltal = 4;
@@ -70,14 +75,40 @@ void FixedUpdate(float timeStep)
         Quaternion vert = Quaternion(mappedInput.x * permm + deltaInput.x * deltal, right);
         Quaternion hor = Quaternion(mappedInput.y * permm + deltaInput.y * deltal, top );
         AimVec =  vert * hor * AimVec;
+        
 		
 		float fwdDot = fwd.DotProduct(AimVec);
-		float backradius = (0.3);
-		if (fwdDot < backradius)
+		
+		if (fwdDot < aimzone)
 		{
-			Quaternion qback = Quaternion(100 * (fwdDot-backradius),fwd.CrossProduct(AimVec));
+			Quaternion qback = Quaternion(100 * (fwdDot-aimzone),fwd.CrossProduct(AimVec));
 			AimVec = qback * AimVec;
 		}
+        
+       
+        Vector3 rollvec;
+        if (fwdDot < rollzone)
+        {
+            rollvec = body.rotation.Inverse() * AimVec;
+            
+        } else {
+            
+            rollvec = body.rotation.Inverse() * Vector3(0,1,0);
+        }
+        
+        rollvec.z = 0;
+        rollvec.Normalize();
+        
+        float roll =  Atan2(rollvec.x, rollvec.y);
+        body.ApplyTorque(body.rotation * Vector3(0,0,-1 * Clamp(roll , -1 * RollForce , RollForce)));
+        
+        //Quaternion QAim;
+        //QAim.FromLookRotation(AimVec,top);
+        
+        Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
+        
+        body.ApplyTorque(body.rotation * Vector3(locaAimVec.y * -5,locaAimVec.x * 5,0));
+        
         
         lastImput = stickInput;
         
@@ -141,7 +172,7 @@ void DrawHud()
         
         hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
         
-        //hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
+        hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
         
         for (int i=0; i<499; i++)
         {
