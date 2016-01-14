@@ -52,9 +52,10 @@ void FixedUpdate(float timeStep)
         Vector2 deltaInput = stickInput - lastImput;
         
 
-        body.ApplyTorque(body.rotation * (Vector3(mappedInput.x  * 0.01, -1 * mappedInput.y* 0.01, 0 ) * -20));
+        //body.ApplyTorque(body.rotation * (Vector3(mappedInput.x  * -1, -1 * mappedInput.y, 0 ) * -20));
 
-        //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * 100, deltaInput.y * 100,0));
+        //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * 170, deltaInput.y * 170,0));
+		body.ApplyTorque(body.rotation * Vector3(0, 1,0));
         
         Vector3 fwd   = body.rotation *  Vector3(0,0,1);
         Vector3 top   = body.rotation *  Vector3(0,1,0);        
@@ -140,7 +141,7 @@ void DrawHud()
         
         hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
         
-        hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
+        //hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
         
         for (int i=0; i<499; i++)
         {
