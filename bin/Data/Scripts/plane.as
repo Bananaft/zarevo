@@ -24,9 +24,8 @@ void Init()
 		body.linearDamping = 0.4;
 		//body.angularFactor = Vector3(0.5f, 0.5f, 0.5f);
 		//body.collisionLayer = 2;
-        body.angularDamping = 0.99;
-        body.linearDamping = 0.8;
-        
+        body.angularDamping = 0.4;
+        body.linearDamping = 0.4;
         SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
     }
     
@@ -45,7 +44,7 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
         
-        body.ApplyForce(body.rotation * Vector3(0,0,900));
+        //body.ApplyForce(body.rotation * Vector3(0,0,900));
         
         // axis indexes: 
         // 0-leftHor 1-leftVert 2-rightHor 3-rightVert 4-leftTrigger 5-rightTrigger
@@ -61,7 +60,8 @@ void FixedUpdate(float timeStep)
         //body.ApplyTorque(body.rotation * (Vector3(mappedInput.x  * -1, -1 * mappedInput.y, 0 ) * -20));
 
         //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * 170, deltaInput.y * 170,0));
-		//body.ApplyTorque(body.rotation * Vector3(0, 1,0));
+		//body.ApplyTorque(body.rotation * Vector3(2, 0,1));
+		
         
         Vector3 fwd   = body.rotation *  Vector3(0,0,1);
         Vector3 top   = body.rotation *  Vector3(0,1,0);        
@@ -107,7 +107,7 @@ void FixedUpdate(float timeStep)
         
         Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
         
-        body.ApplyTorque(body.rotation * Vector3(locaAimVec.y * -5,locaAimVec.x * 5,0));
+        body.ApplyTorque(body.rotation * Vector3(Clamp(locaAimVec.y * -500, -5,5),Clamp(locaAimVec.x * 500,-5,5),0));
         
         
         lastImput = stickInput;
