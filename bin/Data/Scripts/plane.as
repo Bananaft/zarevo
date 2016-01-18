@@ -14,6 +14,18 @@ class plane : ScriptObject
     
     float RollForce = 6;
     float RollVel = 20;
+	
+	float rollMaxVel       = 0.2;
+	float rollDeltaVel     = 0.05;
+	
+	float yawMaxVel        = 0.5;
+	float yawDeltaVel      = 0.05;
+	
+	float pitchUpMaxVel    = 0.6;
+	float pitchUpDeltaVel  = 0.05;
+	
+	float pitchDwnMaxVel   = 0.2;
+	float pitchDwnDeltaVel = 0.05;
     
 void Init()
     {
@@ -100,15 +112,17 @@ void FixedUpdate(float timeStep)
         rollvec.Normalize();
         
         float roll =  Atan2(rollvec.x, rollvec.y);
-        body.ApplyTorque(body.rotation * Vector3(0,0,-1 * Clamp(roll , -1 * RollForce , RollForce)));
+        //body.ApplyTorque(body.rotation * Vector3(0,0,-1 * Clamp(roll , -1 * RollForce , RollForce)));
         
         //Quaternion QAim;
         //QAim.FromLookRotation(AimVec,top);
         
         Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
         
-        body.ApplyTorque(body.rotation * Vector3(Clamp(locaAimVec.y * -500, -5,5),Clamp(locaAimVec.x * 500,-5,5),0));
-        
+        //body.ApplyTorque(body.rotation * Vector3(Clamp(locaAimVec.y * -500, -5,5),Clamp(locaAimVec.x * 500,-5,5),0));
+		
+		
+        ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, 0));
         
         lastImput = stickInput;
         
@@ -117,6 +131,26 @@ void FixedUpdate(float timeStep)
         lgraph[graphpos] = stickInput;
 		
     }    
+	
+
+void ApplyControl (Vector3 CtrlVec)
+{
+	Vector3 angVel = body.angularVelocity;
+	
+	float pitch = mapAxis(CtrlVec.x , angVel.x , pitchDwnDeltaVel , pitchUpDeltaVel , pitchDwnMaxVel , pitchUpMaxVel);
+	float yaw   = mapAxis(CtrlVec.y , angVel.y , yawDeltaVel * -1 , yawDeltaVel     , yawMaxVel * -1   , yawMaxVel);
+	float roll  = mapAxis(CtrlVec.z , angVel.z , rollDeltaVel * -1 , rollDeltaVel    , rollMaxVel * -1  , rollMaxVel);
+	
+	body.angularVelocity = Vector3(pitch, yaw, roll);
+}
+
+float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max)
+{
+	Clamp(des, min, max);
+	float del = cur-des;
+	Clamp(del, mindel, maxdel);
+	return -1 * del;
+}
 
 Vector2 MapInput(Vector2 inp)
 {
