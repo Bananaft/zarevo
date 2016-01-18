@@ -56,11 +56,40 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
         
-        //body.ApplyForce(body.rotation * Vector3(0,0,900));
-        
-        // axis indexes: 
+		ctrl_Direct();
+
+		// axis indexes: 
         // 0-leftHor 1-leftVert 2-rightHor 3-rightVert 4-leftTrigger 5-rightTrigger
-        JoystickState@ joystick = input.joysticksByIndex[0];
+        
+		
+		JoystickState@ joystick = input.joysticksByIndex[0];
+               
+        Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
+        graphpos++;
+        if (graphpos > 500) graphpos = 0;
+        lgraph[graphpos] = stickInput;
+
+		lastImput = stickInput;
+    }    
+
+void ctrl_Direct()
+{
+	JoystickState@ joystick = input.joysticksByIndex[0];
+	
+	Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
+	float pedals = joystick.axisPosition[4] - joystick.axisPosition[5];
+	Vector2 mappedInput = MapInput(stickInput); 
+	
+	Vector2 deltaInput = stickInput - lastImput;
+	
+	ApplyControl(Vector3(mappedInput.x + deltaInput.x * 50 , mappedInput.y + deltaInput.y * 50, pedals));
+	
+}
+
+	
+void ctrl_AimVec ()
+{
+	    JoystickState@ joystick = input.joysticksByIndex[0];
         
         
         Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
@@ -69,15 +98,10 @@ void FixedUpdate(float timeStep)
         Vector2 deltaInput = stickInput - lastImput;
         
 
-        //body.ApplyTorque(body.rotation * (Vector3(mappedInput.x  * -1, -1 * mappedInput.y, 0 ) * -20));
-
-        //body.ApplyTorque(body.rotation * Vector3(deltaInput.x * 170, deltaInput.y * 170,0));
-		//body.ApplyTorque(body.rotation * Vector3(2, 0,1));
-		
         
         Vector3 fwd   = body.rotation *  Vector3(0,0,1);
         Vector3 top   = body.rotation *  Vector3(0,1,0);        
-        Vector3 right =  top.CrossProduct(AimVec); //body.rotation *  Vector3(1,0,0); //
+        Vector3 right =  top.CrossProduct(AimVec); 
         
         
  
@@ -112,26 +136,14 @@ void FixedUpdate(float timeStep)
         rollvec.Normalize();
         
         float roll =  Atan2(rollvec.x, rollvec.y);
-        //body.ApplyTorque(body.rotation * Vector3(0,0,-1 * Clamp(roll , -1 * RollForce , RollForce)));
-        
-        //Quaternion QAim;
-        //QAim.FromLookRotation(AimVec,top);
-        
+
         Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
-        
-        //body.ApplyTorque(body.rotation * Vector3(Clamp(locaAimVec.y * -500, -5,5),Clamp(locaAimVec.x * 500,-5,5),0));
+
 		
 		
         ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, 0));
-        
-        lastImput = stickInput;
-        
-        graphpos++;
-        if (graphpos > 500) graphpos = 0;
-        lgraph[graphpos] = stickInput;
-		
-    }    
 	
+}
 
 void ApplyControl (Vector3 CtrlVec)
 {
@@ -201,12 +213,9 @@ void DrawHud()
         Vector2 lastImputMapped = MapInput(lastImput);
         hud.AddCircle(node.position + (node.rotation * Vector3(70 + lastImputMapped.y * 10,-35 + lastImputMapped.x * 10,100)),node.rotation * Vector3(0,0,1), 1 ,hudcol2,8 , false);
         
-        //hud.AddLine(node.position + (node.rotation * Vector3(60,-35 + 10,100)), node.position + (node.rotation * Vector3(60 - 0.25 * 500,-35 + 10,100)), hudcol,false);
-        //hud.AddLine(node.position + (node.rotation * Vector3(60,-35 - 10,100)), node.position + (node.rotation * Vector3(60 - 0.25 * 500,-35 - 10,100)), hudcol,false);
-        
-        hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
-        
-        hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
+        //AimVec
+        //hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
+        //hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
         
         for (int i=0; i<499; i++)
         {
