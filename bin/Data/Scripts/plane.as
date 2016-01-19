@@ -15,17 +15,17 @@ class plane : ScriptObject
     float RollForce = 6;
     float RollVel = 20;
 	
-	float rollMaxVel       = 0.2;
-	float rollDeltaVel     = 0.05;
+	float rollMaxVel       = 500;
+	float rollDeltaVel     = 1;
 	
-	float yawMaxVel        = 0.5;
-	float yawDeltaVel      = 0.05;
+	float yawMaxVel        = 100;
+	float yawDeltaVel      = 5;
 	
-	float pitchUpMaxVel    = 0.6;
-	float pitchUpDeltaVel  = 0.05;
+	float pitchUpMaxVel    = 80000;
+	float pitchUpDeltaVel  = 5;
 	
-	float pitchDwnMaxVel   = 0.2;
-	float pitchDwnDeltaVel = 0.05;
+	float pitchDwnMaxVel   = 1000;
+	float pitchDwnDeltaVel = 5;
     
 void Init()
     {
@@ -36,7 +36,7 @@ void Init()
 		body.linearDamping = 0.4;
 		//body.angularFactor = Vector3(0.5f, 0.5f, 0.5f);
 		//body.collisionLayer = 2;
-        body.angularDamping = 0.4;
+        body.angularDamping = 0.1;
         body.linearDamping = 0.4;
         SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
     }
@@ -56,7 +56,8 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
         
-		ctrl_Direct();
+		//ctrl_Direct(timeStep);
+		ctrl_AimVec(timeStep);
 
 		// axis indexes: 
         // 0-leftHor 1-leftVert 2-rightHor 3-rightVert 4-leftTrigger 5-rightTrigger
@@ -65,14 +66,14 @@ void FixedUpdate(float timeStep)
 		JoystickState@ joystick = input.joysticksByIndex[0];
                
         Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
-        graphpos++;
-        if (graphpos > 500) graphpos = 0;
-        lgraph[graphpos] = stickInput;
+        //graphpos++;
+        //if (graphpos > 500) graphpos = 0;
+        //lgraph[graphpos] = stickInput;
 
 		lastImput = stickInput;
     }    
 
-void ctrl_Direct()
+void ctrl_Direct(float timeStep)
 {
 	JoystickState@ joystick = input.joysticksByIndex[0];
 	
@@ -82,12 +83,12 @@ void ctrl_Direct()
 	
 	Vector2 deltaInput = stickInput - lastImput;
 	
-	ApplyControl(Vector3(mappedInput.x + deltaInput.x * 50 , mappedInput.y + deltaInput.y * 50, pedals));
+	ApplyControl(Vector3(mappedInput.x * 200, mappedInput.y * 200, pedals*200), timeStep); // + deltaInput.y * 50
 	
 }
 
 	
-void ctrl_AimVec ()
+void ctrl_AimVec (float timeStep)
 {
 	    JoystickState@ joystick = input.joysticksByIndex[0];
         
@@ -141,27 +142,36 @@ void ctrl_AimVec ()
 
 		
 		
-        ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, 0));
+        ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, 0), timeStep);
 	
 }
 
-void ApplyControl (Vector3 CtrlVec)
+void ApplyControl (Vector3 CtrlVec, float timeStep)
 {
 	Vector3 angVel = body.angularVelocity;
 	
-	float pitch = mapAxis(CtrlVec.x , angVel.x , pitchDwnDeltaVel , pitchUpDeltaVel , pitchDwnMaxVel , pitchUpMaxVel);
+	Quaternion ori = body.rotation;
+	
+	angVel = ori.Inverse() * angVel;
+	
+	float pitch = mapAxis(CtrlVec.x , angVel.x , pitchDwnDeltaVel * -1 , pitchUpDeltaVel , pitchDwnMaxVel * -1 , pitchUpMaxVel);
 	float yaw   = mapAxis(CtrlVec.y , angVel.y , yawDeltaVel * -1 , yawDeltaVel     , yawMaxVel * -1   , yawMaxVel);
 	float roll  = mapAxis(CtrlVec.z , angVel.z , rollDeltaVel * -1 , rollDeltaVel    , rollMaxVel * -1  , rollMaxVel);
 	
-	body.angularVelocity = Vector3(pitch, yaw, roll);
+	graphpos++;
+	if (graphpos > 500) graphpos = 0;
+        lgraph[graphpos] = Vector2(pitch, yaw);
+	
+	body.angularVelocity = ori * Vector3(pitch, yaw, roll) * timeStep;
 }
 
 float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max)
 {
-	Clamp(des, min, max);
-	float del = cur-des;
-	Clamp(del, mindel, maxdel);
-	return -1 * del;
+	//des = Clamp(des, min, max);
+	float del = des-cur;
+	log.Info(del);
+	del = Clamp(del, mindel, maxdel);
+	return del;
 }
 
 Vector2 MapInput(Vector2 inp)
@@ -214,8 +224,8 @@ void DrawHud()
         hud.AddCircle(node.position + (node.rotation * Vector3(70 + lastImputMapped.y * 10,-35 + lastImputMapped.x * 10,100)),node.rotation * Vector3(0,0,1), 1 ,hudcol2,8 , false);
         
         //AimVec
-        //hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
-        //hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
+        hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
+        hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
         
         for (int i=0; i<499; i++)
         {
