@@ -10,22 +10,22 @@ class plane : ScriptObject
     
     Vector3 AimVec = Vector3(0,0,1);
     float aimzone = 0.3;
-    float rollzone = 0.99;
+    float rollzone = 0.92;
     
     float RollForce = 6;
     float RollVel = 20;
 	
-	float rollMaxVel       = 500;
-	float rollDeltaVel     = 1;
+	float rollMaxVel       = 3;
+	float rollDeltaVel     = 15;
 	
-	float yawMaxVel        = 100;
-	float yawDeltaVel      = 5;
+	float yawMaxVel        = 0.1;
+	float yawDeltaVel      = 25;
 	
-	float pitchUpMaxVel    = 80000;
-	float pitchUpDeltaVel  = 5;
+	float pitchUpMaxVel    = 1;
+	float pitchUpDeltaVel  = 25;
 	
-	float pitchDwnMaxVel   = 1000;
-	float pitchDwnDeltaVel = 5;
+	float pitchDwnMaxVel   = 0.6;
+	float pitchDwnDeltaVel = 25;
     
 void Init()
     {
@@ -55,6 +55,8 @@ void Update(float timeStep)
 void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
+		
+		//body.ApplyForce(body.rotation * Vector3(0,0,500));
         
 		//ctrl_Direct(timeStep);
 		ctrl_AimVec(timeStep);
@@ -142,7 +144,7 @@ void ctrl_AimVec (float timeStep)
 
 		
 		
-        ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, 0), timeStep);
+        ApplyControl(Vector3(-50 * locaAimVec.y, 50 * locaAimVec.x, -50 * roll), timeStep);
 	
 }
 
@@ -154,24 +156,31 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 	
 	angVel = ori.Inverse() * angVel;
 	
-	float pitch = mapAxis(CtrlVec.x , angVel.x , pitchDwnDeltaVel * -1 , pitchUpDeltaVel , pitchDwnMaxVel * -1 , pitchUpMaxVel);
-	float yaw   = mapAxis(CtrlVec.y , angVel.y , yawDeltaVel * -1 , yawDeltaVel     , yawMaxVel * -1   , yawMaxVel);
-	float roll  = mapAxis(CtrlVec.z , angVel.z , rollDeltaVel * -1 , rollDeltaVel    , rollMaxVel * -1  , rollMaxVel);
+	float pitch = mapAxis(CtrlVec.x , angVel.x , pitchDwnDeltaVel * -1 , pitchUpDeltaVel , pitchDwnMaxVel * -1 , pitchUpMaxVel , timeStep);
+	float yaw   = mapAxis(CtrlVec.y , angVel.y , yawDeltaVel * -1 , yawDeltaVel     , yawMaxVel * -1   , yawMaxVel , timeStep);
+	float roll  = mapAxis(CtrlVec.z , angVel.z , rollDeltaVel * -1 , rollDeltaVel    , rollMaxVel * -1  , rollMaxVel , timeStep);
 	
 	graphpos++;
 	if (graphpos > 500) graphpos = 0;
         lgraph[graphpos] = Vector2(pitch, yaw);
 	
-	body.angularVelocity = ori * Vector3(pitch, yaw, roll) * timeStep;
+	body.angularVelocity = ori * Vector3(pitch , yaw , roll);
 }
 
-float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max)
+float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max, float timeStep)
 {
-	//des = Clamp(des, min, max);
+	des = Clamp(des, min, max);
 	float del = des-cur;
 	log.Info(del);
-	del = Clamp(del, mindel, maxdel);
-	return del;
+	
+	//mindel = mindel * 1000 * timeStep;
+	//maxdel = maxdel * 1000 * timeStep;
+	
+	del = Clamp(del, mindel, maxdel) * timeStep;
+	
+	float newVel = cur+del;
+	
+	return newVel;
 }
 
 Vector2 MapInput(Vector2 inp)
