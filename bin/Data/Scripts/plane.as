@@ -85,7 +85,7 @@ void ctrl_Direct(float timeStep)
 	
 	Vector2 deltaInput = stickInput - lastImput;
 	
-	ApplyControl(Vector3(mappedInput.x * 200, mappedInput.y * 200, pedals*200), timeStep); // + deltaInput.y * 50
+	ApplyControl(Vector3(mappedInput.x * -200 + deltaInput.y * -50, pedals*200 + deltaInput.y * 200, mappedInput.y * -30), timeStep); // + deltaInput.y * 50
 	
 }
 
@@ -144,7 +144,7 @@ void ctrl_AimVec (float timeStep)
 
 		
 		
-        ApplyControl(Vector3(-50 * locaAimVec.y, 50 * locaAimVec.x, -50 * roll), timeStep);
+        ApplyControl(Vector3(-50 * locaAimVec.y, 50 * locaAimVec.x, -5 * roll), timeStep);
 	
 }
 
@@ -169,15 +169,15 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 
 float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max, float timeStep)
 {
-	des = Clamp(des, min, max);
+	//des = Clamp(des, min, max);
 	float del = des-cur;
 	log.Info(del);
 	
 	//mindel = mindel * 1000 * timeStep;
 	//maxdel = maxdel * 1000 * timeStep;
 	
-	del = Clamp(del, mindel, maxdel) * timeStep;
-	
+	//del = Clamp(del, mindel, maxdel) * timeStep;
+	del*= timeStep;
 	float newVel = cur+del;
 	
 	return newVel;
