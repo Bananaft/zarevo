@@ -10,7 +10,8 @@ class plane : ScriptObject
     
     Vector3 AimVec = Vector3(0,0,1);
     float aimzone = 0.3;
-    float rollzone = 0.99;
+    float rollzone = 0.999;
+	float rollendzone = 0.92;
     
     float RollForce = 6;
     float RollVel = 20;
@@ -71,6 +72,7 @@ void FixedUpdate(float timeStep)
         //graphpos++;
         //if (graphpos > 500) graphpos = 0;
         //lgraph[graphpos] = stickInput;
+		
 
 		lastImput = stickInput;
     }    
@@ -85,7 +87,7 @@ void ctrl_Direct(float timeStep)
 	
 	Vector2 deltaInput = stickInput - lastImput;
 	
-	ApplyControl(Vector3(mappedInput.x * -200 + deltaInput.y * -50, pedals*200 + deltaInput.y * 200, mappedInput.y * -30), timeStep); // + deltaInput.y * 50
+	ApplyControl(Vector3(mappedInput.x * -2 + deltaInput.y * -3, pedals*-2 + deltaInput.y * 3, mappedInput.y * -3), timeStep); // + deltaInput.y * 50
 	
 }
 
@@ -128,12 +130,16 @@ void ctrl_AimVec (float timeStep)
         Vector3 rollvec;
         if (fwdDot < rollzone)
         {
-            rollvec = body.rotation.Inverse() * AimVec;
+           float  rollLerp = (fwdDot - rollzone) / (rollendzone-rollzone);
+		
+			rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), rollLerp * -1);
             
         } else {
             
             rollvec = body.rotation.Inverse() * Vector3(0,1,0);
         }
+		
+		
         
         rollvec.z = 0;
         rollvec.Normalize();
