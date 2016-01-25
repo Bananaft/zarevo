@@ -18,14 +18,14 @@ class plane : ScriptObject
 	float rollMaxVel       = 3;
 	float rollDeltaVel     = 15;
 	
-	float yawMaxVel        = 0.1;
-	float yawDeltaVel      = 25;
+	float yawMaxVel        = 10;
+	float yawDeltaVel      = 2500;
 	
-	float pitchUpMaxVel    = 1;
-	float pitchUpDeltaVel  = 25;
+	float pitchUpMaxVel    = 100;
+	float pitchUpDeltaVel  = 2500;
 	
-	float pitchDwnMaxVel   = 0.6;
-	float pitchDwnDeltaVel = 25;
+	float pitchDwnMaxVel   = 60;
+	float pitchDwnDeltaVel = 2500;
     
 void Init()
     {
@@ -36,7 +36,7 @@ void Init()
 		body.linearDamping = 0.4;
 		//body.angularFactor = Vector3(0.5f, 0.5f, 0.5f);
 		//body.collisionLayer = 2;
-        body.angularDamping = 0.1;
+        body.angularDamping = 0.0;
         body.linearDamping = 0.4;
         SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
     }
@@ -98,7 +98,7 @@ void ctrl_AimVec (float timeStep)
         Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
         Vector2 mappedInput = MapInput(stickInput); 
         
-        Vector2 deltaInput = stickInput - lastImput;
+        Vector2 deltaInput = Vector2(0,0);//stickInput - lastImput;
         
 
         
@@ -142,9 +142,11 @@ void ctrl_AimVec (float timeStep)
 
         Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
 
+		float yaw = Atan2(locaAimVec.x,locaAimVec.z);
+		float pitch = Atan2(locaAimVec.y,locaAimVec.z) * -1;
 		
-		
-        ApplyControl(Vector3(-50 * locaAimVec.y, 50 * locaAimVec.x, -5 * roll), timeStep);
+        ApplyControl(Vector3(pitch,yaw,0), timeStep);
+		//ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, -1 * roll), timeStep);
 	
 }
 
@@ -162,7 +164,7 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 	
 	graphpos++;
 	if (graphpos > 500) graphpos = 0;
-        lgraph[graphpos] = Vector2(pitch, yaw);
+        lgraph[graphpos] = Vector2(CtrlVec.x, CtrlVec.y);
 	
 	body.angularVelocity = ori * Vector3(pitch , yaw , roll);
 }
@@ -171,13 +173,13 @@ float mapAxis (float des, float cur,float mindel, float maxdel, float min, float
 {
 	//des = Clamp(des, min, max);
 	float del = des-cur;
-	log.Info(del);
+	log.Info(timeStep);
 	
 	//mindel = mindel * 1000 * timeStep;
 	//maxdel = maxdel * 1000 * timeStep;
 	
 	//del = Clamp(del, mindel, maxdel) * timeStep;
-	del*= timeStep;
+	del*= timeStep * 60;
 	float newVel = cur+del;
 	
 	return newVel;
