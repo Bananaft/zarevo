@@ -10,22 +10,22 @@ class plane : ScriptObject
     
     Vector3 AimVec = Vector3(0,0,1);
     float aimzone = 0.3;
-    float rollzone = 0.92;
+    float rollzone = 0.99;
     
     float RollForce = 6;
     float RollVel = 20;
 	
-	float rollMaxVel       = 3;
-	float rollDeltaVel     = 15;
+	float rollMaxVel       = 1;
+	float rollDeltaVel     = 250;
 	
-	float yawMaxVel        = 10;
-	float yawDeltaVel      = 2500;
+	float yawMaxVel        = 0.25;
+	float yawDeltaVel      = 250;
 	
-	float pitchUpMaxVel    = 100;
-	float pitchUpDeltaVel  = 2500;
+	float pitchUpMaxVel    = 0.7;
+	float pitchUpDeltaVel  = 250;
 	
-	float pitchDwnMaxVel   = 60;
-	float pitchDwnDeltaVel = 2500;
+	float pitchDwnMaxVel   = 1;
+	float pitchDwnDeltaVel = 250;
     
 void Init()
     {
@@ -56,7 +56,7 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
 		
-		//body.ApplyForce(body.rotation * Vector3(0,0,500));
+		body.ApplyForce(body.rotation * Vector3(0,0,500));
         
 		//ctrl_Direct(timeStep);
 		ctrl_AimVec(timeStep);
@@ -98,7 +98,7 @@ void ctrl_AimVec (float timeStep)
         Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
         Vector2 mappedInput = MapInput(stickInput); 
         
-        Vector2 deltaInput = Vector2(0,0);//stickInput - lastImput;
+        Vector2 deltaInput = stickInput - lastImput;
         
 
         
@@ -109,7 +109,7 @@ void ctrl_AimVec (float timeStep)
         
  
         float permm = 2;
-        float deltal = 4;
+        float deltal = 5;
             
         Quaternion vert = Quaternion(mappedInput.x * permm + deltaInput.x * deltal, right);
         Quaternion hor = Quaternion(mappedInput.y * permm + deltaInput.y * deltal, top );
@@ -145,7 +145,7 @@ void ctrl_AimVec (float timeStep)
 		float yaw = Atan2(locaAimVec.x,locaAimVec.z);
 		float pitch = Atan2(locaAimVec.y,locaAimVec.z) * -1;
 		
-        ApplyControl(Vector3(pitch,yaw,0), timeStep);
+        ApplyControl(Vector3(pitch, yaw ,  -1 * roll), timeStep);
 		//ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, -1 * roll), timeStep);
 	
 }
@@ -171,15 +171,16 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 
 float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max, float timeStep)
 {
-	//des = Clamp(des, min, max);
+	des = Clamp(des, min, max) ;
 	float del = des-cur;
 	log.Info(timeStep);
 	
-	//mindel = mindel * 1000 * timeStep;
-	//maxdel = maxdel * 1000 * timeStep;
-	
-	//del = Clamp(del, mindel, maxdel) * timeStep;
 	del*= timeStep * 60;
+	mindel = mindel * 60 * timeStep;
+	maxdel = maxdel * 60 * timeStep;
+	
+	del = Clamp(del, mindel, maxdel);
+	
 	float newVel = cur+del;
 	
 	return newVel;
