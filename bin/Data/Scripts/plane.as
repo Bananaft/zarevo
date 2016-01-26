@@ -169,9 +169,14 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 	
 	angVel = ori.Inverse() * angVel;
 	
-	float pitch = mapAxis(CtrlVec.x , angVel.x , pitchDwnDeltaVel * -1 , pitchUpDeltaVel , pitchDwnMaxVel * -1 , pitchUpMaxVel , timeStep);
-	float yaw   = mapAxis(CtrlVec.y , angVel.y , yawDeltaVel * -1 , yawDeltaVel     , yawMaxVel * -1   , yawMaxVel , timeStep);
-	float roll  = mapAxis(CtrlVec.z , angVel.z , rollDeltaVel * -1 , rollDeltaVel    , rollMaxVel * -1  , rollMaxVel , timeStep);
+	float cpitch = Clamp(CtrlVec.x, pitchDwnMaxVel * -1 , pitchUpMaxVel );
+	float cyaw = Clamp(CtrlVec.y, yawMaxVel * -1   , yawMaxVel);
+	float croll = Clamp(CtrlVec.z, rollMaxVel * -1  , rollMaxVel );
+	
+	
+	float pitch = mapAxis(cpitch , angVel.x , pitchDwnDeltaVel * -1 , pitchUpDeltaVel , timeStep);
+	float yaw   = mapAxis(cyaw , angVel.y , yawDeltaVel * -1 , yawDeltaVel     ,  timeStep);
+	float roll  = mapAxis(croll , angVel.z , rollDeltaVel * -1 , rollDeltaVel    ,  timeStep);
 	
 	graphpos++;
 	if (graphpos > 500) graphpos = 0;
@@ -182,9 +187,8 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 	dsp_ctrl_vec = Vector2(pitch, yaw);
 }
 
-float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max, float timeStep)
+float mapAxis (float des, float cur,float mindel, float maxdel, float timeStep)
 {
-	des = Clamp(des, min, max) ;
 	float del = des-cur;
 	log.Info(timeStep);
 	
