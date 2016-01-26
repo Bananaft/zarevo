@@ -5,8 +5,10 @@ class plane : ScriptObject
     float deadzone = 0.2;
     float livezone = 0.95;
     float inpCurve = 1.9;
-    Array<Vector2> lgraph(500,Vector2(0,0));
+    
+	Array<Vector2> lgraph(500,Vector2(0,0));
     int graphpos = 0;
+	Vector2 dsp_ctrl_vec = Vector2(0,0);
     
     Vector3 AimVec = Vector3(0,0,1);
     float aimzone = 0.3;
@@ -17,16 +19,16 @@ class plane : ScriptObject
     float RollVel = 20;
 	
 	float rollMaxVel       = 1;
-	float rollDeltaVel     = 250;
+	float rollDeltaVel     = 25;
 	
 	float yawMaxVel        = 0.25;
-	float yawDeltaVel      = 250;
+	float yawDeltaVel      = 25;
 	
 	float pitchUpMaxVel    = 0.7;
-	float pitchUpDeltaVel  = 250;
+	float pitchUpDeltaVel  = 25;
 	
 	float pitchDwnMaxVel   = 1;
-	float pitchDwnDeltaVel = 250;
+	float pitchDwnDeltaVel = 25;
     
 void Init()
     {
@@ -130,7 +132,7 @@ void ctrl_AimVec (float timeStep)
         Vector3 rollvec;
         if (fwdDot < rollzone)
         {
-           float  rollLerp = (fwdDot - rollzone) / (rollendzone-rollzone);
+           float  rollLerp = Clamp((fwdDot - rollzone) / (rollendzone-rollzone),0,1);
 		
 			rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), rollLerp * -1);
             
@@ -151,9 +153,12 @@ void ctrl_AimVec (float timeStep)
 		float yaw = Atan2(locaAimVec.x,locaAimVec.z);
 		float pitch = Atan2(locaAimVec.y,locaAimVec.z) * -1;
 		
-        ApplyControl(Vector3(pitch, yaw ,  -1 * roll), timeStep);
+		
+
+        ApplyControl(Vector3(pitch, yaw ,  -0 * roll), timeStep);
 		//ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, -1 * roll), timeStep);
 	
+		
 }
 
 void ApplyControl (Vector3 CtrlVec, float timeStep)
@@ -173,6 +178,8 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
         lgraph[graphpos] = Vector2(CtrlVec.x, CtrlVec.y);
 	
 	body.angularVelocity = ori * Vector3(pitch , yaw , roll);
+	
+	dsp_ctrl_vec = Vector2(pitch, yaw);
 }
 
 float mapAxis (float des, float cur,float mindel, float maxdel, float min, float max, float timeStep)
@@ -245,6 +252,8 @@ void DrawHud()
         hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
         hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
         
+		hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position +  node.rotation * Vector3(dsp_ctrl_vec.y * 20 , dsp_ctrl_vec.x * -20,100), hudcol2,false);
+		
         for (int i=0; i<499; i++)
         {
             hud.AddLine(node.position + (node.rotation * Vector3(60 - 0.25 * i ,-35 + 10 * lgraph[i].x,100)),
