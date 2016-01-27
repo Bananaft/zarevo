@@ -155,7 +155,7 @@ void ctrl_AimVec (float timeStep)
 		
 		
 
-        ApplyControl(Vector3(pitch, yaw ,  -0 * roll), timeStep);
+        ApplyControl(Vector3(pitch, yaw ,  -1 * roll), timeStep);
 		//ApplyControl(Vector3(-5 * locaAimVec.y, 5 * locaAimVec.x, -1 * roll), timeStep);
 	
 		
@@ -169,9 +169,24 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 	
 	angVel = ori.Inverse() * angVel;
 	
-	float cpitch = Clamp(CtrlVec.x, pitchDwnMaxVel * -1 , pitchUpMaxVel );
-	float cyaw = Clamp(CtrlVec.y, yawMaxVel * -1   , yawMaxVel);
+	float cpitch = CtrlVec.x;
+	float cyaw =  CtrlVec.y; //Clamp(CtrlVec.y, yawMaxVel * -1   , yawMaxVel);
 	float croll = Clamp(CtrlVec.z, rollMaxVel * -1  , rollMaxVel );
+	
+	if (pitchDwnMaxVel * -1 > cpitch ||  cpitch > pitchUpMaxVel)
+	{
+		cpitch = Clamp(cpitch, pitchDwnMaxVel * -1 , pitchUpMaxVel );
+		float cpindx = cpitch/CtrlVec.x;
+		cyaw *= cpindx;
+	}	
+	
+	if (yawMaxVel * -1 > cyaw ||  cyaw > yawMaxVel)
+	{
+		float ccyaw = cyaw;
+		cyaw = Clamp(cyaw, yawMaxVel * -1   , yawMaxVel);
+		float cyindx = cyaw/ccyaw;
+		cpitch *= cyindx;
+	}	
 	
 	
 	float pitch = mapAxis(cpitch , angVel.x , pitchDwnDeltaVel * -1 , pitchUpDeltaVel , timeStep);
@@ -179,7 +194,7 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 	float roll  = mapAxis(croll , angVel.z , rollDeltaVel * -1 , rollDeltaVel    ,  timeStep);
 	
 	graphpos++;
-	if (graphpos > 500) graphpos = 0;
+	if (graphpos >= 500) graphpos = 0;
         lgraph[graphpos] = Vector2(CtrlVec.x, CtrlVec.y);
 	
 	body.angularVelocity = ori * Vector3(pitch , yaw , roll);
@@ -190,7 +205,6 @@ void ApplyControl (Vector3 CtrlVec, float timeStep)
 float mapAxis (float des, float cur,float mindel, float maxdel, float timeStep)
 {
 	float del = des-cur;
-	log.Info(timeStep);
 	
 	del*= timeStep * 60;
 	mindel = mindel * 60 * timeStep;
