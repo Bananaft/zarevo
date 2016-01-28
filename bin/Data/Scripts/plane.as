@@ -270,7 +270,7 @@ void DrawHud()
         hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position + AimVec * 100, hudcol,false);
         hud.AddCircle(node.position + (node.rotation * Vector3(0,0,100)),AimVec, 20 ,hudcol,32 , false);
         
-		hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position +  node.rotation * Vector3(dsp_ctrl_vec.y * 20 , dsp_ctrl_vec.x * -20,100), hudcol2,false);
+		//hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position +  node.rotation * Vector3(dsp_ctrl_vec.y * 20 , dsp_ctrl_vec.x * -20,100), hudcol2,false);
 		
         for (int i=0; i<499; i++)
         {
