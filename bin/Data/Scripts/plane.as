@@ -12,23 +12,23 @@ class plane : ScriptObject
     
     Vector3 AimVec = Vector3(0,0,1);
     float aimzone = 0.3;
-    float rollzone = 0.999;
-	float rollendzone = 0.92;
+    float rollzone = 0.99995;
+	float rollendzone = 0.97;
     
     float RollForce = 6;
     float RollVel = 20;
 	
 	float rollMaxVel       = 1;
-	float rollDeltaVel     = 25;
+	float rollDeltaVel     = 0.25;
 	
-	float yawMaxVel        = 0.25;
-	float yawDeltaVel      = 25;
+	float yawMaxVel        = 0.1;
+	float yawDeltaVel      = 0.25;
 	
-	float pitchUpMaxVel    = 0.7;
-	float pitchUpDeltaVel  = 25;
+	float pitchUpMaxVel    = 0.3;
+	float pitchUpDeltaVel  = 0.25;
 	
-	float pitchDwnMaxVel   = 1;
-	float pitchDwnDeltaVel = 25;
+	float pitchDwnMaxVel   = 0.5;
+	float pitchDwnDeltaVel = 0.25;
     
 void Init()
     {
@@ -132,9 +132,11 @@ void ctrl_AimVec (float timeStep)
         Vector3 rollvec;
         if (fwdDot < rollzone)
         {
-           float  rollLerp = Clamp((fwdDot - rollzone) / (rollendzone-rollzone),0,1);
-		
-			rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), rollLerp * -1);
+           float  rollLerp = (fwdDot - rollzone) / (rollendzone-rollzone);
+		   //rollLerp = Clamp(rollLerp,0,1);
+		   if (rollLerp>1) rollLerp = 1;
+			log.Info(rollLerp);
+			rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), 1 - rollLerp);
             
         } else {
             
