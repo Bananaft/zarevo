@@ -30,7 +30,8 @@ class plane : ScriptObject
 	float pitchDwnMaxVel   = 0.5;
 	float pitchDwnDeltaVel = 0.25;
 	
-	bool autopilot = true;
+	bool autopilot = false;
+	float autotimer = 0;
     
 void Init()
     {
@@ -86,7 +87,25 @@ void FixedUpdate(float timeStep)
 	
 void AI_ctrl(float timeStep)
 {
-	AimVec += Vector3(1-Random(2),1-Random(2),1-Random(2)) * 0.05;
+	if (autotimer > 20)
+	{
+		AimVec += Vector3(1-Random(2),1-Random(2),1-Random(2)) * 0.3;
+		autotimer = 0;
+	}
+	autotimer++;
+
+	Vector3 pos = body.position;
+	
+	PhysicsRaycastResult result = physicsWorld.RaycastSingle(Ray(pos, body.rotation * Vector3(0,0,1)),400,1);
+	
+	 if (result.body !is null) AimVec.y += 0.2;
+	 if (pos.y > 600) AimVec.y = -1;
+	 if (pos.y < -1) body.position = Vector3(0,200,0);
+	 if (pos.x > 1600) AimVec.x = -1;
+	 if (pos.x < -1600) AimVec.x = 1;
+	 if (pos.y > 1600) AimVec.y = -1;
+	 if (pos.y < -1600) AimVec.y = 1;
+	 
 	AimVec.Normalize();
 	
 	Vector3 fwd   = body.rotation *  Vector3(0,0,1);
@@ -95,36 +114,42 @@ void AI_ctrl(float timeStep)
 	
 	float fwdDot = fwd.DotProduct(AimVec);
 	
+	if (fwdDot < 1)
+	{
+		Quaternion qback = Quaternion(100 * (fwdDot-aimzone),fwd.CrossProduct(AimVec));
+		AimVec = qback * AimVec;
+	}
+	
 	
 	Vector3 rollvec;
-        if (fwdDot < rollzone)
-        {
-           float  rollLerp = (fwdDot - rollzone) / (rollendzone-rollzone);
-		   //rollLerp = Clamp(rollLerp,0,1);
-		   if (rollLerp>1) rollLerp = 1;
-			log.Info(rollLerp);
-			rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), 1 - rollLerp);
-            
-        } else {
-            
-            rollvec = body.rotation.Inverse() * Vector3(0,1,0);
-        }
+	if (fwdDot < rollzone)
+	{
+	   float  rollLerp = (fwdDot - rollzone) / (rollendzone-rollzone);
+	   //rollLerp = Clamp(rollLerp,0,1);
+	   if (rollLerp>1) rollLerp = 1;
 		
+		rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), 1 - rollLerp);
 		
-        
-        rollvec.z = 0;
-        rollvec.Normalize();
-        
-        float roll =  Atan2(rollvec.x, rollvec.y);
+	} else {
+		
+		rollvec = body.rotation.Inverse() * Vector3(0,1,0);
+	}
 
-        Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
+	
+	
+	rollvec.z = 0;
+	rollvec.Normalize();
+	
+	float roll =  Atan2(rollvec.x, rollvec.y);
 
-		float yaw = Atan2(locaAimVec.x,locaAimVec.z);
-		float pitch = Atan2(locaAimVec.y,locaAimVec.z) * -1;
-		
-		
+	Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
 
-        ApplyControl(Vector3(pitch, yaw ,  -1 * roll), timeStep);
+	float yaw = Atan2(locaAimVec.x,locaAimVec.z);
+	float pitch = Atan2(locaAimVec.y,locaAimVec.z) * -1;
+	
+	
+
+	ApplyControl(Vector3(pitch, yaw ,  -1 * roll), timeStep);
 }
 
 void ctrl_Direct(float timeStep)
@@ -183,7 +208,7 @@ void ctrl_AimVec (float timeStep)
            float  rollLerp = (fwdDot - rollzone) / (rollendzone-rollzone);
 		   //rollLerp = Clamp(rollLerp,0,1);
 		   if (rollLerp>1) rollLerp = 1;
-			log.Info(rollLerp);
+			
 			rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), 1 - rollLerp);
             
         } else {
@@ -322,7 +347,7 @@ void DrawHud()
         
 		//hud.AddLine(node.position + (node.rotation * Vector3(0,0,100)), node.position +  node.rotation * Vector3(dsp_ctrl_vec.y * 20 , dsp_ctrl_vec.x * -20,100), hudcol2,false);
 		
-        for (int i=0; i<499; i++)
+/*        for (int i=0; i<499; i++)
         {
             hud.AddLine(node.position + (node.rotation * Vector3(60 - 0.25 * i ,-35 + 10 * lgraph[i].x,100)),
                         node.position + (node.rotation * Vector3(60 - 0.25 * (i+1),-35 + 10 * lgraph[i+1].x,100)), hudcol,false);
@@ -334,7 +359,7 @@ void DrawHud()
                         node.position + (node.rotation * Vector3(60 - 0.25 * (i+1),-35 + 10 * mpinp2.x,100)), hudcol2,false);
             hud.AddLine(node.position + (node.rotation * Vector3(60 - 0.25 * i ,-35 + 10 * mpinp.y,100)),
                         node.position + (node.rotation * Vector3(60 - 0.25 * (i+1),-35 + 10 * mpinp2.y,100)), hudcol2,false);
-        }
+        }*/
         
     }
         
