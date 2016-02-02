@@ -11,7 +11,7 @@ class plane : ScriptObject
 	Vector2 dsp_ctrl_vec = Vector2(0,0);
     
     Vector3 AimVec = Vector3(0,0,1);
-    float aimzone = 0.3;
+    float aimzone = 0.9;
     float rollzone = 0.99995;
 	float rollendzone = 0.97;
     
@@ -29,6 +29,8 @@ class plane : ScriptObject
 	
 	float pitchDwnMaxVel   = 0.5;
 	float pitchDwnDeltaVel = 0.25;
+	
+	bool autopilot = true;
     
 void Init()
     {
@@ -61,8 +63,11 @@ void FixedUpdate(float timeStep)
 		
 		body.ApplyForce(body.rotation * Vector3(0,0,500));
         
+		if (autopilot) AI_ctrl(timeStep); else ctrl_AimVec(timeStep);
+
 		//ctrl_Direct(timeStep);
-		ctrl_AimVec(timeStep);
+		
+
 
 		// axis indexes: 
         // 0-leftHor 1-leftVert 2-rightHor 3-rightVert 4-leftTrigger 5-rightTrigger
@@ -78,6 +83,49 @@ void FixedUpdate(float timeStep)
 
 		lastImput = stickInput;
     }    
+	
+void AI_ctrl(float timeStep)
+{
+	AimVec += Vector3(1-Random(2),1-Random(2),1-Random(2)) * 0.05;
+	AimVec.Normalize();
+	
+	Vector3 fwd   = body.rotation *  Vector3(0,0,1);
+    Vector3 top   = body.rotation *  Vector3(0,1,0);        
+        
+	
+	float fwdDot = fwd.DotProduct(AimVec);
+	
+	
+	Vector3 rollvec;
+        if (fwdDot < rollzone)
+        {
+           float  rollLerp = (fwdDot - rollzone) / (rollendzone-rollzone);
+		   //rollLerp = Clamp(rollLerp,0,1);
+		   if (rollLerp>1) rollLerp = 1;
+			log.Info(rollLerp);
+			rollvec = body.rotation.Inverse() * AimVec.Lerp(Vector3(0,1,0), 1 - rollLerp);
+            
+        } else {
+            
+            rollvec = body.rotation.Inverse() * Vector3(0,1,0);
+        }
+		
+		
+        
+        rollvec.z = 0;
+        rollvec.Normalize();
+        
+        float roll =  Atan2(rollvec.x, rollvec.y);
+
+        Vector3 locaAimVec = body.rotation.Inverse() * AimVec;
+
+		float yaw = Atan2(locaAimVec.x,locaAimVec.z);
+		float pitch = Atan2(locaAimVec.y,locaAimVec.z) * -1;
+		
+		
+
+        ApplyControl(Vector3(pitch, yaw ,  -1 * roll), timeStep);
+}
 
 void ctrl_Direct(float timeStep)
 {
