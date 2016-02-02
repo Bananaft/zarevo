@@ -50,7 +50,7 @@ void Init()
     
 void HandlePostRenderUpdate(StringHash eventType, VariantMap& eventData)
     {
-         DrawHud();
+         if (!autopilot) DrawHud();
     }
 
 void Update(float timeStep)
@@ -62,7 +62,7 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
 		
-		body.ApplyForce(body.rotation * Vector3(0,0,500));
+		body.ApplyForce(body.rotation * Vector3(0,0,200));
         
 		if (autopilot) AI_ctrl(timeStep); else ctrl_AimVec(timeStep);
 
@@ -116,7 +116,7 @@ void AI_ctrl(float timeStep)
 	
 	if (fwdDot < 1)
 	{
-		Quaternion qback = Quaternion(100 * (fwdDot-aimzone),fwd.CrossProduct(AimVec));
+		Quaternion qback = Quaternion(10 * (fwdDot-aimzone),fwd.CrossProduct(AimVec));
 		AimVec = qback * AimVec;
 	}
 	

@@ -100,6 +100,21 @@ void Start()
        object.material = CloudMat;
        object.castShadows = true;
    }
+  
+	
+   for (int i=0; i<20; i++)
+   {
+		Node@ aiPlaneNode = scene_.CreateChild("aiPlane");
+		aiPlaneNode.position = Vector3(0, 300, 50 * i);
+		StaticModel@ planeModel = aiPlaneNode.CreateComponent("StaticModel");
+		planeModel.model = cache.GetResource("Model", "Models/Vehicles/aircrafts/f16");
+		planeModel.material = cache.GetResource("Material", "Materials/test1.xml");
+		planeModel.castShadows = true;
+		
+		plane@ aiplane = cast<plane>(aiPlaneNode.CreateScriptObject(scriptFile, "plane"));
+		aiplane.Init();
+		aiplane.autopilot = true;
+   }
    
 
 }
