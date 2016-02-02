@@ -43,7 +43,7 @@ void Init()
 		//body.angularFactor = Vector3(0.5f, 0.5f, 0.5f);
 		//body.collisionLayer = 2;
         body.angularDamping = 0.0;
-        body.linearDamping = 0.4;
+        body.linearDamping = 0.9;
         SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
     }
     
@@ -62,7 +62,7 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
 		
-		body.ApplyForce(body.rotation * Vector3(0,0,200));
+		body.ApplyForce(body.rotation * Vector3(0,0,1000));
         
 		if (autopilot) AI_ctrl(timeStep); else ctrl_AimVec(timeStep);
 
@@ -170,7 +170,7 @@ void ctrl_Direct(float timeStep)
 void ctrl_AimVec (float timeStep)
 {
 	    JoystickState@ joystick = input.joysticksByIndex[0];
-        
+        if (joystick.buttonDown[9]) body.ApplyForce(body.rotation * Vector3(0,0,500));
         
         Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
         Vector2 mappedInput = MapInput(stickInput); 
