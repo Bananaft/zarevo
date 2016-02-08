@@ -42,9 +42,15 @@ void Start()
     
     Node@ planeNode = scene_.CreateChild("plane");
     cameraNode.parent = planeNode;
+	cameraNode.position = Vector3(0,0.6,2.5);
     planeNode.position = Vector3(0,150,0);
     plane@ plane = cast<plane>(planeNode.CreateScriptObject(scriptFile, "plane"));
     plane.Init();
+	
+	StaticModel@ PplaneModel = planeNode.CreateComponent("StaticModel");
+	PplaneModel.model = cache.GetResource("Model", "Models/Vehicles/aircrafts/f16");
+	PplaneModel.material = cache.GetResource("Material", "Materials/test1.xml");
+	PplaneModel.castShadows = true;
     
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();

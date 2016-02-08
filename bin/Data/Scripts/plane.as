@@ -1,7 +1,8 @@
 class plane : ScriptObject
 {
     RigidBody@ body;
-    Vector2 lastImput = Vector2(0,0);
+	//Node camNode;
+	Vector2 lastImput = Vector2(0,0);
     float deadzone = 0.2;
     float livezone = 0.95;
     float inpCurve = 1.9;
@@ -43,7 +44,7 @@ void Init()
 		//body.angularFactor = Vector3(0.5f, 0.5f, 0.5f);
 		//body.collisionLayer = 2;
         body.angularDamping = 0.0;
-        body.linearDamping = 0.9;
+        body.linearDamping = 0.9999;
         SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
     }
     
@@ -62,7 +63,7 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
 		
-		body.ApplyForce(body.rotation * Vector3(0,0,1000));
+		body.ApplyForce(body.rotation * Vector3(0,0,2300));
         
 		if (autopilot) AI_ctrl(timeStep); else ctrl_AimVec(timeStep);
 
@@ -172,6 +173,13 @@ void ctrl_AimVec (float timeStep)
 	    JoystickState@ joystick = input.joysticksByIndex[0];
         if (joystick.buttonDown[9]) body.ApplyForce(body.rotation * Vector3(0,0,500));
         
+		Vector2 viewInput = MapInput(Vector2(joystick.axisPosition[1],joystick.axisPosition[0]));
+		
+		Node@ camNode = node.GetChild("CamNode");
+		
+		camNode.rotation = Quaternion(viewInput.x * 90, viewInput.y * 90,0);
+		
+		
         Vector2 stickInput = Vector2(joystick.axisPosition[3],joystick.axisPosition[2]);
         Vector2 mappedInput = MapInput(stickInput); 
         
