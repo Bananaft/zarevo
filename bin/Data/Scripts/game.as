@@ -57,6 +57,8 @@ void Start()
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
     renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
+    renderpath.shaderParameters["AutoExposureAdaptRate"] = 100000.0f;
+    renderpath.SetEnabled("AutoExposureFix", false);
     
     renderer.hdrRendering = true;
 
@@ -206,10 +208,12 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
         {
             if (pe_ae)
                 {
+                    renderpath.SetEnabled("AutoExposureFix", false);
                     renderpath.SetEnabled("AutoExposure", false);
                     pe_ae = false;
                 } else {
                     renderpath.SetEnabled("AutoExposure", true);
+                    renderpath.SetEnabled("AutoExposureFix", true);
                     pe_ae = true;
                 }
         }    //else if (key == KEY_V)
@@ -242,6 +246,13 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     // Take the frame time step, which is stored as a float
     float timeStep = eventData["TimeStep"].GetFloat();
     if (timepass) cloudNode.Rotate(Quaternion(0, 3 * timeStep,0));
+    
+    // HDR hack: http://urho3d.prophpbb.com/post10052.html?hilit=HDR#p10052
+    if (scene_.elapsedTime > 0.3f)
+    {
+        renderpath.shaderParameters["AutoExposureAdaptRate"] = 0.6f;
+        renderpath.SetEnabled("AutoExposureFix", true);
+    }
     
 }
 

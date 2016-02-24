@@ -30,7 +30,7 @@
         <texture unit="diffuse" name="prevAdaptedLum" />
         <texture unit="normal" name="lum1" />
     </command>
-    <command type="quad" tag="AutoExposure" vs="AutoExposure" ps="AutoExposure" vsdefines="EXPOSE" psdefines="EXPOSE" output="viewport">
+    <command type="quad" tag="AutoExposureFix" vs="AutoExposure" ps="AutoExposure" vsdefines="EXPOSE" psdefines="EXPOSE" output="viewport">
         <parameter name="AutoExposureMiddleGrey" value="0.6" />
         <texture unit="diffuse" name="viewport" />
         <texture unit="normal" name="adaptedLum" />
