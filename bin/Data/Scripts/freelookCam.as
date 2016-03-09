@@ -52,9 +52,10 @@ void Update(float timeStep)
         cam.zoom = Clamp(cam.zoom + mousescroll * cam.zoom * 0.2, 0.8 , 20.0 );
         
         //check terrain collision
-       // Vector3 campos = node.position;
-        //float ter_height = terrain.GetHeight(campos) + 0.9;
-        //if (campos.y<ter_height) node.position = Vector3(campos.x, ter_height, campos.z);
+        Vector3 campos = node.position;
+        Terrain@ terr = scene.GetChild("terrain").GetComponent("terrain");
+        float ter_height = terr.GetHeight(campos) + 0.9;
+        if (campos.y<ter_height) node.position = Vector3(campos.x, ter_height, campos.z);
     }
     
 void FixedUpdate(float timeStep)

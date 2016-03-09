@@ -34,28 +34,29 @@ void Start()
 	Node@ cameraNode = scene_.CreateChild("CamNode");
     Camera@ camera = cameraNode.CreateComponent("Camera");
 	Viewport@ mainVP = Viewport(scene_, camera);
-    //freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
-    //flcam.Init();
+    freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
+    flcam.Init();
     
     //scene_.CreateComponent("DebugRenderer");
     
     
-    Node@ planeNode = scene_.CreateChild("plane");
-    cameraNode.parent = planeNode;
-	cameraNode.position = Vector3(0,0.6,2.5);
-    planeNode.position = Vector3(0,150,0);
-    plane@ plane = cast<plane>(planeNode.CreateScriptObject(scriptFile, "plane"));
-    plane.Init();
-	
-	StaticModel@ PplaneModel = planeNode.CreateComponent("StaticModel");
-	PplaneModel.model = cache.GetResource("Model", "Models/Vehicles/aircrafts/f16");
-	PplaneModel.material = cache.GetResource("Material", "Materials/test1.xml");
-	PplaneModel.castShadows = true;
+//    Node@ planeNode = scene_.CreateChild("plane");
+//    cameraNode.parent = planeNode;
+//	cameraNode.position = Vector3(0,0.6,2.5);
+//    planeNode.position = Vector3(0,150,0);
+//    plane@ plane = cast<plane>(planeNode.CreateScriptObject(scriptFile, "plane"));
+//    plane.Init();
+//	
+//	StaticModel@ PplaneModel = planeNode.CreateComponent("StaticModel");
+//	PplaneModel.model = cache.GetResource("Model", "Models/Vehicles/aircrafts/f16");
+//	PplaneModel.material = cache.GetResource("Material", "Materials/test1.xml");
+//	PplaneModel.castShadows = true;
     
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
-	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+	//renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+    renderpath.Append(cache.GetResource("XMLFile","PostProcess/bn_HDR.xml"));
     renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
     renderpath.shaderParameters["AutoExposureAdaptRate"] = 100000.0f;
     renderpath.SetEnabled("AutoExposureFix", false);
@@ -248,7 +249,7 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     if (timepass) cloudNode.Rotate(Quaternion(0, 3 * timeStep,0));
     
     // HDR hack: http://urho3d.prophpbb.com/post10052.html?hilit=HDR#p10052
-    if (scene_.elapsedTime > 0.3f)
+    if (scene_.elapsedTime > 0.5f)
     {
         renderpath.shaderParameters["AutoExposureAdaptRate"] = 0.6f;
         renderpath.SetEnabled("AutoExposureFix", true);
@@ -313,7 +314,7 @@ class Sky : ScriptObject
         //float sunheight = 
         float suncolPos = 0.5 + 0.5 * sunvec.y;
         Color suncol = SunColorRamp.GetColor(suncolPos);
-        sun.color = suncol * 2;
+        sun.color = suncol * 10.2;
         //log.Info( sun.color.ToString());
         Color zencol = ZenColorRamp.GetColor(suncolPos);
         Color skycol = SkyColorRamp.GetColor(suncolPos);

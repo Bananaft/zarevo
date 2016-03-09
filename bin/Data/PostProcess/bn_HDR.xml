@@ -1,0 +1,6 @@
+<renderpath>
+    <command type="quad" tag="bnHDR" vs="bn_HDR" ps="bn_HDR" output="viewport">
+        <parameter name="Exposure" value="0.6" />
+        <texture unit="diffuse" name="viewport" />
+    </command>
+</renderpath>
