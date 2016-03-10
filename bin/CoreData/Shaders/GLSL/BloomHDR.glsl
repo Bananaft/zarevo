@@ -30,6 +30,11 @@ void VS()
     vScreenPos = GetScreenPosPreDiv(gl_Position);
 }
 
+vec3 ScreenBlend( vec3 a, vec3 b )
+{
+ return 1 - ( 1 - a ) * ( 1 - b );
+}
+
 void PS()
 {
     #ifdef BRIGHT
@@ -67,7 +72,11 @@ void PS()
 
     #ifdef COMBINE2
     vec3 color = texture2D(sDiffMap, vScreenPos).rgb * cBloomHDRMix.x;
+    color = color/(1+color);
     vec3 bloom = texture2D(sNormalMap, vTexCoord).rgb * cBloomHDRMix.y;
-    gl_FragColor = vec4(pow(color,vec3( 1/2.2 )) + bloom, 1.0);
+    //bloom = bloom/(1+bloom);
+    color = ScreenBlend(color, bloom);
+
+    gl_FragColor = vec4(pow(color,vec3( 1/2.2 )) , 1.0);
     #endif
 }

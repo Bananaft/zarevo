@@ -36,15 +36,31 @@ void VS()
     vScreenPos = GetScreenPosPreDiv(gl_Position);
 }
 
+// this value determines ratio of dark and bright pixels in frame for the same value of average luminance
+// increasing this value means increasing contribution of bright pixels
+// decreasing - increasing contribution of dark pixels
+#define EXPOSURE_INTEGRAL_OFFSET 1.00f
+// some non-linear response of bright pixels
+#define EXPOSURE_EXP_OFFSET 0.5f
+
 void PS()
 {
     #ifdef LUMINANCE64
-    float logLumSum = 0.0;
-    logLumSum += log(dot(texture2D(sDiffMap, vTexCoord + vec2(-1.0, -1.0) * cHDR128InvSize).rgb, LumWeights) + 1e-5);
-    logLumSum += log(dot(texture2D(sDiffMap, vTexCoord + vec2(-1.0, 1.0) * cHDR128InvSize).rgb, LumWeights) + 1e-5);
-    logLumSum += log(dot(texture2D(sDiffMap, vTexCoord + vec2(1.0, 1.0) * cHDR128InvSize).rgb, LumWeights) + 1e-5);
-    logLumSum += log(dot(texture2D(sDiffMap, vTexCoord + vec2(1.0, -1.0) * cHDR128InvSize).rgb, LumWeights) + 1e-5);
-    gl_FragColor.r = logLumSum;
+    vec3 colors[4];
+    colors[ 0 ] = texture2D(sDiffMap, vTexCoord + vec2(-1.0, -1.0) * cHDR128InvSize).rgb;
+    colors[ 1 ] = texture2D(sDiffMap, vTexCoord + vec2(-1.0, 1.0) * cHDR128InvSize).rgb;
+    colors[ 2 ] = texture2D(sDiffMap, vTexCoord + vec2(1.0, 1.0) * cHDR128InvSize).rgb;
+    colors[ 3 ] = texture2D(sDiffMap, vTexCoord + vec2(1.0, -1.0) * cHDR128InvSize).rgb;
+
+ // pack luminance to shift dark/bright pixels contribution on total average
+ float packedLum = 0;
+ for( int n = 0; n < 4; ++n )
+  packedLum += 1.0f / ( dot( colors[ n ], LumWeights ) + EXPOSURE_INTEGRAL_OFFSET );
+
+ packedLum /= 4;
+ packedLum = pow( packedLum, EXPOSURE_EXP_OFFSET );
+
+    gl_FragColor.r = packedLum;
     #endif
 
     #ifdef LUMINANCE16
@@ -56,13 +72,18 @@ void PS()
     #endif
 
     #ifdef LUMINANCE1
-    gl_FragColor.r = exp(GatherAvgLum(sDiffMap, vTexCoord, cLum4InvSize) / 16.0);
+    gl_FragColor.r = GatherAvgLum(sDiffMap, vTexCoord, cLum4InvSize);
     #endif
 
     #ifdef ADAPTLUMINANCE
     float adaptedLum = texture2D(sDiffMap, vTexCoord).r;
-    float lum = clamp(texture2D(sNormalMap, vTexCoord).r, cAutoExposureLumRange.x, cAutoExposureLumRange.y);
+   float lum = texture2D(sNormalMap, vTexCoord).r;
+   lum = ( 1.0f / pow( lum, 1.0f / EXPOSURE_EXP_OFFSET ) - EXPOSURE_INTEGRAL_OFFSET );
+   lum = clamp(lum, cAutoExposureLumRange.x, cAutoExposureLumRange.y);
     gl_FragColor.r = adaptedLum + (lum - adaptedLum) * (1.0 - exp(-cDeltaTimePS * cAutoExposureAdaptRate));
+
+
+// gl_FragColor.r = curLum;
     #endif
 
     #ifdef EXPOSE

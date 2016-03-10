@@ -55,8 +55,8 @@ void Start()
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
-	//renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
-    renderpath.Append(cache.GetResource("XMLFile","PostProcess/bn_HDR.xml"));
+	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+    //renderpath.Append(cache.GetResource("XMLFile","PostProcess/bn_HDR.xml"));
     renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
     renderpath.shaderParameters["AutoExposureAdaptRate"] = 100000.0f;
     renderpath.SetEnabled("AutoExposureFix", false);
@@ -314,10 +314,19 @@ class Sky : ScriptObject
         //float sunheight = 
         float suncolPos = 0.5 + 0.5 * sunvec.y;
         Color suncol = SunColorRamp.GetColor(suncolPos);
+        suncol.r = Pow(suncol.r,2.2);
+        suncol.g = Pow(suncol.g,2.2);
+        suncol.b = Pow(suncol.b,2.2);
         sun.color = suncol * 10.2;
         //log.Info( sun.color.ToString());
         Color zencol = ZenColorRamp.GetColor(suncolPos);
+        zencol.r = Pow(zencol.r,2.2);
+        zencol.g = Pow(zencol.g,2.2);
+        zencol.b = Pow(zencol.b,2.2);
         Color skycol = SkyColorRamp.GetColor(suncolPos);
+        skycol.r = Pow(skycol.r,2.2);
+        skycol.g = Pow(skycol.g,2.2);
+        skycol.b = Pow(skycol.b,2.2);
         //zone.ambientColor = skycol * 0.2;
         renderpath.shaderParameters["ZenColor"] = Variant(zencol);
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
