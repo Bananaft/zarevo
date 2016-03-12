@@ -58,8 +58,8 @@ void Start()
 	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
     //renderpath.Append(cache.GetResource("XMLFile","PostProcess/bn_HDR.xml"));
     renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
-    renderpath.shaderParameters["AutoExposureAdaptRate"] = 100000.0f;
-    renderpath.SetEnabled("AutoExposureFix", false);
+    //renderpath.shaderParameters["AutoExposureAdaptRate"] = 100000.0f;
+    //renderpath.SetEnabled("AutoExposureFix", false);
     
     renderer.hdrRendering = true;
 
@@ -209,12 +209,12 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
         {
             if (pe_ae)
                 {
-                    renderpath.SetEnabled("AutoExposureFix", false);
+                    //renderpath.SetEnabled("AutoExposureFix", false);
                     renderpath.SetEnabled("AutoExposure", false);
                     pe_ae = false;
                 } else {
                     renderpath.SetEnabled("AutoExposure", true);
-                    renderpath.SetEnabled("AutoExposureFix", true);
+                    //renderpath.SetEnabled("AutoExposureFix", true);
                     pe_ae = true;
                 }
         }    //else if (key == KEY_V)

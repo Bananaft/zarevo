@@ -78,9 +78,10 @@ void PS()
 
     float occl1 = clamp(((globalPos.y + 15.0)/heightStep - groundAlbedo1.a)*20, 0 , 1);
     float occl2 = clamp(((globalPos.y + 20.0)/heightStep - groundAlbedo2.a)*10, 0 , 1);
-    float occl3 = clamp(((globalPos.y + 0.0)/heightStep - groundAlbedo3.a)*2.0, 0 , 1);
+    float occl3 = clamp(((globalPos.y + 0.60)/heightStep - groundAlbedo3.a)*20.0, 0 , 1);
 
-    vec3 skyLight =  0.9 * (zenithFactor * occl1 * occl2 + occl1 * occl2 * occl3 * (horizonFactor + groundFactor));
+    vec3 skyLight =  0.9 * (zenithFactor * occl1 * occl2 + occl1 * occl2 * occl3 * (horizonFactor +  0.5 * groundFactor));
+    //vec3 skyLight =  0.9 * (zenithFactor * occl1 + occl2 * groundFactor +  occl3 * horizonFactor);
 
     //vec3 skyLight = vec3(0.5) * normalInput.y + vec3(0.5) * (1-normalInput.y);
 
