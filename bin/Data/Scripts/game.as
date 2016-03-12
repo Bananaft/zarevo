@@ -285,7 +285,7 @@ class Sky : ScriptObject
         sunNode = scene_.GetChild("Sun", true);
         sun = sunNode.GetComponent("Light");
         
-        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.01,0.002),Color(0.0,0.0,0.0)};
+        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.06,0.002),Color(0.0,0.0,0.0)};
         Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
         
         Array<Color> arSkyColC = {Color(0.32,0.64,0.95),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
@@ -313,17 +313,17 @@ class Sky : ScriptObject
         Vector3 sunvec = sunNode.worldDirection;// * Vector3(0,1,0);
         //float sunheight = 
         float suncolPos = 0.5 + 0.5 * sunvec.y;
-        Color suncol = SunColorRamp.GetColor(suncolPos);
+        Color suncol = SunColorRamp.GetColor(suncolPos) * 8;
         suncol.r = Pow(suncol.r,2.2);
         suncol.g = Pow(suncol.g,2.2);
         suncol.b = Pow(suncol.b,2.2);
-        sun.color = suncol * 10.2;
+        sun.color = suncol;
         //log.Info( sun.color.ToString());
-        Color zencol = ZenColorRamp.GetColor(suncolPos);
+        Color zencol = ZenColorRamp.GetColor(suncolPos) * 6;
         zencol.r = Pow(zencol.r,2.2);
         zencol.g = Pow(zencol.g,2.2);
         zencol.b = Pow(zencol.b,2.2);
-        Color skycol = SkyColorRamp.GetColor(suncolPos);
+        Color skycol = SkyColorRamp.GetColor(suncolPos) * 6;
         skycol.r = Pow(skycol.r,2.2);
         skycol.g = Pow(skycol.g,2.2);
         skycol.b = Pow(skycol.b,2.2);
