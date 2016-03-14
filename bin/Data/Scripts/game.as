@@ -13,7 +13,7 @@ bool wireframe =false;
 
 Terrain@ terrain;
 RenderPath@ renderpath;
-
+bool renderInit = false;
 
 bool timepass =true;
 
@@ -37,6 +37,15 @@ void Start()
     freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
     flcam.Init();
     
+    renderer.viewports[0] = mainVP;
+	renderpath = mainVP.renderPath.Clone();
+    
+    renderer.hdrRendering = true;
+    
+	
+	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
+    renderer.viewports[0].renderPath = renderpath;
+    
     //scene_.CreateComponent("DebugRenderer");
     
     
@@ -51,17 +60,8 @@ void Start()
 //	PplaneModel.model = cache.GetResource("Model", "Models/Vehicles/aircrafts/f16");
 //	PplaneModel.material = cache.GetResource("Material", "Materials/test1.xml");
 //	PplaneModel.castShadows = true;
+
     
-	renderer.viewports[0] = mainVP;
-	renderpath = mainVP.renderPath.Clone();
-	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));
-	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
-    //renderpath.Append(cache.GetResource("XMLFile","PostProcess/bn_HDR.xml"));
-    renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
-    //renderpath.shaderParameters["AutoExposureAdaptRate"] = 100000.0f;
-    //renderpath.SetEnabled("AutoExposureFix", false);
-    
-    renderer.hdrRendering = true;
 
     renderer.specularLighting = false;
     
@@ -69,7 +69,7 @@ void Start()
     renderer.shadowQuality = 3;
     
 	
-	mainVP.renderPath = renderpath;
+	
 	
 	
 	camera.farClip = 12000;
@@ -126,6 +126,23 @@ void Start()
    }
    
 
+}
+
+void initRender()
+{
+    
+    Viewport@ vp = renderer.viewports[0];
+	renderpath = vp.renderPath.Clone();
+    
+   
+    
+	renderpath.Append(cache.GetResource("XMLFile","PostProcess/AutoExposure.xml"));
+    //renderpath.Append(cache.GetResource("XMLFile","PostProcess/bn_HDR.xml"));
+    renderpath.Append(cache.GetResource("XMLFile","PostProcess/BloomHDR.xml"));
+    //renderpath.shaderParameters["AutoExposureAdaptRate"] = 100000.0f;
+    //renderpath.SetEnabled("AutoExposureFix", false);
+    renderer.viewports[0].renderPath = renderpath;
+    renderInit = true;
 }
 
 void CreateConsoleAndDebugHud()
@@ -249,10 +266,11 @@ void HandleUpdate(StringHash eventType, VariantMap& eventData)
     if (timepass) cloudNode.Rotate(Quaternion(0, 3 * timeStep,0));
     
     // HDR hack: http://urho3d.prophpbb.com/post10052.html?hilit=HDR#p10052
-    if (scene_.elapsedTime > 0.5f)
+    if (scene_.elapsedTime > 0.5f && !renderInit) 
     {
-        renderpath.shaderParameters["AutoExposureAdaptRate"] = 0.6f;
-        renderpath.SetEnabled("AutoExposureFix", true);
+        //renderpath.shaderParameters["AutoExposureAdaptRate"] = 0.6f;
+        //renderpath.SetEnabled("AutoExposureFix", true);
+        initRender();
     }
     
 }
