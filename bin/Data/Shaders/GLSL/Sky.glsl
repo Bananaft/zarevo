@@ -26,7 +26,6 @@ void VS()
     //CamPos = cCameraPos;
 }
 
-
 void PS()
 {
     // If rendering a directional light quad, optimize out the w divide
@@ -67,7 +66,10 @@ void PS()
     float sunAmount = pow(exp((sunDot-1)*5), 1 + (1-layer) * 60);
 
     float hor_factor =clamp(pow(1-DirRay.y, 2 + layer),0,1);// * (0.2 + 0.8 *pow(sunDot,2.2)),0,1);
-    vec3 fogcolor = 1.0 * mix(cZenColor,cSkyColor, hor_factor) * layer + cSunColor *  sunAmount;
+    vec3 fogcolor = 1.0 * mix(cZenColor,cSkyColor, hor_factor) * layer;// + cSunColor *  sunAmount;
+    fogcolor += cSunColor *  sunAmount;
+    //fogcolor =vec3(0.1,0.5,0.8) +  cSunColor *  sunAmount;
+    //fogcolor = max(cSunColor *  sunAmount, fogcolor);
 
     float groundDiff = max(dot(vec3(0,-1,0), cSunDir), 0.0);
 

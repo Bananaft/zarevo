@@ -13,10 +13,10 @@ bool wireframe =false;
 
 Terrain@ terrain;
 RenderPath@ renderpath;
-bool renderInit = false;
+
 
 bool timepass =true;
-
+bool renderInit = false;
 
 
 void Start()
