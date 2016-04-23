@@ -1,1 +1,1 @@
-Scripts/game.as -w -s -v -deferred -af 8
+Scripts/game2.as -w -s -v -deferred -af 8
