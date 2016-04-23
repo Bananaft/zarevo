@@ -1,5 +1,6 @@
 #include "freelookCam.as";
 #include "bnterrain.as";
+#include "world.as";
 
 RenderPath@ renderpath;
 Scene@ scene_;
@@ -35,13 +36,18 @@ void initRender()
 	
 	Viewport@ mainVP = Viewport(scene_, camera);
     freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
+	flcam.Init();
 	
 	Node@ terrNode = scene_.CreateChild("terrain");
 	bnterrain@ bn_terrain = cast<bnterrain>(terrNode.CreateScriptObject(scriptFile, "bnterrain"));
 	bn_terrain.Init();
 	
+	Node@ worldNode = scene_.CreateChild("world");
+	world@ world = cast<world>(worldNode.CreateScriptObject(scriptFile, "world"));
+	world.Init();
+	
     
-	flcam.Init();
+	
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
     

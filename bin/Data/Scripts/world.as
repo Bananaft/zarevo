@@ -1,9 +1,21 @@
 class world : ScriptObject
 {
 	
-	Init()
+	
+void	Init()
 	{
+		Node@ skyNode = node.CreateChild("Sky");
+		skyNode.rotation = Quaternion(62,0,0);
+		Node@ Sun = skyNode.CreateChild("Sun");
+		Light@ SunLight =  Sun.CreateComponent("Light");
+		SunLight.lightType = LIGHT_DIRECTIONAL;
+		SunLight.castShadows = true;
+		SunLight.shadowFocus = FocusParameters(false,true,false,0.5,3);
+		SunLight.shadowCascade = CascadeParameters(50,360,1600,5000,1,0.95);
+		SunLight.shadowBias = BiasParameters(0.000003, 4);
 		
+		Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
+		sky.Init();
 	}
 }
 
@@ -13,8 +25,9 @@ class Sky : ScriptObject
     
     float daytime = 0;
     float astroStep = 0.00069444444;
+	bool timepass = true;
     
-    Zone@ zone;
+   
     Light@ sun;
     Node@ sunNode;
     
@@ -28,11 +41,7 @@ class Sky : ScriptObject
     void Init()
     {
         
-        //Scene@ scene = node.parent;
-        Node@ zoneNode = scene_.GetChild("Zone", true);
-        zone = zoneNode.GetComponent("Zone");
-        
-        sunNode = scene_.GetChild("Sun", true);
+        sunNode = node.GetChild("Sun", false);
         sun = sunNode.GetComponent("Light");
         
         Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.06,0.002),Color(0.0,0.0,0.0)};
@@ -61,14 +70,14 @@ class Sky : ScriptObject
         sunNode.rotation = Quaternion( 0.0f, 360 * daytime - 90 , 0.0f );
         
         Vector3 sunvec = sunNode.worldDirection;// * Vector3(0,1,0);
-        //float sunheight = 
+
         float suncolPos = 0.5 + 0.5 * sunvec.y;
         Color suncol = SunColorRamp.GetColor(suncolPos) * 8;
         suncol.r = Pow(suncol.r,2.2);
         suncol.g = Pow(suncol.g,2.2);
         suncol.b = Pow(suncol.b,2.2);
         sun.color = suncol;
-        //log.Info( sun.color.ToString());
+
         Color zencol = ZenColorRamp.GetColor(suncolPos) * 6;
         zencol.r = Pow(zencol.r,2.2);
         zencol.g = Pow(zencol.g,2.2);
@@ -77,7 +86,7 @@ class Sky : ScriptObject
         skycol.r = Pow(skycol.r,2.2);
         skycol.g = Pow(skycol.g,2.2);
         skycol.b = Pow(skycol.b,2.2);
-        //zone.ambientColor = skycol * 0.2;
+      
         renderpath.shaderParameters["ZenColor"] = Variant(zencol);
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
         renderpath.shaderParameters["SunColor"] = Variant(suncol);
