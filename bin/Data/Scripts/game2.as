@@ -46,12 +46,15 @@ void initRender()
 	world@ world = cast<world>(worldNode.CreateScriptObject(scriptFile, "world"));
 	world.Init();
 	
-    
+    renderer.hdrRendering = true;
+	
+	renderer.textureFilterMode = FILTER_ANISOTROPIC;
+	renderer.textureAnisotropy = 8;
 	
 	renderer.viewports[0] = mainVP;
 	renderpath = mainVP.renderPath.Clone();
     
-    renderer.hdrRendering = true;
+    
     
 	
 	renderpath.Load(cache.GetResource("XMLFile","RenderPaths/DeferredHWDepth.xml"));

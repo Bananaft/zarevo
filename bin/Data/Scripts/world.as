@@ -4,9 +4,12 @@ class world : ScriptObject
 	
 void	Init()
 	{
+
 		Node@ skyNode = node.CreateChild("Sky");
-		skyNode.rotation = Quaternion(62,0,0);
 		Node@ Sun = skyNode.CreateChild("Sun");
+
+		skyNode.rotation = Quaternion(62,0,0);
+		
 		Light@ SunLight =  Sun.CreateComponent("Light");
 		SunLight.lightType = LIGHT_DIRECTIONAL;
 		SunLight.castShadows = true;
@@ -67,7 +70,7 @@ class Sky : ScriptObject
         else if (skyColorLerp<0)skyColorLerp=0;
         
        
-        sunNode.rotation = Quaternion( 0.0f, 360 * daytime - 90 , 0.0f );
+        sunNode.rotation = Quaternion( 0.0f, 360 * daytime - 90, 0.0f );
         
         Vector3 sunvec = sunNode.worldDirection;// * Vector3(0,1,0);
 

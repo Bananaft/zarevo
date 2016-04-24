@@ -24,6 +24,25 @@ void Init()
 		terrain.castShadows = true;
 		//terrain.heightMap = renderTexture.GetImage();
 		terrain.heightMap = cache.GetResource("Image", "Textures/geodata/kstn.png");
-		terrain.material = cache.GetResource("Material", "Materials/colorTerrain.xml");
+		Material@ terrmat = Material();
+		terrmat.SetTechnique(0,cache.GetResource("Technique", "Techniques/bn_terrain.xml"),0,0);
+		
+		Image@ gtiles = Image();
+		gtiles.SetSize(3072,3072,4);
+		
+		for (int x=0; x<3050; x++)
+		{
+			for (int y=0; y<3072; y++)
+			{
+				gtiles.SetPixel(x,y,Color(Random(1),Random(1),Random(1)));
+			}
+		}
+		
+		Texture2D@ gtex = Texture2D();
+		gtex.SetData(gtiles,true);
+		gtex.filterMode = FILTER_NEAREST;
+		terrmat.textures[TU_DIFFUSE] = gtex;
+		
+		terrain.material = terrmat;
 	}
 }
