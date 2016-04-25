@@ -34,10 +34,10 @@ void VS()
 
 void PS()
 {
+  vec4 tilemap = texture2D(sDiffMap, vWorldPos.xz / 3072 / 5);
+  vec4 pmap = texture2D(sNormalMap, (fract(vWorldPos.xz/5)+vec2(tilemap.r*255,0))/8);
 
-	vec4 tilemap = texture2D(sDiffMap, vTexCoord.xy);
-
-	vec4 diffColor = tilemap;
+	vec4 diffColor = pmap;
 
 	vec3 normal = vNormal;
 

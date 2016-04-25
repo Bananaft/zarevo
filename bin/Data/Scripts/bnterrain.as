@@ -2,6 +2,8 @@ class bnterrain : ScriptObject
 {
 	Texture2D@ renderTexture;
 	RenderSurface@ surface;
+	Image@ gtiles;
+	Texture2D@ gtex;
 	
 void Init()
 	{
@@ -27,22 +29,35 @@ void Init()
 		Material@ terrmat = Material();
 		terrmat.SetTechnique(0,cache.GetResource("Technique", "Techniques/bn_terrain.xml"),0,0);
 		
-		Image@ gtiles = Image();
+		gtiles = Image();
 		gtiles.SetSize(3072,3072,4);
 		
 		for (int x=0; x<3050; x++)
 		{
 			for (int y=0; y<3072; y++)
 			{
-				gtiles.SetPixel(x,y,Color(Random(1),Random(1),Random(1)));
+				gtiles.SetPixel(x,y,Color(Random(1.0/256.0 * 4.0),Random(1.0/256.0 * 8.0),Random(1.0/256.0 * 8.0)));
 			}
 		}
 		
-		Texture2D@ gtex = Texture2D();
+		gtex = Texture2D();
 		gtex.SetData(gtiles,true);
 		gtex.filterMode = FILTER_NEAREST;
 		terrmat.textures[TU_DIFFUSE] = gtex;
 		
+		Texture2D@ ptex = cache.GetResource("Texture2D", "Textures/patterns/gtiles.png");
+		ptex.filterMode = FILTER_NEAREST;
+		terrmat.textures[TU_NORMAL] = ptex;
+		
 		terrain.material = terrmat;
+	}
+	
+void FixedUpdate(float timeStep)
+	{
+		Viewport@ vp = renderer.viewports[0];
+		Camera@ cam = vp.camera;
+		
+		gtiles.SetPixel(cam.node.worldPosition.x * 5, cam.node.worldPosition.y * 5 ,Color(1.0/256.0 * 8,1.0/256.0 * 8,0))	;
+		//gtex.SetData(gtiles,true);
 	}
 }
