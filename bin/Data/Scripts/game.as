@@ -234,9 +234,10 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                     //renderpath.SetEnabled("AutoExposureFix", true);
                     pe_ae = true;
                 }
-        }    //else if (key == KEY_V)
- /*       {
-            Camera@ cam = cameraNode.GetComponent("camera");
+        }   else if (key == KEY_V)
+        {
+            
+			Camera@ cam = renderer.viewports[0].camera;
             if (wireframe){
                 cam.fillMode = FILL_SOLID;
                 wireframe = false;
@@ -245,7 +246,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
                 wireframe = true;
             }
             
-        }*/
+        }
     else if (key == KEY_T) 
         {
             if(timepass) timepass = false; else timepass = true;
