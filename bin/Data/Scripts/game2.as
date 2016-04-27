@@ -15,8 +15,10 @@ void Start()
 	cache.autoReloadResources = true;
 	
 	scene_ = Scene();
-	scene_.CreateComponent("Octree");
-    scene_.CreateComponent("PhysicsWorld");
+	scene_.LoadXML(cache.GetFile("Scenes/kstn_01.xml"));
+	
+	//scene_.CreateComponent("Octree");
+    //scene_.CreateComponent("PhysicsWorld");
 	
 	CreateConsoleAndDebugHud();
 
@@ -38,9 +40,9 @@ void initRender()
     freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
 	flcam.Init();
 	
-	Node@ terrNode = scene_.CreateChild("terrain");
-	bnterrain@ bn_terrain = cast<bnterrain>(terrNode.CreateScriptObject(scriptFile, "bnterrain"));
-	bn_terrain.Init();
+	//Node@ terrNode = scene_.CreateChild("terrain");
+	//bnterrain@ bn_terrain = cast<bnterrain>(terrNode.CreateScriptObject(scriptFile, "bnterrain"));
+	//bn_terrain.Init();
 	
 	Node@ worldNode = scene_.CreateChild("world");
 	world@ world = cast<world>(worldNode.CreateScriptObject(scriptFile, "world"));
