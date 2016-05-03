@@ -125,7 +125,7 @@ void CreateAttributeInspectorWindow()
     parentContainer = attributeInspectorWindow.GetChild("ParentContainer");
     ui.root.AddChild(attributeInspectorWindow);
     int height = Min(ui.root.height - 60, 500);
-    attributeInspectorWindow.SetSize(300, height);
+    attributeInspectorWindow.SetSize(344, height);
     attributeInspectorWindow.SetPosition(ui.root.width - 10 - attributeInspectorWindow.width, 100);
     attributeInspectorWindow.opacity = uiMaxOpacity;
     attributeInspectorWindow.BringToFront();
@@ -136,11 +136,6 @@ void CreateAttributeInspectorWindow()
     SubscribeToEvent(inspectorLockButton, "Pressed", "ToggleInspectorLock");
     SubscribeToEvent(attributeInspectorWindow.GetChild("CloseButton", true), "Pressed", "HideAttributeInspectorWindow");
     SubscribeToEvent(attributeInspectorWindow, "LayoutUpdated", "HandleWindowLayoutUpdated");
-}
-
-void HideAttributeInspectorWindow()
-{
-    attributeInspectorWindow.visible = false;
 }
 
 void DisableInspectorLock()
@@ -166,12 +161,26 @@ void ToggleInspectorLock()
         EnableInspectorLock();
 }
 
-bool ShowAttributeInspectorWindow()
+bool ToggleAttributeInspectorWindow()
+{
+    if (attributeInspectorWindow.visible == false)
+        ShowAttributeInspectorWindow();
+    else
+        HideAttributeInspectorWindow();
+    return true;
+}
+
+void ShowAttributeInspectorWindow()
 {
     attributeInspectorWindow.visible = true;
     attributeInspectorWindow.BringToFront();
-    return true;
 }
+
+void HideAttributeInspectorWindow()
+{
+    attributeInspectorWindow.visible = false;
+}
+
 
 /// Handle main window layout updated event by positioning elements that needs manually-positioning (elements that are children of UI-element container with "Free" layout-mode).
 void HandleWindowLayoutUpdated()
@@ -356,6 +365,7 @@ void UpdateAttributeInspector(bool fullUpdate = true)
         // No editables, insert a dummy component container to show the information
         Text@ titleText = GetComponentContainer(0).GetChild("TitleText");
         titleText.text = "Select editable objects";
+        titleText.autoLocalizable = true;
         UIElement@ panel = titleText.GetChild("IconsPanel");
         panel.visible = false;
     }
@@ -546,6 +556,28 @@ void PostEditAttribute(Serializable@ serializable, uint index)
         if (staticModel !is null)
             staticModel.ApplyMaterialList();
     }
+    
+    // If a CollisionShape changed the shape type to trimesh or convex, and a collision model is not set,
+    // try to get it from a StaticModel in the same node
+    if (serializable.typeName == "CollisionShape" && serializable.attributeInfos[index].name == "Shape Type")
+    {
+        int shapeType = serializable.GetAttribute("Shape Type").GetInt();
+        if ((shapeType == 6 || shapeType == 7) && serializable.GetAttribute("CustomGeometry ComponentID").GetInt() == 0 &&
+            serializable.GetAttribute("Model").GetResourceRef().name.Trimmed().length == 0)
+        {
+            Node@ ownerNode = cast<Component>(serializable).node;
+            if (ownerNode !is null)
+            {
+                StaticModel@ staticModel = ownerNode.GetComponent("StaticModel");
+                if (staticModel !is null)
+                {
+                    serializable.SetAttribute("Model", staticModel.GetAttribute("Model"));
+                    serializable.ApplyAttributes();
+                }
+            }
+        }
+    }
+
 }
 
 /// Store the IDs of the actual serializable objects into user-defined variable of the 'attribute editor' (e.g. line-edit, drop-down-list, etc).

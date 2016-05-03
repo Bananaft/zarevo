@@ -68,6 +68,7 @@ void initRender()
     
     renderer.shadowMapSize = 2048;
     renderer.shadowQuality = 3;
+
 }
 
 

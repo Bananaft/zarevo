@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<cubemap>
+    <face name="3_PosX.png" />
+    <face name="3_NegX.png" />
+    <face name="3_PosY.png" />
+    <face name="3_NegY.png" />
+    <face name="3_PosZ.png" />
+    <face name="3_NegZ.png" />
+</cubemap>
