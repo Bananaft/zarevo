@@ -1,3 +1,5 @@
+#include "mesh_tools.as";
+
 class world : ScriptObject
 {
 	
@@ -28,7 +30,7 @@ class Sky : ScriptObject
     
     float daytime = 0;
     float astroStep = 0.00069444444;
-	bool timepass = true;
+	bool timepass = false;
     
    
     Light@ sun;
@@ -59,6 +61,29 @@ class Sky : ScriptObject
         SunColorRamp.SetRamp (arSunColC,arSunColP);
         SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
         ZenColorRamp.SetRamp (arZenColC,arZenColP);
+		
+		Vector3 clSize = Vector3(120,30,120);
+		Array<Vector3> pCloud = BoxPointCloud(500,clSize);
+		Geometry@ geom = pCloudToQuadSprites(pCloud);
+		Model@ cloudModel = Model();
+		
+	   cloudModel.numGeometries = 1;
+	   cloudModel.SetGeometry(0, 0, geom);
+	   cloudModel.boundingBox = BoundingBox(clSize * -1.0, clSize);
+	   
+	   Material@ CloudMat = Material();
+	   CloudMat = cache.GetResource("Material","Materials/test_bbl.xml");
+	   
+	   for (int i=0; i<100; i++)
+	   {
+		   Node@ cloudNode = scene_.CreateChild("cloudModel");
+		   cloudNode.position = Vector3(Random(5500), 100.0 + Random(200), Random(-6000));
+		   StaticModel@ object = cloudNode.CreateComponent("StaticModel");
+		   object.model = cloudModel;
+		   
+		   object.material = CloudMat;
+		   object.castShadows = true;
+	   }
      
     }
     
@@ -81,18 +106,18 @@ class Sky : ScriptObject
         suncol.b = Pow(suncol.b,2.2);
         sun.color = suncol;
 
-        Color zencol = ZenColorRamp.GetColor(suncolPos) * 6;
+        Color zencol = Color(0.3984,0.5117,0.7305);//ZenColorRamp.GetColor(suncolPos) * 6;
         zencol.r = Pow(zencol.r,2.2);
         zencol.g = Pow(zencol.g,2.2);
         zencol.b = Pow(zencol.b,2.2);
-        Color skycol = SkyColorRamp.GetColor(suncolPos) * 6;
+        Color skycol = Color(0.3984,0.5117,0.7305);// SkyColorRamp.GetColor(suncolPos) * 6;
         skycol.r = Pow(skycol.r,2.2);
         skycol.g = Pow(skycol.g,2.2);
         skycol.b = Pow(skycol.b,2.2);
       
         renderpath.shaderParameters["ZenColor"] = Variant(zencol);
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
-        renderpath.shaderParameters["SunColor"] = Variant(suncol);
+        renderpath.shaderParameters["SunColor"] = Variant(Color(0.7031,0.4687,0.1055));
         renderpath.shaderParameters["SunDir"] = Variant(sunvec);
         
         if (timepass)daytime += astroStep * timeStep;

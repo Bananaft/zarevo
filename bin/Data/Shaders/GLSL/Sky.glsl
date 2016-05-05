@@ -50,11 +50,7 @@ void PS()
     vec3 globalPos = worldPos + cCameraPosPS;
     float height = globalPos.y*0.01;
 
-    vec2 uv = 0.5 + globalPos.xz / (3072 * 5);
-    uv.y *= -1;
-    vec4 groundAlbedo1 = textureLod(sSpecMap, uv, 0.0);
-    vec4 groundAlbedo2 = textureLod(sSpecMap, uv, 1.0);
-    vec4 groundAlbedo3 = textureLod(sSpecMap, uv, 2.0);
+
 
 
     float fogFactor =  clamp(exp(-height*depth2+0.7) * (1-exp(depth2*2-2)),0,1);
@@ -63,13 +59,44 @@ void PS()
 
     float layer = clamp(exp(((1-DirRay.y)-1) * (0.5 + cCameraPosPS.y*0.001)),0,1);
     float sunDot = max(dot(DirRay ,-1 * cSunDir ),0);
-    float sunAmount = pow(exp((sunDot-1)*5), 1 + (1-layer) * 60);
+    //float sunAmount = pow(exp((sunDot-1)*5), 1 + (1-layer) * 60);
 
-    float hor_factor =clamp(pow(1-DirRay.y, 2 + layer),0,1);// * (0.2 + 0.8 *pow(sunDot,2.2)),0,1);
-    vec3 fogcolor = 1.0 * mix(cZenColor,cSkyColor, hor_factor) * layer;// + cSunColor *  sunAmount;
-    fogcolor += cSunColor *  sunAmount;
-    //fogcolor =vec3(0.1,0.5,0.8) +  cSunColor *  sunAmount;
-    //fogcolor = max(cSunColor *  sunAmount, fogcolor);
+    //float hor_factor =clamp(pow(1-DirRay.y, 2 + layer),0,1);// * (0.2 + 0.8 *pow(sunDot,2.2)),0,1);
+    //vec3 fogcolor = mix(cZenColor,cSkyColor, hor_factor) * layer;// + cSunColor *  sunAmount;
+    //fogcolor += cSunColor *  sunAmount;
+
+    //Mie mask
+
+  float sunatt = max(-1.0 *cSunDir.y,0.0);
+  float fatt = max(DirRay.y,0.0);
+
+  //float sun = max(1.0 - (1.0 + 10.0 * sunatt + 1.0 * fatt) * (pow(sunDot,16.) * -1.0),0.0)
+  //      + 0.3 * pow(1.0-fatt,12.0) * (1.6-sunatt);
+
+  float sun = 0.3 * pow(1.0-fatt,12.0) * (1.6-sunatt)
+            + max((1.0 + 10.0 * sunatt + 1.0 * fatt) * pow(sunDot,18.),0.);
+  sun *= fogFactor;
+
+
+//  vec3 fogcolor = vec3(mix(cSkyColor, cSunColor, sun)
+//            * ((0.5 + 1.0 * pow(sunatt,0.4)) * (1.5-fatt) + pow(sun, 5.2)
+//            * sunatt * (5.0 + 15.0 * fatt)));
+//  fogcolor *= 8.;
+
+  vec3 chroma = vec3(mix(cSkyColor, cSunColor,clamp(sun,0.,1. ) * 0.85)) + vec3(0.06,0.06,0.06);
+
+  float luma = ((0.5 + 1.0 * pow(sunatt,0.4)) * (1.5-fatt) + pow(sun, 2.2) * sunatt * (5.0 + 15.0 * sunatt));
+
+  float exposure = 8.;
+
+  vec3 fogcolor = chroma * luma * exposure;
+
+    // SKYLIGHT
+    vec2 uv = 0.5 + globalPos.xz / (3072 * 5);
+    uv.y *= -1;
+    vec4 groundAlbedo1 = textureLod(sSpecMap, uv, 0.0);
+    vec4 groundAlbedo2 = textureLod(sSpecMap, uv, 1.0);
+    vec4 groundAlbedo3 = textureLod(sSpecMap, uv, 2.0);
 
     float groundDiff = max(dot(vec3(0,-1,0), cSunDir), 0.0);
 
@@ -82,13 +109,12 @@ void PS()
     float occl2 = clamp(((globalPos.y + 20.0)/heightStep - groundAlbedo2.a)*10, 0 , 1);
     float occl3 = clamp(((globalPos.y + 0.60)/heightStep - groundAlbedo3.a)*20.0, 0 , 1);
 
-    vec3 skyLight =  0.4 * (zenithFactor * occl1 * occl2 + occl1 * occl2 * occl3 * (horizonFactor +  groundFactor));
-    //vec3 skyLight =  0.9 * (zenithFactor * occl1 + occl2 * groundFactor +  occl3 * horizonFactor);
+    vec3 skyLight = 16. * 0.4 * (zenithFactor * occl1 * occl2 + occl1 * occl2 * occl3 * (horizonFactor +  groundFactor));
 
-    //vec3 skyLight = vec3(0.5) * normalInput.y + vec3(0.5) * (1-normalInput.y);
 
     vec3 result = (diffuseInput.rgb + skyLight * albedoInput.rgb)*diffFactor + fogcolor*fogFactor;
 
     gl_FragColor = vec4(result, 0.0);
+    //gl_FragColor = vec4(sun);
 
 }
