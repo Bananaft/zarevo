@@ -9,7 +9,9 @@ void	Init()
 
 		Node@ skyNode = node.CreateChild("Sky");
 		Node@ Sun = skyNode.CreateChild("Sun");
-
+		Node@ SunMdl = Sun.CreateChild("SunMdl");
+		SunMdl.rotation  = Quaternion(0,180,0);
+		
 		skyNode.rotation = Quaternion(62,0,0);
 		
 		Light@ SunLight =  Sun.CreateComponent("Light");
@@ -19,48 +21,15 @@ void	Init()
 		SunLight.shadowCascade = CascadeParameters(50,360,1600,5000,1,0.95);
 		SunLight.shadowBias = BiasParameters(0.000003, 4);
 		
+		
+		StaticModel@ SunModel = SunMdl.CreateComponent("StaticModel");
+		SunModel.model = cache.GetResource("Model", "Models/sun.mdl");
+		SunMdl.Scale(200);
+		SunModel.material = cache.GetResource("Material", "Materials/sun.xml");
+		
 		Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
 		sky.Init();
-	}
-}
-
-class Sky : ScriptObject
-{
-    float Pi = 3.14159;
-    
-    float daytime = 0;
-    float astroStep = 0.00069444444;
-	bool timepass = false;
-    
-   
-    Light@ sun;
-    Node@ sunNode;
-    
-    
-    Ramp SunColorRamp;
-    Ramp SkyColorRamp;
-    Ramp ZenColorRamp;
-    
-    
-    
-    void Init()
-    {
-        
-        sunNode = node.GetChild("Sun", false);
-        sun = sunNode.GetComponent("Light");
-        
-        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.06,0.002),Color(0.0,0.0,0.0)};
-        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
-        
-        Array<Color> arSkyColC = {Color(0.32,0.64,0.95),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
-        Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            , 0.900            };
-        
-        Array<Color> arZenColC = {Color(0.04,0.27,1.00),Color(0.002,0.003,0.111),Color(0.0001,0.0015,0.005),Color(0.0,0.0,0.0)};
-        Array<float> arZenColP = {         0.45               , 0.620                  , 0.700            , 0.900            };
-        
-        SunColorRamp.SetRamp (arSunColC,arSunColP);
-        SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
-        ZenColorRamp.SetRamp (arZenColC,arZenColP);
+		
 		
 		Vector3 clSize = Vector3(120,30,120);
 		Array<Vector3> pCloud = BoxPointCloud(500,clSize);
@@ -84,6 +53,41 @@ class Sky : ScriptObject
 		   object.material = CloudMat;
 		   object.castShadows = true;
 	   }
+	}
+}
+
+class Sky : ScriptObject
+{
+    float Pi = 3.14159;
+    
+    float daytime = 0;
+    float astroStep = 0.00069444444;
+	bool timepass = false;
+    
+   
+    Light@ sun;
+    Node@ sunNode;
+    
+    
+    Ramp SunColorRamp;
+    Ramp SkyColorRamp;
+    
+    
+    
+    void Init()
+    {
+        
+        sunNode = node.GetChild("Sun", false);
+        sun = sunNode.GetComponent("Light");
+        
+        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.06,0.002),Color(0.0,0.0,0.0)};
+        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
+        
+        Array<Color> arSkyColC = {Color(0.32,0.64,0.95),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
+        Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            , 0.900            };
+        
+        SunColorRamp.SetRamp (arSunColC,arSunColP);
+        SkyColorRamp.SetRamp (arSkyColC,arSkyColP);
      
     }
     
@@ -106,16 +110,11 @@ class Sky : ScriptObject
         suncol.b = Pow(suncol.b,2.2);
         sun.color = suncol;
 
-        Color zencol = Color(0.3984,0.5117,0.7305);//ZenColorRamp.GetColor(suncolPos) * 6;
-        zencol.r = Pow(zencol.r,2.2);
-        zencol.g = Pow(zencol.g,2.2);
-        zencol.b = Pow(zencol.b,2.2);
         Color skycol = Color(0.3984,0.5117,0.7305);// SkyColorRamp.GetColor(suncolPos) * 6;
         skycol.r = Pow(skycol.r,2.2);
         skycol.g = Pow(skycol.g,2.2);
         skycol.b = Pow(skycol.b,2.2);
       
-        renderpath.shaderParameters["ZenColor"] = Variant(zencol);
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
         renderpath.shaderParameters["SunColor"] = Variant(Color(0.7031,0.4687,0.1055));
         renderpath.shaderParameters["SunDir"] = Variant(sunvec);

@@ -4,12 +4,13 @@
 #include "ScreenPos.glsl"
 #include "Lighting.glsl"
 
-uniform vec3 cZenColor;
 uniform vec3 cSkyColor;
 uniform vec3 cSunColor;
 uniform vec3 cSunDir;
 uniform float cFogDist;
 uniform float cTerrHStep;
+uniform float cSunLum;
+uniform float cSkyLum;
 
 varying vec2 vScreenPos;
 varying vec3 vFarRay;
@@ -75,21 +76,19 @@ void PS()
 
   float sun = 0.3 * pow(1.0-fatt,12.0) * (1.6-sunatt)
             + max((1.0 + 10.0 * sunatt + 1.0 * fatt) * pow(sunDot,18.),0.);
-  sun *= fogFactor;
-
+  sun *= fogFactor;// * clamp((DirRay.y+0.5)*20,0.,1.);
+sun = 0.;
 
 //  vec3 fogcolor = vec3(mix(cSkyColor, cSunColor, sun)
 //            * ((0.5 + 1.0 * pow(sunatt,0.4)) * (1.5-fatt) + pow(sun, 5.2)
 //            * sunatt * (5.0 + 15.0 * fatt)));
 //  fogcolor *= 8.;
 
-  vec3 chroma = vec3(mix(cSkyColor, cSunColor,clamp(sun,0.,1. ) * 0.85)) + vec3(0.06,0.06,0.06);
+  vec3 chroma = vec3(mix(cSkyColor, cSunColor,clamp(sun,0.,1. ) * 0.85)) + vec3(0.06);
 
-  float luma = ((0.5 + 1.0 * pow(sunatt,0.4)) * (1.5-fatt) + pow(sun, 2.2) * sunatt * (5.0 + 15.0 * sunatt));
+  float luma = ((0.5 + 1.0 * pow(sunatt,0.4)) * (1.5-fatt) + pow(sun, 2.2) * cSunLum);
 
-  float exposure = 8.;
-
-  vec3 fogcolor = chroma * luma * exposure;
+  vec3 fogcolor = chroma * luma * cSkyLum;
 
     // SKYLIGHT
     vec2 uv = 0.5 + globalPos.xz / (3072 * 5);
@@ -100,17 +99,18 @@ void PS()
 
     float groundDiff = max(dot(vec3(0,-1,0), cSunDir), 0.0);
 
-    vec3 zenithFactor = mix(cZenColor,cSkyColor, 0.5) * pow(normalInput.y,4.2); //cSkyColor
-    vec3 horizonFactor = cSkyColor * (1- 4 * pow(abs(0.5 - normalInput.y),2.2));
-    vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * 0.5 * groundAlbedo1.rgb * pow(1-normalInput.y,4.2); //
-    float heightStep = cTerrHStep * 256.0;
+    // vec3 zenithFactor = mix(cZenColor,cSkyColor, 0.5) * pow(normalInput.y,4.2); //cSkyColor
+    //vec3 horizonFactor = cSkyColor * (1- 4 * pow(abs(0.5 - normalInput.y),2.2));
+    // vec3 groundFactor = (cSkyColor + (cSunColor * groundDiff)) * 0.5 * groundAlbedo1.rgb * pow(1-normalInput.y,4.2); //
+    // float heightStep = cTerrHStep * 256.0;
+    //
+    // float occl1 = clamp(((globalPos.y + 15.0)/heightStep - groundAlbedo1.a)*20, 0 , 1);
+    // float occl2 = clamp(((globalPos.y + 20.0)/heightStep - groundAlbedo2.a)*10, 0 , 1);
+    // float occl3 = clamp(((globalPos.y + 0.60)/heightStep - groundAlbedo3.a)*20.0, 0 , 1);
 
-    float occl1 = clamp(((globalPos.y + 15.0)/heightStep - groundAlbedo1.a)*20, 0 , 1);
-    float occl2 = clamp(((globalPos.y + 20.0)/heightStep - groundAlbedo2.a)*10, 0 , 1);
-    float occl3 = clamp(((globalPos.y + 0.60)/heightStep - groundAlbedo3.a)*20.0, 0 , 1);
+    //vec3 skyLight = 16. * 0.4 * (zenithFactor * occl1 * occl2 + occl1 * occl2 * occl3 * (horizonFactor +  groundFactor));
 
-    vec3 skyLight = 16. * 0.4 * (zenithFactor * occl1 * occl2 + occl1 * occl2 * occl3 * (horizonFactor +  groundFactor));
-
+    vec3 skyLight = cSkyColor * normalInput.y * 8.;
 
     vec3 result = (diffuseInput.rgb + skyLight * albedoInput.rgb)*diffFactor + fogcolor*fogFactor;
 

@@ -8,7 +8,7 @@ float roll = 0.0f;
 void Init()
     {
        
-        node.position = Vector3(0,150,0);
+        node.position = Vector3(0,0,0);
     }
     
 void Update(float timeStep)
