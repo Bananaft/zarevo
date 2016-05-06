@@ -72,11 +72,20 @@ void PS()
 
     #ifdef COMBINE2
     vec3 color = texture2D(sDiffMap, vScreenPos).rgb * cBloomHDRMix.x;
-    //color = color/(1+color);
-    //color = 0.5+0.36 * atan(3 * (color-0.5));
-    //color = pow(color,vec3( 1/2.2 ));
-    vec3 x = max(vec3(0.0),color-vec3(0.004)); // Filmic Curve
-    color = (x*(6.2*color+.5))/(x*(6.2*x+1.7)+0.06);
+
+    float white = 8.;
+    //  color *= (1.0 + color / white) / (1.0 + color);
+    float L = 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.g;
+    float nL = (1.0 + L / white) / (1.0 + L);;
+    float scale = nL / L;
+    color *= nL;
+    color = pow(color,vec3( 1/2.2 ));
+
+
+
+
+    // vec3 x = max(vec3(0.0),color-vec3(0.004)); // Filmic Curve
+    // color = (x*(6.2*color+.5))/(x*(6.2*x+1.7)+0.06);
 
     vec3 bloom = texture2D(sNormalMap, vTexCoord).rgb * cBloomHDRMix.y;
     //bloom = bloom/(1+bloom);
