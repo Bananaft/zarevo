@@ -10,7 +10,7 @@ void VS()
 {
   mat4 modelMatrix = iModelMatrix;
   //modelMatrix[3].xyz = vec3(0.0);
-  vec3 worldPos = iPos.xyz;//GetWorldPos(modelMatrix);
+  vec3 worldPos = (vec4(0.) * modelMatrix).xyz;
   vec4 clipPos = GetClipPos(worldPos);
   gl_Position = clipPos;
 
