@@ -27,11 +27,13 @@ void	Init()
 		
 		StaticModel@ SunModelCmp = SunMdlNode.CreateComponent("StaticModel");
 		SunModelCmp.model = SunModel;
-		SunModelCmp.material = cache.GetResource("Material", "Materials/sun.xml");
+		Material@ sunMat = cache.GetResource("Material", "Materials/sun.xml");
+		SunModelCmp.material = sunMat;
 		SunMdlNode.Scale(200);
 		
 		
 		Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
+		sky.SunMdl = SunModelCmp;
 		sky.Init();
 		
 		
@@ -71,6 +73,7 @@ class Sky : ScriptObject
    
     Light@ sun;
     Node@ sunNode;
+	StaticModel@ SunMdl;
     
     
     Ramp SunColorRamp;
@@ -113,6 +116,7 @@ class Sky : ScriptObject
         suncol.g = Pow(suncol.g,2.2);
         suncol.b = Pow(suncol.b,2.2);
         sun.color = suncol;
+		
 
         Color skycol = Color(0.3984,0.5117,0.7305);// SkyColorRamp.GetColor(suncolPos) * 6;
         skycol.r = Pow(skycol.r,2.2);

@@ -74,10 +74,9 @@ void PS()
   //float sun = max(1.0 - (1.0 + 10.0 * sunatt + 1.0 * fatt) * (pow(sunDot,16.) * -1.0),0.0)
   //      + 0.3 * pow(1.0-fatt,12.0) * (1.6-sunatt);
 
-  float sun = 0.3 * pow(1.0-fatt,12.0) * (1.6-sunatt)
-            + max((1.0 + 10.0 * sunatt + 1.0 * fatt) * pow(sunDot,18.),0.);
+  float sun = pow(1.0-fatt,12.0) * (.6 + sunatt)
+            + max( pow(sunDot,108.),0.); //(1.0 + 2.0 * sunatt + 1.0 * fatt) *
   sun *= fogFactor;// * clamp((DirRay.y+0.5)*20,0.,1.);
-sun = 0.;
 
 //  vec3 fogcolor = vec3(mix(cSkyColor, cSunColor, sun)
 //            * ((0.5 + 1.0 * pow(sunatt,0.4)) * (1.5-fatt) + pow(sun, 5.2)
@@ -88,7 +87,7 @@ sun = 0.;
 
   float luma = ((0.5 + 1.0 * pow(sunatt,0.4)) * (1.5-fatt) + pow(sun, 2.2) * cSunLum);
 
-  vec3 fogcolor = chroma * luma * cSkyLum;
+  vec3 fogcolor = chroma * (1+sun) * cSkyLum;//luma
 
     // SKYLIGHT
     vec2 uv = 0.5 + globalPos.xz / (3072 * 5);
@@ -115,6 +114,6 @@ sun = 0.;
     vec3 result = (diffuseInput.rgb + skyLight * albedoInput.rgb)*diffFactor + fogcolor*fogFactor;
 
     gl_FragColor = vec4(result, 0.0);
-    //gl_FragColor = vec4(sun);
+    //gl_FragColor = vec4(fatt);
 
 }

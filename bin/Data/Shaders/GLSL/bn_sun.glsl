@@ -26,7 +26,7 @@ void PS()
 {
 
   vec3 ambient = vec3(64.0,64.0,64.0);
-  float alpha = clamp( vRay.y * 100. - 0.5 , 0., 1.);
+  float alpha = clamp( vRay.y * 50. - 0.06 , 0., 1.);
 
   #if defined(PREPASS)
       // Fill light pre-pass G-Buffer
