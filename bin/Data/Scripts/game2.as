@@ -175,10 +175,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
             }
             
         }
-//    else if (key == KEY_T) 
-//        {
-//            if(timepass) timepass = false; else timepass = true;
-//        }    
+
         
 
 }

@@ -9,8 +9,8 @@ void	Init()
 
 		Node@ skyNode = node.CreateChild("Sky");
 		Node@ Sun = skyNode.CreateChild("Sun");
-		Node@ SunMdl = Sun.CreateChild("SunMdl");
-		SunMdl.rotation  = Quaternion(0,180,0);
+		Node@ SunMdlNode = Sun.CreateChild("SunMdlNode");
+		SunMdlNode.rotation  = Quaternion(0,180,0);
 		
 		skyNode.rotation = Quaternion(62,0,0);
 		
@@ -21,11 +21,15 @@ void	Init()
 		SunLight.shadowCascade = CascadeParameters(50,360,1600,5000,1,0.95);
 		SunLight.shadowBias = BiasParameters(0.000003, 4);
 		
+		Model@ SunModel = Model();
+		SunModel = cache.GetResource("Model", "Models/sun.mdl");
+		SunModel.boundingBox = BoundingBox(Vector3(-20000,-20000,-20000),Vector3(20000,20000,20000));
 		
-		StaticModel@ SunModel = SunMdl.CreateComponent("StaticModel");
-		SunModel.model = cache.GetResource("Model", "Models/sun.mdl");
-		SunMdl.Scale(200);
-		SunModel.material = cache.GetResource("Material", "Materials/sun.xml");
+		StaticModel@ SunModelCmp = SunMdlNode.CreateComponent("StaticModel");
+		SunModelCmp.model = SunModel;
+		SunModelCmp.material = cache.GetResource("Material", "Materials/sun.xml");
+		SunMdlNode.Scale(200);
+		
 		
 		Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
 		sky.Init();
@@ -62,7 +66,7 @@ class Sky : ScriptObject
     
     float daytime = 0;
     float astroStep = 0.00069444444;
-	bool timepass = false;
+	bool timepass = true;
     
    
     Light@ sun;
@@ -122,15 +126,13 @@ class Sky : ScriptObject
         if (timepass)daytime += astroStep * timeStep;
         if (daytime > 1) daytime -= 1;
         if (daytime < 0) daytime += 1;
-       
-        //int mousescroll = input.mouseMoveWheel;
-        //daytime += mousescroll * 0.01;
-        //log.Info((6+Ceil(daytime*24)) + ":" + Ceil((Ceil((1-daytime)*24)-(1-daytime)*24)*60));
+
              if (input.keyDown[KEY_KP_PLUS]) daytime += 0.001;
         else if (input.keyDown[KEY_KP_MINUS]) daytime -= 0.001;
-        
-//        if (input.keyDown[KEY_LEFT]) sunNode.parent.Rotate(Quaternion(0,0,-1));
-//        else if (input.keyDown[KEY_RIGHT]) sunNode.parent.Rotate(Quaternion(0,0,1));
+		if (input.keyPress[KEY_T]) 
+        {
+            if(timepass) timepass = false; else timepass = true;
+        }    
         
     }
     

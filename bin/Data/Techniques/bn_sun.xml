@@ -1,5 +1,3 @@
 <technique vs="bn_sun" ps="bn_sun" psdefines="DIFFMAP" >
-    <pass name="base" />
-    <pass name="deferred" psdefines="DEFERRED" />
-    <pass name="depth" vs="Depth" ps="Depth"  />
+    <pass name="alpha" depthwrite="false" blend="alpha" />
 </technique>
