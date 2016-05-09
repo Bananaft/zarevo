@@ -25,19 +25,20 @@ void VS()
 void PS()
 {
 
-  vec3 ambient = vec3(64.0,64.0,64.0);
+  vec3 color = vec3(10.) + cMatDiffColor.rgb * 2.0;
   float alpha = clamp( vRay.y * 50. - 0.06 , 0., 1.);
+  color *= alpha;
 
   #if defined(PREPASS)
       // Fill light pre-pass G-Buffer
       gl_FragData[0] = vec4(0.5, 0.9, 0.5, 1.0);
       //gl_FragData[1] = vec4(EncodeDepth(vWorldPos.w), 0.0);
   #elif defined(DEFERRED)
-      gl_FragData[0] = vec4(ambient , alpha);
+      gl_FragData[0] = vec4(color , 1.);
       gl_FragData[1] = vec4(0.0, 0.0, 0.0, 0.0);
       gl_FragData[2] = vec4(0.5, 0.5, 0.5, 1.0);
       //gl_FragData[3] = vec4(EncodeDepth(vWorldPos.w), 0.0);
   #else
-      gl_FragColor = vec4(ambient.rgb, alpha);
+      gl_FragColor = vec4(color.rgb, 1.);
   #endif
 }

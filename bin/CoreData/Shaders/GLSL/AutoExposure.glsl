@@ -90,6 +90,16 @@ void PS()
     vec3 color = texture2D(sDiffMap, vScreenPos).rgb;
     float adaptedLum = texture2D(sNormalMap, vTexCoord).r;
     //gl_FragColor = vec4( pow( vec3(color * (cAutoExposureMiddleGrey / adaptedLum)),vec3( 1/2.2 ) ), 1.0 );
-    gl_FragColor = vec4( vec3(color * (cAutoExposureMiddleGrey / adaptedLum)), 1.0);
+
+
+    ///// Numbers output by FabriceNeyret2 https://www.shadertoy.com/view/4lXSR4
+    int x = 28-int(vScreenPos.x * 1000)/3, y = int(vScreenPos.y  * 1000)/3,
+    c = int( adaptedLum / pow(10.,float(x/4-3)) );
+    x-=x/4*4;
+    c = ( x<1||y<1||y>5? 0: y>4? 972980223: y>3? 690407533: y>2? 704642687: y>1? 696556137: 972881535 )
+        / int(exp2(float(x+26+c/10*30-3*c)));
+    vec3 num = vec3( max(c-c/2*2 , 0) );
+    gl_FragColor = vec4( vec3(color * (cAutoExposureMiddleGrey / adaptedLum) + num*0.2), 1.0);
+
     #endif
 }

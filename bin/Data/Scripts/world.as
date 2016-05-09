@@ -18,7 +18,7 @@ void	Init()
 		SunLight.lightType = LIGHT_DIRECTIONAL;
 		SunLight.castShadows = true;
 		SunLight.shadowFocus = FocusParameters(false,true,false,0.5,3);
-		SunLight.shadowCascade = CascadeParameters(50,360,1600,5000,1,0.95);
+		SunLight.shadowCascade = CascadeParameters(50,360,1600,5000,0.85,0.85);
 		SunLight.shadowBias = BiasParameters(0.000003, 4);
 		
 		Model@ SunModel = Model();
@@ -27,13 +27,13 @@ void	Init()
 		
 		StaticModel@ SunModelCmp = SunMdlNode.CreateComponent("StaticModel");
 		SunModelCmp.model = SunModel;
-		Material@ sunMat = cache.GetResource("Material", "Materials/sun.xml");
-		SunModelCmp.material = sunMat;
+		Material@ SunMat = cache.GetResource("Material", "Materials/sun.xml");
+		SunModelCmp.material = SunMat;
 		SunMdlNode.Scale(200);
 		
 		
 		Sky@ sky = cast<Sky>(skyNode.CreateScriptObject(scriptFile, "Sky"));
-		sky.SunMdl = SunModelCmp;
+		sky.SunMat = SunMat;
 		sky.Init();
 		
 		
@@ -73,7 +73,7 @@ class Sky : ScriptObject
    
     Light@ sun;
     Node@ sunNode;
-	StaticModel@ SunMdl;
+	Material@ SunMat;
     
     
     Ramp SunColorRamp;
@@ -87,8 +87,8 @@ class Sky : ScriptObject
         sunNode = node.GetChild("Sun", false);
         sun = sunNode.GetComponent("Light");
         
-        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.06,0.002),Color(0.0,0.0,0.0)};
-        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                , 0.5              };
+        Array<Color> arSunColC = {Color(1,0.93,0.73),Color(1,0.32,0.07),Color(0.73,0.06,0.002)}; //,Color(0.0,0.0,0.0)
+        Array<float> arSunColP = { 0.267            , 0.367            , 0.446                }; //, 0.5              
         
         Array<Color> arSkyColC = {Color(0.32,0.64,0.95),Color(0.08,0.13,0.42),Color(0.009,0.013,0.073),Color(0.003,0.0045,0.024),Color(0.0,0.0,0.0)};
         Array<float> arSkyColP = { 0.435               , 0.580               , 0.630                  , 0.700            , 0.900            };
@@ -109,14 +109,15 @@ class Sky : ScriptObject
         sunNode.rotation = Quaternion( 0.0f, 360 * daytime - 90, 0.0f );
         
         Vector3 sunvec = sunNode.worldDirection;// * Vector3(0,1,0);
-
+		float sunLuma = 128 * Clamp(1-Pow(1-(-1*sunvec.y),5),0.0,1.0);
         float suncolPos = 0.5 + 0.5 * sunvec.y;
-        Color suncol = SunColorRamp.GetColor(suncolPos) * 8;
+        Color suncol =  Color(0.7031,0.4687,0.1055);//SunColorRamp.GetColor(suncolPos) * 8;
         suncol.r = Pow(suncol.r,2.2);
         suncol.g = Pow(suncol.g,2.2);
         suncol.b = Pow(suncol.b,2.2);
-        sun.color = suncol;
+        sun.color = suncol * sunLuma;
 		
+		SunMat.shaderParameters["MatDiffColor"] = Variant(suncol * sunLuma);
 
         Color skycol = Color(0.3984,0.5117,0.7305);// SkyColorRamp.GetColor(suncolPos) * 6;
         skycol.r = Pow(skycol.r,2.2);
@@ -124,7 +125,7 @@ class Sky : ScriptObject
         skycol.b = Pow(skycol.b,2.2);
       
         renderpath.shaderParameters["SkyColor"] = Variant(skycol);
-        renderpath.shaderParameters["SunColor"] = Variant(Color(0.7031,0.4687,0.1055));
+        renderpath.shaderParameters["SunColor"] = Variant(suncol);
         renderpath.shaderParameters["SunDir"] = Variant(sunvec);
         
         if (timepass)daytime += astroStep * timeStep;
