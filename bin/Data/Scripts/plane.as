@@ -63,7 +63,7 @@ void FixedUpdate(float timeStep)
 	{
         body.ApplyForce(Vector3(0,98.1,0));
 		
-		body.ApplyForce(body.rotation * Vector3(0,0,2300));
+		body.ApplyForce(body.rotation * Vector3(0,0,4300));
         
 		if (autopilot) AI_ctrl(timeStep); else ctrl_AimVec(timeStep);
 
@@ -221,7 +221,7 @@ void ctrl_AimVec (float timeStep)
             
         } else {
             
-            rollvec = body.rotation.Inverse() * Vector3(0,1,0);
+          //  rollvec = body.rotation.Inverse() * Vector3(0,1,0);
         }
 		
 		
