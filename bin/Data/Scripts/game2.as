@@ -1,4 +1,5 @@
 #include "freelookCam.as";
+#include "veh_controller.as";
 #include "bnterrain.as";
 #include "world.as";
 
@@ -37,7 +38,7 @@ void initRender()
     camera.fov = 50.0f;
 	
 	Viewport@ mainVP = Viewport(scene_, camera);
-    freelookCam@ flcam = cast<freelookCam>(cameraNode.CreateScriptObject(scriptFile, "freelookCam"));
+    veh_controller@ flcam = cast<veh_controller>(cameraNode.CreateScriptObject(scriptFile, "veh_controller"));
 	flcam.Init();
 	
 	//Node@ terrNode = scene_.CreateChild("terrain");
