@@ -1,10 +1,12 @@
 class veh_controller : ScriptObject
 {
-	float deadzone = 0.35;
+	float deadzone = 0.2;
     float livezone = 0.95;
-    float inpCurve = 1.5;
-	float plainsens = 2.0;
-	float deltasens = 8.0;
+    float inpCurve = 1.8;
+	float plainsens = 3.0;
+	float deltasens = 12.0;
+	
+	
 	
 	
 	Vector2 lastImput = Vector2(0,0);
@@ -20,7 +22,7 @@ void Init()
 		node.parent = campivot2;
 		
 		vehnode.position = Vector3(-200,200,0);
-		node.position = Vector3(0,4,-10);
+		node.position = Vector3(0,2,-8);
         SubscribeToEvent("PostRenderUpdate", "HandlePostRenderUpdate");
 		
 		StaticModel@ boxybox = vehnode.CreateComponent("StaticModel");
@@ -103,6 +105,10 @@ void DrawHud()
         hud.AddCircle(pos + (rot * Vector3(70 + lastImput.y * 10,-35 + lastImput.x * 10,100)),rot * Vector3(0,0,1), 1 ,hudcol,8 , false);
         Vector2 lastImputMapped = MapInput(lastImput);
         hud.AddCircle(pos + (rot * Vector3(70 + lastImputMapped.y * 10,-35 + lastImputMapped.x * 10,100)),rot * Vector3(0,0,1), 1 ,hudcol2,8 , false);
+		
+		JoystickState@ joystick = input.joysticksByIndex[0];
+		Vector3 spdvc =  campivot.rotation * Vector3(joystick.axisPosition[0], 0, -1 * joystick.axisPosition[1]);
+		 hud.AddLine(vehnode.position,vehnode.position + spdvc * 2, hudcol2,false);
 	}
 }
 
