@@ -6,7 +6,9 @@ class veh_controller : ScriptObject
 	float inpCurve = 1.8;  //-Кривая искажения силы инпута. 1 - линейный росты между
 	//мёртовй и живой зоной, чем больше, тем более прогнутая кивая. Плавно в середине, резко в конце.
 	float plainsens = 3.0; //-Чувствительность обычного инпута
-	float deltasens = 12.0; //-Чувствительность адитивного дельта-инпута.
+	float deltasens = 6.0; //-Чувствительность адитивного дельта-инпута.
+	
+	bool sightmove = true;
 
 
 
@@ -16,6 +18,7 @@ class veh_controller : ScriptObject
 	Vector2 lastImput = Vector2(0,0);
 	Vector2 speed = Vector2(0,0);
 	Node@ vehnode;
+	Node@ csnode;
 	Node@ campivot;
 	Node@ campivot2;
 void Init()
@@ -24,6 +27,7 @@ void Init()
 		campivot = vehnode.CreateChild("campivot");
 		campivot2 = campivot.CreateChild("campivot");
 		node.parent = campivot2;
+		csnode = campivot2.CreateChild("csnode");
 
 		vehnode.position = Vector3(-620,200,-900);
 		node.position = Vector3(0,2,-8);
@@ -75,8 +79,17 @@ void FixedUpdate(float timeStep)
 		Vector2 mappedInput = MapInput(stickInput);
 
 		Vector2 deltaInput = stickInput - lastImput;
+		Vector2 finalinput;
+		if (sightmove)
+		{
+			finalinput = mappedInput * plainsens;
+			csnode.rotation = Quaternion(stickInput.x*deltasens,stickInput.y*deltasens,0.0f);
+		} else {
+			
+			finalinput = mappedInput * plainsens + deltaInput * deltasens;
+		}
+		
 		lastImput = stickInput;
-		Vector2 finalinput = mappedInput * plainsens + deltaInput * deltasens;
 
 		campivot.Rotate(Quaternion(0,finalinput.y,0.));
 		campivot2.Rotate(Quaternion(finalinput.x,0,0.));
@@ -98,10 +111,10 @@ void DrawHud()
 		Color hudcol = Color(0.1,1.0,0.1,1.0);
         Color hudcol2 = Color(1.0,0.6,0.1,1.0);
         DebugRenderer@ hud = node.scene.debugRenderer;
-        hud.AddLine(pos + (rot * Vector3(-1,0,100)),pos + (rot *  Vector3(-3,0,100)), hudcol,false);
-        hud.AddLine(pos + (rot * Vector3(1,0,100)),pos + (rot *  Vector3(3,0,100)), hudcol,false);
-        hud.AddLine(pos + (rot * Vector3(0,-1,100)),pos + (rot *  Vector3(0,-3,100)),hudcol,false);
-        hud.AddLine(pos + (rot * Vector3(0,1,100)),pos + (rot *  Vector3(0,3,100)), hudcol,false);
+        hud.AddLine(pos + (csnode.worldRotation * Vector3(-1,0,100)),pos + (csnode.worldRotation *  Vector3(-3,0,100)), hudcol,false);
+        hud.AddLine(pos + (csnode.worldRotation * Vector3(1,0,100)),pos + (csnode.worldRotation *  Vector3(3,0,100)), hudcol,false);
+        hud.AddLine(pos + (csnode.worldRotation * Vector3(0,-1,100)),pos + (csnode.worldRotation *  Vector3(0,-3,100)),hudcol,false);
+        hud.AddLine(pos + (csnode.worldRotation * Vector3(0,1,100)),pos + (csnode.worldRotation *  Vector3(0,3,100)), hudcol,false);
 
 		hud.AddCircle(pos + (rot * Vector3(70,-35,100)),rot * Vector3(0,0,1), 10 ,hudcol,32 , false);
         hud.AddCircle(pos + (rot * Vector3(70,-35,100)),rot * Vector3(0,0,1), 10 * deadzone ,hudcol,32 , false);
